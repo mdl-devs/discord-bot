@@ -81,9 +81,6 @@ async def servers(ctx):
       online = " :white_check_mark:"
     else:
       online = " :x:"
-    #await ctx.send("name "  +  name + " gamename "  + game + " Server Staus "  +  online )
-    #await ctx.send( players + "/" + maxplayers)
-    #await ctx.send("Players in queue: " + queue)
     embed.add_field(name=game + ": " + name + online, value=players + '/' + maxplayers, inline=True)
  await ctx.send(embed=embed)
 
