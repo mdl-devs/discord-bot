@@ -66,9 +66,9 @@ async def servers(ctx):
  getserversURL = "https://api.truckersmp.com/v2/servers"
  r = requests.get(getserversURL)
  data = r.json()["response"]
- embed = discord.Embed(title="TMP Server Status", color=0xFF0000)
+ embed = discord.Embed(title="TMP Server Status", url="https://traffic.krashnz.com/", color=0xFF0000)
  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
- embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+ embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001", url="https://alle-group.com/",)
  for server in data:
     serverid = server["id"]
     game = server["game"]
