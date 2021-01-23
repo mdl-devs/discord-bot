@@ -7,17 +7,11 @@ from pip._vendor import requests
 import datetime
 import json
 
-client = discord.Client()
 
 # this is the information needed for the bot, prefix is $. Just set up to say that the bot is Working as a Test In Progress
 token = 'Nzk3NjE4MTQzMTczMjc5NzU0.X_pFyA.N75wby0uAALjGP-rFUCjIDYVSo0'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 game = discord.Game('Working on myself, Test in Progress')
-
-#This is to know if the bot is running
-@client.event
-async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
 
 #Command for seeing [A'G] Upper Staff
 @bot.command()
@@ -67,6 +61,7 @@ async def VTCapply(ctx):
     await ctx.send(embed=embed)
 
 #Experimental command for Server List
+@bot.command()
 def transformTime(timestamp):
     return datetime.datetime.fromtimestamp(timestamp).strftime('%c')
 getserversURL = "https://api.truckersmp.com/v2/servers"
@@ -91,7 +86,6 @@ for server in data:
       online = "Online"
     else:
       online = "Offline"
-@bot.command()
 async def servers(ctx):
     await ctx.send("---------")
     await ctx.send(name + " (" + game + ") - Status: " + online )
