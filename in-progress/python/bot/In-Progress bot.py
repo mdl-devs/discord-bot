@@ -64,9 +64,9 @@ async def VTCapply(ctx):
 @bot.command()
 async def servers(ctx):
  getserversURL = "https://api.truckersmp.com/v2/servers"
-
  r = requests.get(getserversURL)
  data = r.json()["response"]
+ embed = discord.Embed(title="TMP Server Status", color=0xFF0000)
  for server in data:
     serverid = server["id"]
     game = server["game"]
@@ -79,13 +79,11 @@ async def servers(ctx):
       online = "Online"
     else:
       online = "Offline"
-    embed=discord.embed(title='TruckersMP Server Status', color=0xff000)
-    embed.add_field(name='Name', value=name, inline=True)
-    embed.add_field(name='Game', value=game, inline=True)
-    embed.add_field(name='Service Status', value=online, inline=True)
-    embed.add_field(name='Players Online', value=players + "/" + maxplayers, inline=True)
-    embed.add_field(name='Players in Queue', value=queue, inline=True)
-    await ctx.send(embed)
+    #await ctx.send("name "  +  name + " gamename "  + game + " Server Staus "  +  online )
+    #await ctx.send( players + "/" + maxplayers)
+    #await ctx.send("Players in queue: " + queue)
+    embed.add_field(name=game + ": " + name, value=players + '/' + maxplayers, inline=True)
+ await ctx.send(embed=embed)
 
 #change async def (members) change the members bit to what ever u want. 
 @bot.command()
@@ -94,6 +92,8 @@ async def members(ctx):
  data = r.json()
  members_count = r.json()['response']['members_count']
  print(members_count)
- await ctx.send(members_count)
+ embed = discord.Embed(title='Number of Alle Members', color=0xFF0000)
+ embed.add_field(name="Alle Members", value=members_count, inline=True)
+ await ctx.send(embed=embed)
 
 bot.run(token, bot=True)
