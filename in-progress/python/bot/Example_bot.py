@@ -1,48 +1,52 @@
-import datetime
-import time.time
 import discord
-from discord import user
-import requests
+from discord.colour import Color
+from discord.ext import commands
+from discord import Game
+from discord.ext.commands import Bot
+from pip._vendor import requests
+import datetime
+import json
 
 getserversURL = "https://api.truckersmp.com/v2/servers"
 gettimeURL = "https://api.truckersmp.com/v2/game_time"
 
 client = discord.Client()
 
-def transformTime(timestamp):
-    return datetime.datetime.fromtimestamp(timestamp).strftime('%c')
-r = requests.get(getserversURL)
-rt = requests.get(gettimeURL)
 
-data = r.json()["response"]
+@bot.command()
+async def members(ctx):
+ r = requests.get("https://api.truckersmp.com/v2/vtc/13006")
+ data = r.json()
+ members_count = r.json()['response']['members_count']
+ print(members_count)
+ await ctx.send(members_count
+
+@bot.command()
+async def servers(ctx):
+    
+getserversURL = "https://api.truckyapp.com/v2/truckersmp/servers"
+b = requests.get(getserversURL)
+data = b.json()["response"]
 for server in data:
     serverid = server["id"]
     game = server["game"]
-    name = server["name"]
+    name = server["shortname"]
     players = str(server["players"])
     queue = str(server["queue"])
     maxplayers = str(server["maxplayers"])
     online = (server["online"])
-
-@client.event
-async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if message.content.startswith('$bootup'):
-        await message.channel.send('Booting up........Boot up complete! Welcome User!')
-        await message.channel.send('..................')
-        await message.channel.send('Boot up Complete! Welcome User!')
-    
-    if message.content.startswith('$serverstats'):
-        if online:
-            online = "Online"
-        else:
-            online = "Offline"
+    if online:
+      online = "Online"
+    else:
+      online = "Offline"
+      
+@bot.command()
+async def servers(ctx):
+    await ctx.send("---------")
+    await ctx.send(name + " (" + game + ") - Status: " + online )
+    await ctx.send("Drivers online: " + players + "/" + maxplayers)
+    await ctx.send("Players in queue: " + queue)
 
 
-client.run('Nzk3NjE4MTQzMTczMjc5NzU0.X_pFyA.N75wby0uAALjGP-rFUCjIDYVSo0')
+
+Bot.run('Nzk3NjE4MTQzMTczMjc5NzU0.X_pFyA.N75wby0uAALjGP-rFUCjIDYVSo0', bot=True)

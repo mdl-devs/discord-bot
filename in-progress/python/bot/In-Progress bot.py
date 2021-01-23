@@ -50,7 +50,7 @@ async def info(ctx):
     embed.add_field(name='Slogan', value='Keeping the world moving!', inline=False)
     embed.add_field(name='Devisions', value='Alle Logistics, Alle Transport, Alle Air, Alle Farms', inline=False)
     embed.add_field(name='CEO and Founder', value='Sully#3056 is the Founder and CEO since 27th March, 2020!', inline=False)
-    embed.add_field(name='Drivers', value='23 drivers and counting')
+    #embed.add_field(name='Memebers', value=membercount + ' members and counting')
     await ctx.send(embed=embed)
 
 #Command for Applicants
@@ -62,22 +62,15 @@ async def VTCapply(ctx):
 
 #Experimental command for Server List
 @bot.command()
-def transformTime(timestamp):
-    return datetime.datetime.fromtimestamp(timestamp).strftime('%c')
-getserversURL = "https://api.truckersmp.com/v2/servers"
-gettimeURL = "https://api.truckersmp.com/v2/game_time"
-r = requests.get(getserversURL)
-rt = requests.get(gettimeURL)
-data = r.json()["response"]
-gametime = rt.json()["game_time"]
-print("Server List")
-print("")
-print("(Game Time: " + transformTime(gametime) + ")")
+async def servers(ctx):
+ getserversURL = "https://api.truckersmp.com/v2/servers"
 
-for server in data:
+ r = requests.get(getserversURL)
+ data = r.json()["response"]
+ for server in data:
     serverid = server["id"]
     game = server["game"]
-    name = server["name"]
+    name = server["shortname"]
     players = str(server["players"])
     queue = str(server["queue"])
     maxplayers = str(server["maxplayers"])
@@ -86,11 +79,21 @@ for server in data:
       online = "Online"
     else:
       online = "Offline"
-async def servers(ctx):
-    await ctx.send("---------")
-    await ctx.send(name + " (" + game + ") - Status: " + online )
-    await ctx.send("Drivers online: " + players + "/" + maxplayers)
-    await ctx.send("Players in queue: " + queue)
+    embed=discord.embed(title='TruckersMP Server Status', color=0xff000)
+    embed.add_field(name='Name', value=name, inline=True)
+    embed.add_field(name='Game', value=game, inline=True)
+    embed.add_field(name='Service Status', value=online, inline=True)
+    embed.add_field(name='Players Online', value=players + "/" + maxplayers, inline=True)
+    embed.add_field(name='Players in Queue', value=queue, inline=True)
+    await ctx.send(embed)
 
+#change async def (members) change the members bit to what ever u want. 
+@bot.command()
+async def members(ctx):
+ r = requests.get("https://api.truckersmp.com/v2/vtc/13006")
+ data = r.json()
+ members_count = r.json()['response']['members_count']
+ print(members_count)
+ await ctx.send(members_count)
 
 bot.run(token, bot=True)
