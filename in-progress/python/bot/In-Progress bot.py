@@ -67,6 +67,8 @@ async def servers(ctx):
  r = requests.get(getserversURL)
  data = r.json()["response"]
  embed = discord.Embed(title="TMP Server Status", color=0xFF0000)
+ embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+ embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
  for server in data:
     serverid = server["id"]
     game = server["game"]
@@ -76,13 +78,13 @@ async def servers(ctx):
     maxplayers = str(server["maxplayers"])
     online = (server["online"])
     if online:
-      online = "Online"
+      online = " :white_check_mark:"
     else:
-      online = "Offline"
+      online = " :x:"
     #await ctx.send("name "  +  name + " gamename "  + game + " Server Staus "  +  online )
     #await ctx.send( players + "/" + maxplayers)
     #await ctx.send("Players in queue: " + queue)
-    embed.add_field(name=game + ": " + name, value=players + '/' + maxplayers, inline=True)
+    embed.add_field(name=game + ": " + name + online, value=players + '/' + maxplayers, inline=True)
  await ctx.send(embed=embed)
 
 #change async def (members) change the members bit to what ever u want. 
