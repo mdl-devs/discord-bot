@@ -73,13 +73,11 @@ async def servers(ctx):
  data = r.json()["response"]
  embed = discord.Embed(title="TMP Server Status", url="https://traffic.krashnz.com/", color=0xFF0000)
  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
- embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001", url="https://alle-group.com/",)
+ embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
  for server in data:
-    serverid = server["id"]
     game = server["game"]
     name = server["shortname"]
     players = str(server["players"])
-    queue = str(server["queue"])
     maxplayers = str(server["maxplayers"])
     online = (server["online"])
     if online:
@@ -100,5 +98,23 @@ async def members(ctx):
  embed.add_field(name="Logisitics Members", value=members_count, inline=True)
  embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
  await ctx.send(embed=embed)
+
+ #Command for Traffic
+@bot.command()
+async def traffic(ctx):
+  getinfoURL = "https://traffic.krashnz.com/api/v2/public/server/ets2/sim1/top.json"
+  embed = discord.Embed(title="TMP Sim 1 Status", color=0xFF0000)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  r = requests.get(getinfoURL)
+  data = r.json()["response"]
+  for top in data['top']:
+    name = top['name']
+    how_bad = top['severity']
+    drivers = str(top['players'])
+  
+    embed.add_field(name=name, value=how_bad + "/" + drivers, inline=True)
+  await ctx.send(embed=embed)
+
 
 bot.run(token, bot=True)
