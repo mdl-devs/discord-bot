@@ -9,9 +9,9 @@ import json
 
 
 # this is the information needed for the bot, prefix is $. Just set up to say that the bot is Working as a Test In Progress
-token = 'Nzk3NjE4MTQzMTczMjc5NzU0.X_pFyA.N75wby0uAALjGP-rFUCjIDYVSo0'
+token = 'ODAyNjgxODE0NDEzMzQ0ODA5.YAyxsQ.UYvvQk-gFHwtPWY0y542WnjBB-U'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
-game = discord.Game('Working on myself, Test in Progress')
+discord.CustomActivity(name='Working on myself, Testing in Progress')
 
 #Command for seeing [A'G] Upper Staff
 @bot.command()
@@ -27,6 +27,7 @@ async def alleupperstaff(ctx):
     embed.add_field(name="DIRECTOR OF DEVELOPEMENT", value="_Guuuty#8864", inline=False)
     embed.add_field(name="DIRECTOR OF HUMAN RESOURCES", value="Murphy#2843", inline=False)
     embed.add_field(name='DIRECTOR OF EXAMINATIONS', value='Yzzoxi#3590', inline=False)
+    embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
     await ctx.send(embed=embed)
 
 #Command for [A'G] Lower Staff
@@ -39,6 +40,7 @@ async def allelowerstaff(ctx):
     embed.add_field(name='Driver Supervisor', value='Maki#9235', inline=False)
     embed.add_field(name='Department Manager', value='7celverboys#1346', inline=False)
     embed.add_field(name='Event/Media Team', value='Vacant | Open for Applicants', inline=False)
+    embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
     await ctx.send(embed=embed)
 
 #Command for VTC Information
@@ -50,14 +52,17 @@ async def info(ctx):
     embed.add_field(name='Slogan', value='Keeping the world moving!', inline=False)
     embed.add_field(name='Devisions', value='Alle Logistics, Alle Transport, Alle Air, Alle Farms', inline=False)
     embed.add_field(name='CEO and Founder', value='Sully#3056 is the Founder and CEO since 27th March, 2020!', inline=False)
-    #embed.add_field(name='Memebers', value=membercount + ' members and counting')
+    embed.add_field(name='Alle Website', value=f'https://alle-group.com/', inline=False)
+    embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
     await ctx.send(embed=embed)
 
 #Command for Applicants
 @bot.command()
 async def VTCapply(ctx):
-    embed=discord.Embed(Title='Thank you for choosing Alle Logisitics', color=0xFF0000)
-    embed.add_field(name='Apply Here', value=f'https://truckersmp.com/vtc/13006', inline=True)
+    embed=discord.Embed(Title='Alle Driver Application', color=0xFF0000)
+    embed.add_field(name='Thank you!', value='We strive to have the best join our VTC!', inline=False)
+    embed.add_field(name='Apply Here', value=f'https://truckersmp.com/vtc/13006', inline=False)
+    embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
     await ctx.send(embed=embed)
 
 #Experimental command for Server List
@@ -81,21 +86,19 @@ async def servers(ctx):
       online = " :white_check_mark:"
     else:
       online = " :x:"
-    #await ctx.send("name "  +  name + " gamename "  + game + " Server Staus "  +  online )
-    #await ctx.send( players + "/" + maxplayers)
-    #await ctx.send("Players in queue: " + queue)
     embed.add_field(name=game + ": " + name + online, value=players + '/' + maxplayers, inline=True)
  await ctx.send(embed=embed)
 
-#change async def (members) change the members bit to what ever u want. 
+#Command for Member Counts
 @bot.command()
 async def members(ctx):
  r = requests.get("https://api.truckersmp.com/v2/vtc/13006")
  data = r.json()
  members_count = r.json()['response']['members_count']
  print(members_count)
- embed = discord.Embed(title='Number of Alle Members', color=0xFF0000)
- embed.add_field(name="Alle Members", value=members_count, inline=True)
+ embed = discord.Embed(title='Alle Members (WIP)', color=0xFF0000)
+ embed.add_field(name="Logisitics Members", value=members_count, inline=True)
+ embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
  await ctx.send(embed=embed)
 
 bot.run(token, bot=True)
