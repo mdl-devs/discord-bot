@@ -1,4 +1,5 @@
 import discord
+from discord import client
 from discord.colour import Color
 from discord.ext import commands
 from discord import Game
@@ -11,7 +12,14 @@ import json
 # this is the information needed for the bot, prefix is $. Just set up to say that the bot is Working as a Test In Progress
 token = 'ODAyNjgxODE0NDEzMzQ0ODA5.YAyxsQ.UYvvQk-gFHwtPWY0y542WnjBB-U'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
-discord.CustomActivity(name='Working on myself, Testing in Progress')
+
+#Command before use of bot
+@bot.command()
+async def bootup(ctx):
+  await ctx.send('BOOTING UP...........')
+  activity = discord.Activity(name='my activity', type=discord.ActivityType.watching)
+  await client.change_presence(activity=activity)
+  await ctx.send('BOOTUP COMPLETE. BOT READY FOR USE')
 
 #Command for seeing [A'G] Upper Staff
 @bot.command()
