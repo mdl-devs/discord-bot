@@ -13,13 +13,18 @@ import json
 token = 'ODAyNjgxODE0NDEzMzQ0ODA5.YAyxsQ.UYvvQk-gFHwtPWY0y542WnjBB-U'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 
-#Command before use of bot
+#Help command
+bot.remove_command('help')
 @bot.command()
-async def bootup(ctx):
-  await ctx.send('BOOTING UP...........')
-  activity = discord.Activity(name='my activity', type=discord.ActivityType.watching)
-  await client.change_presence(activity=activity)
-  await ctx.send('BOOTUP COMPLETE. BOT READY FOR USE')
+async def help(ctx):
+  embed = discord.Embed(title='Commands', color=0xFF0000)
+  embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  embed.add_field(name='Alle Group Info', value="alleupperstaff, allelowerstaff, info, vtcapply, members", inline=False)
+  embed.add_field(name='TMP Server info', value="servers", inline=False)
+  embed.add_field(name='ETS Server traffic', value="traffic, traffic2, traffic3, trafficarc, trafficus, trafficpm, trafficpmarc", inline=False)
+  embed.add_field(name='ATS Server traffic', value="atstrafficus, atstrafficusarc, atstrafficeu")
+  await ctx.send(embed=embed)
 
 #Command for seeing [A'G] Upper Staff
 @bot.command()
