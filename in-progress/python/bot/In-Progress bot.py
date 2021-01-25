@@ -87,6 +87,157 @@ async def servers(ctx):
     embed.add_field(name=game + ": " + name + online, value=players + '/' + maxplayers, inline=True)
  await ctx.send(embed=embed)
 
+ #Commands for Traffic
+@bot.command()
+async def traffic(ctx):
+  getinfoURL = "https://traffic.krashnz.com/api/v2/public/server/ets2/sim1/top.json"
+  embed = discord.Embed(title="TMP ETS2 Sim 1 Status", color=0xFF0000)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  r = requests.get(getinfoURL)
+  data = r.json()["response"]
+  for top in data['top']:
+    name = top['name']
+    congestion = top['severity']
+    drivers = str(top['players'])
+    embed.add_field(name=name, value=congestion + "/" + drivers, inline=True)
+  await ctx.send(embed=embed)
+
+@bot.command()
+async def traffic2(ctx):
+  getSim2TFC = "https://traffic.krashnz.com/api/v2/public/server/ets2/sim2/top.json"
+  embed = discord.Embed(title="TMP ETS2 Sim 2 Status", color=0xFF0000)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  r = requests.get(getSim2TFC)
+  data = r.json()['response']
+  for top in data['top']:
+    name = top['name']
+    congestion = top['severity']
+    drivers = str(top['players'])
+    embed.add_field(name=name, value=congestion + '/' + drivers, inline=True)
+  await ctx.send(embed=embed)
+
+@bot.command()
+async def traffic3(ctx):
+  getSim2TFC = "https://traffic.krashnz.com/api/v2/public/server/ets2/sim3/top.json"
+  embed = discord.Embed(title="TMP ETS2 Sim 3 Status", color=0xFF0000)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  r = requests.get(getSim2TFC)
+  data = r.json()['response']
+  for top in data['top']:
+    name = top['name']
+    congestion = top['severity']
+    drivers = str(top['players'])
+    embed.add_field(name=name, value=congestion + '/' + drivers, inline=True)
+  await ctx.send(embed=embed)
+
+@bot.command()
+async def trafficARC(ctx):
+  getSim2TFC = "https://traffic.krashnz.com/api/v2/public/server/ets2/arc1/top.json"
+  embed = discord.Embed(title="TMP ETS2 EU Arcade Status", color=0xFF0000)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  r = requests.get(getSim2TFC)
+  data = r.json()['response']
+  for top in data['top']:
+    name = top['name']
+    congestion = top['severity']
+    drivers = str(top['players'])
+    embed.add_field(name=name, value=congestion + '/' + drivers, inline=True)
+  await ctx.send(embed=embed)
+
+@bot.command()
+async def trafficUS(ctx):
+  getSim2TFC = "https://traffic.krashnz.com/api/v2/public/server/ets2/us/top.json"
+  embed = discord.Embed(title="TMP ETS2 US Sim Status", color=0xFF0000)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  r = requests.get(getSim2TFC)
+  data = r.json()['response']
+  for top in data['top']:
+    name = top['name']
+    congestion = top['severity']
+    drivers = str(top['players'])
+    embed.add_field(name=name, value=congestion + '/' + drivers, inline=True)
+  await ctx.send(embed=embed)
+
+@bot.command()
+async def trafficPM(ctx):
+  getSim2TFC = "https://traffic.krashnz.com/api/v2/public/server/promods/pm/top.json"
+  embed = discord.Embed(title="TMP Promods Sim Status", color=0xFF0000)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  r = requests.get(getSim2TFC)
+  data = r.json()['response']
+  for top in data['top']:
+    name = top['name']
+    congestion = top['severity']
+    drivers = str(top['players'])
+    embed.add_field(name=name, value=congestion + '/' + drivers, inline=True)
+  await ctx.send(embed=embed)
+
+@bot.command()
+async def trafficPMARC(ctx):
+  getSim2TFC = "https://traffic.krashnz.com/api/v2/public/server/promods/pm-arc/top.json"
+  embed = discord.Embed(title="TMP Promods Arcade Status", color=0xFF0000)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  r = requests.get(getSim2TFC)
+  data = r.json()['response']
+  for top in data['top']:
+    name = top['name']
+    congestion = top['severity']
+    drivers = str(top['players'])
+    embed.add_field(name=name, value=congestion + '/' + drivers, inline=True)
+  await ctx.send(embed=embed)
+
+@bot.command()
+async def ATSTrafficUS(ctx):
+  getSim2TFC = "https://traffic.krashnz.com/api/v2/public/server/ats/us-sim/top.json"
+  embed = discord.Embed(title="TMP ATS US Sim Status", color=0xFF0000)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  r = requests.get(getSim2TFC)
+  data = r.json()['response']
+  for top in data['top']:
+    name = top['name']
+    congestion = top['severity']
+    drivers = str(top['players'])
+    embed.add_field(name=name, value=congestion + '/' + drivers, inline=True)
+  await ctx.send(embed=embed)
+
+@bot.command()
+async def ATSTrafficUSArc(ctx):
+  getSim2TFC = "https://traffic.krashnz.com/api/v2/public/server/ats/us-arc/top.json"
+  embed = discord.Embed(title="TMP ATS US Arcade Status", color=0xFF0000)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  r = requests.get(getSim2TFC)
+  data = r.json()['response']
+  for top in data['top']:
+    name = top['name']
+    congestion = top['severity']
+    drivers = str(top['players'])
+    embed.add_field(name=name, value=congestion + '/' + drivers, inline=True)
+  await ctx.send(embed=embed)
+
+@bot.command()
+async def ATSTrafficEU(ctx):
+  getSim2TFC = "https://traffic.krashnz.com/api/v2/public/server/ats/sim/top.json"
+  embed = discord.Embed(title="TMP ATS EU Sim Status", color=0xFF0000)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  r = requests.get(getSim2TFC)
+  data = r.json()['response']
+  for top in data['top']:
+    name = top['name']
+    congestion = top['severity']
+    drivers = str(top['players'])
+    embed.add_field(name=name, value=congestion + '/' + drivers, inline=True)
+  await ctx.send(embed=embed)
+
 #Command for Member Counts
 @bot.command()
 async def members(ctx):
@@ -98,23 +249,5 @@ async def members(ctx):
  embed.add_field(name="Logisitics Members", value=members_count, inline=True)
  embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
  await ctx.send(embed=embed)
-
- #Command for Traffic
-@bot.command()
-async def traffic(ctx):
-  getinfoURL = "https://traffic.krashnz.com/api/v2/public/server/ets2/sim1/top.json"
-  embed = discord.Embed(title="TMP Sim 1 Status", color=0xFF0000)
-  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
-  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
-  r = requests.get(getinfoURL)
-  data = r.json()["response"]
-  for top in data['top']:
-    name = top['name']
-    how_bad = top['severity']
-    drivers = str(top['players'])
-  
-    embed.add_field(name=name, value=how_bad + "/" + drivers, inline=True)
-  await ctx.send(embed=embed)
-
 
 bot.run(token, bot=True)
