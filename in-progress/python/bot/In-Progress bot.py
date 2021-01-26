@@ -263,4 +263,21 @@ async def members(ctx):
  embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
  await ctx.send(embed=embed)
 
+#Gametime Command
+@bot.command()
+async def gametime(ctx):
+  def transformTime(timestamp):
+   return datetime.datetime.fromtimestamp(timestamp).strftime('%c')
+  gettimeURL = "https://api.truckersmp.com/v2/game_time"
+  rt = requests.get(gettimeURL)
+  gametime = rt.json()["game_time"]
+  time = transformTime(gametime)
+  embed = discord.Embed(title='TruckersMP Game time', color=0xFF0000)
+  embed.add_field(name='Game Time', value=time, inline=True)
+  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+  embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+  await ctx.send(embed=embed)
+  
+
+
 bot.run(token, bot=True)
