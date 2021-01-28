@@ -13,6 +13,11 @@ import json
 token = 'ODAyNjgxODE0NDEzMzQ0ODA5.YAyxsQ.UYvvQk-gFHwtPWY0y542WnjBB-U'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 
+#Changes Presence
+@bot.event
+async def on_ready():
+  await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"over the Alle Public Server"))
+
 #Help command
 bot.remove_command('help')
 @bot.command()
