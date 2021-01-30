@@ -266,6 +266,7 @@ async def members(ctx):
  embed = discord.Embed(title='Alle Members (WIP)', color=0xFF0000)
  embed.add_field(name="Logisitics Members", value=members_count, inline=True)
  embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
+ embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
  await ctx.send(embed=embed)
 
 #Gametime Command
@@ -283,6 +284,16 @@ async def gametime(ctx):
   embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
   await ctx.send(embed=embed)
   
+#Command for Minecraft server Information
+@bot.command()
+@command.has_role('Alle Group')
+async def minecraftinfo(ctx):
+    embed = discord.Embed(title='Minecraft Server Info', color=0xFF0000)
+    embed.add_field(name='Minecraft Small Server', value='176.57.144.138 | 4 slots', inline=False)
+    embed.add_field(name='Minecraft Large Server', value='allesever2.aternos.me | 100 slots', inline = False)
+    embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
+    embed.set_footer(text="Bot code made by StarAssassin64#9196 and Jamesmay#0001")
+    await ctx.send(embed=embed)
 
-
+    
 bot.run(token, bot=True)
