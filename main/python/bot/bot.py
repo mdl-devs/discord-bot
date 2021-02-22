@@ -119,28 +119,9 @@ async def hub(ctx, name, steam_ID, tmp_ID):
      embed.add_field(name="Steam ID", value=steam_ID, inline=False)
      embed.add_field(name="Password", value="you will have a password sent to u when the drivers hub is published", inline=False)
      await ctx.send(embed=embed)
-@bot.command()
-async def partnerc(ctx, *, message):
-    await ctx.message.delete()
-    embed = discord.Embed(
-        title="ALLE GROUP PARTNER / PUBLIC CONVOY POSTING SYSTEM", color=0xFF0000)
-    embed.add_field(name="convoy info", value=message, inline=False)
-    await ctx.send(embed=embed)
 
 
-@bot.command()
-async def carl(ctx):
-   await ctx.message.delete()
-   await ctx.send(" Mr bot greeter   :rofl: nutter :smile:")
 
-
-#@bot.command()
-#async def speedy(ctx):
-   #await ctx.message.delete()
-   ##(" Im fast as f##k boiiii. *** look at my disco lights ***")
-   ##await ctx.send("its my brithday woooooo im another year older :partying_face: :partying_face: :partying_face: :partying_face: :partying_face: :partying_face: :partying_face: :partying_face:")
-   ##("https://cdn.discordapp.com/attachments/794887186990366750/801142872966561812/20210119153518_1.jpg")
-   #await ctx.send("https://cdn.discordapp.com/attachments/797843659957600266/809214826484203550/20210120004307_1.png")
 @bot.command()
 async def clear(ctx, limit: int = None):
     passed = 0
@@ -162,10 +143,6 @@ async def nuke(ctx, amount=1000):
     await ctx.send(f"{ctx.author.name}#{ctx.author.discriminator} ")
 
 
-@bot.command()
-async def sully(ctx):
-    await ctx.message.delete()
-    await ctx.send("ahh mr viper what do u need with mr viper")
 
 
 @bot.command()
@@ -462,7 +439,7 @@ async def convoy(ctx, Destination, Server, Start, Meet_time, Start_time, DLC, Ca
  await ctx.send("new convoy added to #our-events")
  #sends the convoy info to next convoy channel
  channel1 = bot.get_channel(794886155551637534)
- embed1 = discord.Embed(title="New Convoy on" f"{date}")
+ embed = discord.Embed(title="New Convoy on" f"{date}")
  embed.add_field(name="Destination", value=f"{Destination}", inline=False)
  embed.add_field(name="Start Location", value=f"{Start}", inline=False)
  embed.add_field(name="Convoy Meet Time", value=f"{Meet_time}", inline=False)
@@ -472,7 +449,7 @@ async def convoy(ctx, Destination, Server, Start, Meet_time, Start_time, DLC, Ca
  embed.add_field(name="Trailers", value=f"{Trailers}", inline=False)
  embed.add_field(name="No Time Zone", value=f"{No_time_zone}", inline=False)
  embed.add_field(name="TMP Event Page Link", value=f"{TMP}", inline=False)
- await channel1.send(embed=embed1)
+ await channel1.send(embed=embed)
  logchannel = bot.get_channel(794888270923300884)
  await logchannel.send(f"{ctx.author.name}#{ctx.author.discriminator} just added a convoy")
 
