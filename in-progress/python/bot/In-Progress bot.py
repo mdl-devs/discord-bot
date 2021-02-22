@@ -13,16 +13,15 @@ from discord.ext.commands import has_permissions, MissingPermissions
 token = 'ODAyNjgxODE0NDEzMzQ0ODA5.YAyxsQ.UYvvQk-gFHwtPWY0y542WnjBB-U'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 
+
 #Changes Presence
-
-
 @bot.event
 async def on_ready():
   await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"over the Alle Public Server"))
 
+
 #Help command
 bot.remove_command('help')
-
 
 @bot.command()
 async def help(ctx):
@@ -40,9 +39,8 @@ async def help(ctx):
                   value="atstrafficus, atstrafficusarc, atstrafficeu")
   await ctx.send(embed=embed)
 
+
 #Command for seeing [A'G] Upper Staff
-
-
 @bot.command()
 async def alleupperstaff(ctx):
     await ctx.message.delete()
@@ -67,9 +65,8 @@ async def alleupperstaff(ctx):
         url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
     await ctx.send(embed=embed)
 
+
 #Command for [A'G] Lower Staff
-
-
 @bot.command()
 async def allelowerstaff(ctx):
     await ctx.message.delete()
@@ -86,9 +83,8 @@ async def allelowerstaff(ctx):
         url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
     await ctx.send(embed=embed)
 
+
 #Command for VTC Information
-
-
 @bot.command()
 async def info(ctx):
     await ctx.message.delete()
@@ -106,9 +102,8 @@ async def info(ctx):
         url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
     await ctx.send(embed=embed)
 
+
 #Command for Applicants
-
-
 @bot.command()
 async def VTCapply(ctx):
     embed = discord.Embed(Title='Alle Driver Application', color=0xFF0000)
@@ -120,9 +115,8 @@ async def VTCapply(ctx):
         url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
     await ctx.send(embed=embed)
 
+
 #Experimental command for Server List
-
-
 @bot.command()
 async def servers(ctx):
  getserversURL = "https://api.truckersmp.com/v2/servers"
@@ -147,9 +141,8 @@ async def servers(ctx):
                     value=players + '/' + maxplayers, inline=True)
  await ctx.send(embed=embed)
 
+
  #Commands for Traffic
-
-
 @bot.command()
 async def traffic(ctx):
   getinfoURL = "https://traffic.krashnz.com/api/v2/public/server/ets2/sim1/top.json"
@@ -319,26 +312,40 @@ async def ATSTrafficEU(ctx):
     embed.add_field(name=name, value=congestion + '/' + drivers, inline=True)
   await ctx.send(embed=embed)
 
+
 #Command for Member Counts
-
-
 @bot.command()
-async def members(ctx):
- r = requests.get("https://api.truckersmp.com/v2/vtc/13006")
- data = r.json()
- members_count = r.json()['response']['members_count']
- print(members_count)
- embed = discord.Embed(title='Alle Members (WIP)', color=0xFF0000)
- embed.add_field(name="Logisitics Members", value=members_count, inline=True)
- embed.set_thumbnail(
-     url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
- embed.set_footer(
-     text="Bot code made by StarAssassin64#9196 and spock#0001")
- await ctx.send(embed=embed)
+async def drivers(ctx):
+  await ctx.message.delete()
+  mydb = mysql.connector.connect(
+      host="localhost",
+      user="root",
+      password="Fv4&4*JT61%8WGj&vwj",
+      database="alle_hub"
+  )
+  mycursor = mydb.cursor()
+  cursor = mydb.cursor()
+
+  mycursor.execute("SELECT name FROM users")
+  myresult = mycursor.fetchall()
+  cursor.execute("select count(name) from users;")
+  result = cursor.fetchall()
+  embed = discord.Embed(title="Drivers List", color=0xFF0000)
+  embed.add_field(name="List of drivers", value=myresult, inline=False)
+  embed.add_field(name="Total Number Of Drivers", value=result, inline=False)
+  #await ctx.send(tabulate(myresult, headers=['users'], tablefmt='psql'))
+  await ctx.send(embed=embed)
+  results = result
+
+  channel = bot.get_channel(794888270923300884)
+  embed1 = discord.Embed(title=f"{ctx.author.name}#{ctx.author.discriminator}",
+                         icon_url=ctx.author.avatar_url, color=0xFF0000)
+  embed1.add_field(name="This user  just checked the amount of drivers using ",
+                   value="`?drivers`", inline=False)
+  await channel.send(embed=embed1)
+
 
 #Gametime Command
-
-
 @bot.command()
 async def gametime(ctx):
   def transformTime(timestamp):
@@ -354,9 +361,8 @@ async def gametime(ctx):
       text="Bot code made by StarAssassin64#9196 and spock#0001")
   await ctx.send(embed=embed)
 
+
 #Command for Minecraft server Information
-
-
 @bot.command()
 @commands.has_role('Alle Group')
 async def minecraftinfo(ctx):
@@ -371,5 +377,99 @@ async def minecraftinfo(ctx):
         text="Bot code made by StarAssassin64#9196 and spock#0001")
     await ctx.send(embed=embed)
 
+
+#Clear Commands
+@bot.command()
+async def clear(ctx, limit: int = None):
+    passed = 0
+    failed = 0
+    async for msg in ctx.message.channel.history(limit=limit):
+        if msg.author.id == bot.user.id:
+            try:
+                await msg.delete()
+                passed += 1
+            except:
+                failed += 1
+    print(f"[Complete] Removed {passed} messages with {failed} fails")
+
+@bot.command()
+async def nuke(ctx, amount=1000):
+    await ctx.channel.purge(limit=amount)
+    await ctx.message.delete()
+    await ctx.send(f"{ctx.author.name}#{ctx.author.discriminator} ")
+
+
+#Support Command
+@bot.command()
+async def supportmessage(ctx, user: discord.User, *, message):
+    #user = bot.get_user(755493797160288286)
+    await ctx.message.delete()
+    await user.send(f"{ctx.author.name}#{ctx.author.discriminator} just sent u a message contents = {message}")
+
+
+#Player report command
+@bot.command()
+async def bplayer(ctx, name, discordname, tmpid, steamid):
+  embed = discord.Embed(
+      title="New Player Issue Report Player Name" "=" f"{name}")
+  embed.add_field(name="Discord Tag/Name",
+                  value=f"{discordname}", inline=False)
+  embed.add_field(name="Tmp ID", value=f"{tmpid}", inline=False)
+  embed.add_field(name="Steam ID", value=f"{steamid}", inline=False)
+  await ctx.send(embed=embed)
+
+
+#Ping Command
+@bot.command()
+async def ping(ctx):
+    await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
+
+
+#Kick Command
+@bot.command(pass_context=True)
+@commands.has_permissions(administrator=True)
+async def kick(ctx, member: discord.Member, *, reason=None):
+  await member.kick(reason=reason)
+  await ctx.send(f'{member.mention} has been kicked for the following reason{reason}')
+
+
+#Ban Command
+@bot.command(pass_context=True)
+@commands.has_permissions(administrator=True)
+async def ban(ctx, member: discord.Member, *, reason=None):
+    await member.ban(reason=reason)
+    await ctx.send(f'{member.mention} has been banned for the following reason: {reason}')
+
+
+#Unban Command
+bot.command(pass_context=True)
+@commands.has_permissions(administrator=True)
+async def unban(ctx, *, member):
+    banned_users = await ctx.guild.bans()
+    member_name, member_discriminator = member.split("#")
+    for ban_entry in banned_users:
+        user = ban_entry.user
+        if (user.name, user.discriminator) == (member_name, member_discriminator):
+            await ctx.guild.unban(user)
+            await ctx.send(f"unbanned {user.mention}")
+
+
+#Command for force nickname command
+@bot.command(pass_context=True)
+@commands.has_permissions(administrator=True)
+async def chnick(ctx, member: discord.Member, *, nick):
+    await member.edit(nick=nick)
+    await ctx.send(f'Nickname was changed for {member.mention} ')
+
+
+#Welcome Message
+#@client.event()
+#async def on_member_join(member):
+#  embed=discord.Embed(Title='Welcome' + member.name, color=0xFF0000)
+# embed.add_field(value='Here are some options of what you can do:', inline=True)
+#  embed.add_field(name='Want to join in?', value='Check ' + discord.TextChannel.mention('811825821026222100'), inline=True)
+#  embed.add_field(name='Server Roles', value='See ' + discord.TextChannel.mention('797201363029065799'), inline=True)
+#  embed.add_field(name='Questions?', value=' sernd a DM to ' + discord.member.mention('575252669443211264'), inline=True)
+#  await ctx.send
 
 bot.run(token, bot=True)
