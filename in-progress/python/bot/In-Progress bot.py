@@ -286,7 +286,7 @@ async def gametime(ctx):
   
 #Command for Minecraft server Information
 @bot.command()
-@command.has_role('Alle Group')
+@commands.has_role('Alle Group')
 async def minecraftinfo(ctx):
     embed = discord.Embed(title='Minecraft Server Info', color=0xFF0000)
     embed.add_field(name='Minecraft Small Server', value='176.57.144.138 | 4 slots', inline=False)
