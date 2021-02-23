@@ -8,6 +8,7 @@ from pip._vendor import requests
 import datetime
 import json
 from discord.ext.commands import has_permissions, MissingPermissions
+import mysql.connector
 
 # this is the information needed for the bot, prefix is $. Just set up to say that the bot is Working as a Test In Progress
 token = 'ODAyNjgxODE0NDEzMzQ0ODA5.YAyxsQ.UYvvQk-gFHwtPWY0y542WnjBB-U'
@@ -462,14 +463,5 @@ async def chnick(ctx, member: discord.Member, *, nick):
     await ctx.send(f'Nickname was changed for {member.mention} ')
 
 
-#Welcome Message
-#@client.event()
-#async def on_member_join(member):
-#  embed=discord.Embed(Title='Welcome' + member.name, color=0xFF0000)
-# embed.add_field(value='Here are some options of what you can do:', inline=True)
-#  embed.add_field(name='Want to join in?', value='Check ' + discord.TextChannel.mention('811825821026222100'), inline=True)
-#  embed.add_field(name='Server Roles', value='See ' + discord.TextChannel.mention('797201363029065799'), inline=True)
-#  embed.add_field(name='Questions?', value=' sernd a DM to ' + discord.member.mention('575252669443211264'), inline=True)
-#  await ctx.send
 
 bot.run(token, bot=True)
