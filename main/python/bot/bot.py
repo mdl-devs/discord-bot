@@ -19,7 +19,7 @@ token = 'NzcwMzQzMjM1MjE3Nzg0ODYy.X5cMCw.stMS01QFVChvz-8OQchATM8yTKk'
 bot = commands.Bot(commands.when_mentioned_or('?'))
 # no longer needed game = discord.Game('Alle groups server')
 
-truckerbd = 'Jamesmay#0001'
+truckerbd = 'spock#0001'
 
 
 @bot.command()
@@ -29,11 +29,11 @@ async def info(ctx):
   embed.add_field(name="CEO", value="Sully#3056 ", inline=False)
   embed.add_field(
       name="COO", value="CarlJL2006#8589,Speedy#2286", inline=False)
-  embed.add_field(name="CCO", value="jamesmay#8635,LC#2328", inline=False)
+  embed.add_field(name="CCO", value=truckerbd + ",LC#2328", inline=False)
   embed.add_field(name="DIRECTOR OF AGRICULTURE",
                   value="NoahTheFox#4148", inline=False)
   embed.add_field(name="TRANSPORT MANGER", value="lewis#4672", inline=False)
-  embed.add_field(name="EVENT MANAGER", value="TRUCKERBEAN#0001", inline=False)
+  embed.add_field(name="EVENT MANAGER", value="Sani#0189", inline=False)
   embed.add_field(name="DIRECTOR OF DEVELOPEMENT",
                   value="_Guuuty#8864", inline=False)
   embed.add_field(name="DIRECTOR OF HUMAN RESOURCES",
@@ -302,7 +302,7 @@ async def servers(ctx):
                        url="https://traffic.krashnz.com/", color=0xFF0000)
  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
  embed.set_footer(
-     text="Bot Devloped by  StarAssassin64#9196 and Jamesmay#0001")
+     text="Bot Devloped by  StarAssassin64#9196 and " + truckerbd)
  for server in data:
     serverid = server["id"]
     game = server["game"]
@@ -331,7 +331,7 @@ async def traffic(ctx):
                        url="https://traffic.krashnz.com/", color=0xFF0000)
  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
  embed.set_footer(
-     text="Bot Devloped by  StarAssassin64#9196 and Jamesmay#0001")
+     text="Bot Devloped by  StarAssassin64#9196 and" + truckerbd)
  for top in data["top"]:
     id = top["id"]
     name = top["name"]
@@ -375,7 +375,7 @@ async def traffic3(ctx):
                        url="https://traffic.krashnz.com/", color=0xFF0000)
  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
  embed.set_footer(
-     text="Bot Devloped by  StarAssassin64#9196 and Jamesmay#0001")
+     text="Bot Devloped by  StarAssassin64#9196 and " + truckerbd)
  for top in data["top"]:
     id = top["id"]
     name = top["name"]
@@ -515,14 +515,6 @@ async def check(ctx, nameid):
       async with cs.get('http://51.195.223.137/users?name={nameid}') as r:
         res = await r.json()
         await ctx.send(res)
-
-
-@bot.command()
-async def cat(ctx):
-    await ctx.message.delete()
-    await ctx.send('do u know this cat if so take it back NOW!!!')
-    await ctx.send('https://media.discordapp.net/attachments/794887127086530570/803393677207535647/gnnhhnhg.png?width=485&height=595')
-
 
 @bot.command()
 async def job(ctx):
