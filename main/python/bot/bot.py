@@ -417,7 +417,7 @@ async def job(ctx):
 
 
 
-
+#to fire users and drivers
 @bot.command()
 async def fire(ctx, *, name):
  await ctx.message.delete()
