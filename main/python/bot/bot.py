@@ -49,22 +49,7 @@ async def info(ctx):
   await ctx.message.delete()
 
 
-@bot.command()
-async def nextconvoy(ctx):
-  embed = discord.Embed(title="ALLE GROUPS NEXT CONVOY", color=0xFF0000)
-  embed.add_field(name="DATE", value=f"N/A", inline=True)
-  embed.add_field(name="SERVER", value=f"N/A", inline=False)
-  embed.add_field(name="ORIGIN", value=f"N/A ", inline=False)
-  embed.add_field(name="DESTINATION", value=f"N/A", inline=False)
-  embed.add_field(name="MEET", value=f"N/A", inline=False)
-  embed.add_field(name="DEPART", value=f"N/A", inline=False)
-  embed.add_field(name="CARS", value=f"N/A", inline=False)
-  embed.add_field(name="TRAILERS", value=f"N/A", inline=False)
-  embed.add_field(name="NO TIME ZONE", value=f"N/A", inline=False)
-  embed.add_field(name="TMP EVENT SIGN UP ", value=f"N/A", inline=False)
-  embed = discord.Embed(description="do `announce1` or `convoy` to add a convoy xD. But pls note that at the current time CONVOYS ARE CANCELLED. You are not seeing the convoy info due to convoys being stopped. :) P.S the next couple of public convoys are `25th-january-prime-convoy` `26th-january-rlc-convoy` `28th-january-truckers-chn-convoy` hope to see ya at them. ", inline=False)
-  await ctx.send(embed=embed)
-  await ctx.message.delete()
+
 
 
 @bot.command()
@@ -302,7 +287,7 @@ async def servers(ctx):
                        url="https://traffic.krashnz.com/", color=0xFF0000)
  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
  embed.set_footer(
-     text="Bot Devloped by  StarAssassin64#9196 and " + truckerbd)
+     text="Bot code developed by Alle Devs")
  for server in data:
     serverid = server["id"]
     game = server["game"]
@@ -321,70 +306,7 @@ async def servers(ctx):
 # command ofa
 
 
-@bot.command()
-async def traffic(ctx):
- await ctx.message.delete()
- getserversURL = "https://traffic.krashnz.com/api/v2/public/server/ets2/sim1/top.json"
- r = requests.get(getserversURL)
- data = r.json()["response"]
- embed = discord.Embed(title="TMP Traffic Status (SIM 1)",
-                       url="https://traffic.krashnz.com/", color=0xFF0000)
- embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
- embed.set_footer(
-     text="Bot Devloped by  StarAssassin64#9196 and" + truckerbd)
- for top in data["top"]:
-    id = top["id"]
-    name = top["name"]
-    country = top["country"]
-    players = str(top["players"])
-    severity = top["severity"]
-    embed.add_field(name=name,
-                    value=severity + '' + ':octagonal_sign: ' + "(" + players + ")", inline=True)
- await ctx.send(embed=embed)
 
-
-@bot.command()
-async def traffic2(ctx):
- await ctx.message.delete()
- getserversURL = "https://traffic.krashnz.com/api/v2/public/server/ets2/sim2/top.json"
- r = requests.get(getserversURL)
- data = r.json()["response"]
- embed = discord.Embed(title="TMP Traffic Status (SIM 2)",
-                       url="https://traffic.krashnz.com/", color=0xFF0000)
- embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
- embed.set_footer(
-     text="Bot Devloped by  StarAssassin64#9196 and " + "" + truckerbd)
- for top in data["top"]:
-    id = top["id"]
-    name = top["name"]
-    country = top["country"]
-    players = str(top["players"])
-    severity = top["severity"]
-    embed.add_field(name=name,
-                    value=severity + '' + ':octagonal_sign: ' + "(" + players + ")", inline=True)
- await ctx.send(embed=embed)
-
-
-@bot.command()
-async def traffic3(ctx):
- await ctx.message.delete()
- getserversURL = "https://traffic.krashnz.com/api/v2/public/server/ets2/sim3/top.json"
- r = requests.get(getserversURL)
- data = r.json()["response"]
- embed = discord.Embed(title="TMP Traffic Status (SIM 3)",
-                       url="https://traffic.krashnz.com/", color=0xFF0000)
- embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
- embed.set_footer(
-     text="Bot Devloped by  StarAssassin64#9196 and " + truckerbd)
- for top in data["top"]:
-    id = top["id"]
-    name = top["name"]
-    country = top["country"]
-    players = str(top["players"])
-    severity = top["severity"]
-    embed.add_field(name=name,
-                    value=severity + '' + ':yellow_circle: : ' + "(" + players + ")", inline=True)
- await ctx.send(embed=embed)
 
 
 #@bot.command()
@@ -419,40 +341,7 @@ async def ping(ctx):
     await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
 
 
-@bot.command()
-@commands.has_role('''A'G | Staff''')
-async def convoy(ctx, Destination, Server, Start, Meet_time, Start_time, DLC, Cars, Trailers, No_time_zone, TMP, date):
- await ctx.message.delete()
- mydb = mysql.connector.connect(
-     host="localhost",
-     user="root",
-     password="Fv4&4*JT61%8WGj&vwj",
-     database="convoys"
- )
- mycursor = mydb.cursor()
 
- sql = "INSERT INTO convoyinfo (Destination, Server, Start, Meet_time, Start_time, DLC, Cars, Trailers, No_time_zone, TMP, date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
- val = (f"{Destination}", f"{Server}", f"{Start}",
-        f"{Meet_time}", f"{Start_time}", f"{DLC}", f"{Cars}", f"{Trailers}", f"{No_time_zone}", f"{TMP}", f"{date}")
- mycursor.execute(sql, val)
-
- mydb.commit()
- await ctx.send("new convoy added to #our-events")
- #sends the convoy info to next convoy channel
- channel1 = bot.get_channel(794886155551637534)
- embed = discord.Embed(title="New Convoy on" f"{date}")
- embed.add_field(name="Destination", value=f"{Destination}", inline=False)
- embed.add_field(name="Start Location", value=f"{Start}", inline=False)
- embed.add_field(name="Convoy Meet Time", value=f"{Meet_time}", inline=False)
- embed.add_field(name="Start Time", value=f"{Start_time}", inline=False)
- embed.add_field(name="DLC", value=f"{DLC}", inline=False)
- embed.add_field(name="Cars", value=f"{Cars}", inline=False)
- embed.add_field(name="Trailers", value=f"{Trailers}", inline=False)
- embed.add_field(name="No Time Zone", value=f"{No_time_zone}", inline=False)
- embed.add_field(name="TMP Event Page Link", value=f"{TMP}", inline=False)
- await channel1.send(embed=embed)
- logchannel = bot.get_channel(794888270923300884)
- await logchannel.send(f"{ctx.author.name}#{ctx.author.discriminator} just added a convoy")
 
 #kick command
 
@@ -523,29 +412,10 @@ async def job(ctx):
     await ctx.send(embed=embed)
 
 
-@bot.command()
-async def helpconvoy(ctx):
-    await ctx.message.delete()
-    await ctx.send("`?convoy 19/01/2021 sim-3 test-location test-location test-location 7pm no yes testing testing` the command structure is like this *** date, server, origin, destination, meet, depart, cars, trailers, no time zone link, tmp events page link. *** ` YOU MUST MAKE SURE TO HAVE IT IN THAT ORDER ` *** please have `-` between words e.g no-trailers-please ***")
 
 
-#remove command coming soon
-@bot.command()
-async def removec(ctx, *, date):
- await ctx.message.delete()
- mydb = mysql.connector.connect(
-     host="localhost",
-     user="root",
-     password="Fv4&4*JT61%8WGj&vwj",
-     database="convoys"
- )
- mycursor = mydb.cursor()
 
- sql = f"DELETE FROM convoyinfo WHERE DATE = '{date}'"
- mycursor.execute(sql)
 
- mydb.commit()
-#
 
 
 @bot.command()

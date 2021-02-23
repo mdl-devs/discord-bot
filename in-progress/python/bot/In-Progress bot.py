@@ -30,7 +30,7 @@ async def help(ctx):
   embed.set_thumbnail(
       url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   embed.add_field(name='Alle Group Info',
                   value="alleupperstaff, allelowerstaff, info, vtcapply, members", inline=False)
   embed.add_field(name='TMP Server info', value="servers", inline=False)
@@ -127,7 +127,7 @@ async def servers(ctx):
                        url="https://traffic.krashnz.com/", color=0xFF0000)
  embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
  embed.set_footer(
-     text="Bot code made by StarAssassin64#9196 and spock#0001")
+     text="Bot code developed by Alle Devs")
  for server in data:
     game = server["game"]
     name = server["shortname"]
@@ -150,7 +150,7 @@ async def traffic(ctx):
   embed = discord.Embed(title="TMP ETS2 Sim 1 Status", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   r = requests.get(getinfoURL)
   data = r.json()["response"]
   for top in data['top']:
@@ -167,7 +167,7 @@ async def traffic2(ctx):
   embed = discord.Embed(title="TMP ETS2 Sim 2 Status", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   r = requests.get(getSim2TFC)
   data = r.json()['response']
   for top in data['top']:
@@ -184,7 +184,7 @@ async def traffic3(ctx):
   embed = discord.Embed(title="TMP ETS2 Sim 3 Status", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   r = requests.get(getSim2TFC)
   data = r.json()['response']
   for top in data['top']:
@@ -201,7 +201,7 @@ async def trafficARC(ctx):
   embed = discord.Embed(title="TMP ETS2 EU Arcade Status", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   r = requests.get(getSim2TFC)
   data = r.json()['response']
   for top in data['top']:
@@ -218,7 +218,7 @@ async def trafficUS(ctx):
   embed = discord.Embed(title="TMP ETS2 US Sim Status", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   r = requests.get(getSim2TFC)
   data = r.json()['response']
   for top in data['top']:
@@ -235,7 +235,7 @@ async def trafficPM(ctx):
   embed = discord.Embed(title="TMP Promods Sim Status", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   r = requests.get(getSim2TFC)
   data = r.json()['response']
   for top in data['top']:
@@ -252,7 +252,7 @@ async def trafficPMARC(ctx):
   embed = discord.Embed(title="TMP Promods Arcade Status", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   r = requests.get(getSim2TFC)
   data = r.json()['response']
   for top in data['top']:
@@ -269,7 +269,7 @@ async def ATSTrafficUS(ctx):
   embed = discord.Embed(title="TMP ATS US Sim Status", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   r = requests.get(getSim2TFC)
   data = r.json()['response']
   for top in data['top']:
@@ -286,7 +286,7 @@ async def ATSTrafficUSArc(ctx):
   embed = discord.Embed(title="TMP ATS US Arcade Status", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   r = requests.get(getSim2TFC)
   data = r.json()['response']
   for top in data['top']:
@@ -303,7 +303,7 @@ async def ATSTrafficEU(ctx):
   embed = discord.Embed(title="TMP ATS EU Sim Status", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   r = requests.get(getSim2TFC)
   data = r.json()['response']
   for top in data['top']:
@@ -359,7 +359,7 @@ async def gametime(ctx):
   embed.add_field(name='Game Time', value=time, inline=True)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code made by StarAssassin64#9196 and spock#0001")
+      text="Bot code developed by Alle Devs")
   await ctx.send(embed=embed)
 
 
@@ -375,7 +375,7 @@ async def minecraftinfo(ctx):
     embed.set_thumbnail(
         url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
     embed.set_footer(
-        text="Bot code made by StarAssassin64#9196 and spock#0001")
+        text="Bot code developed by Alle Devs")
     await ctx.send(embed=embed)
 
 
