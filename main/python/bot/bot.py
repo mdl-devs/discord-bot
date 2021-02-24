@@ -22,31 +22,6 @@ bot = commands.Bot(commands.when_mentioned_or('?'))
 truckerbd = 'spock#0001'
 
 
-@bot.command()
-async def info(ctx):
-  await ctx.message.delete()
-  embed = discord.Embed(title="ALLE GROUP", color=0xFF0000)
-  embed.add_field(name="CEO", value="Sully#3056 ", inline=False)
-  embed.add_field(
-      name="COO", value="CarlJL2006#8589,Speedy#2286", inline=False)
-  embed.add_field(name="CCO", value=truckerbd + ",LC#2328", inline=False)
-  embed.add_field(name="DIRECTOR OF AGRICULTURE",
-                  value="NoahTheFox#4148", inline=False)
-  embed.add_field(name="TRANSPORT MANGER", value="lewis#4672", inline=False)
-  embed.add_field(name="EVENT MANAGER", value="Sani#0189", inline=False)
-  embed.add_field(name="DIRECTOR OF DEVELOPEMENT",
-                  value="_Guuuty#8864", inline=False)
-  embed.add_field(name="DIRECTOR OF HUMAN RESOURCES",
-                  value="Desmond Doss#9332", inline=False)
-  embed.add_field(name="DEX", value="Yzzoxi#3590", inline=False)
-  embed.add_field(
-      name="DEV TEAM", value="Adriano Trezub#3845, StarAssassin64#9196", inline=False)
-  embed.add_field(name="HUMAN RESOURCES",
-                  value="Saà¹‡à¹‡à¹‡ni#8080", inline=False)
-  embed.add_field(name="EVENT / MEDIA TEAM",
-                  value="currently hiring", inline=False)
-  await ctx.send(embed=embed)
-  await ctx.message.delete()
 
 
 
