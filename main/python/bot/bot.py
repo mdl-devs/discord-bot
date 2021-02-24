@@ -21,23 +21,10 @@ bot = commands.Bot(commands.when_mentioned_or('?'))
 
 truckerbd = 'spock#0001'
 
-
-
-
-
-
-
-
-
 @bot.command()
 async def test(ctx, *, message):
     embed = discord.Embed(description=message, color=0xFF0000)
     await ctx.send(embed=embed)
-
-
-
-
-
 
 @bot.command()
 async def hub(ctx, name, steam_ID, tmp_ID, password):
@@ -64,20 +51,6 @@ async def hub(ctx, name, steam_ID, tmp_ID, password):
     embed.add_field(
         name="Password", value="what ever u set it to :wink:", inline=False)
     await ctx.send(embed=embed)
-
-
-
-
-
-
-@bot.command()
-async def nuke(ctx, amount=1000):
-    await ctx.channel.purge(limit=amount)
-    await ctx.message.delete()
-    await ctx.send(f"{ctx.author.name}#{ctx.author.discriminator} ")
-
-
-
 
 @bot.command()
 async def dm(ctx, user: discord.User, *, message):
@@ -201,93 +174,11 @@ async def members(ctx):
  members_count = r.json()['response']['members_count']
  await ctx.send(f'The amount of drivers and staff in this vtc is {members_count}')
 
-
-
-
-
-@bot.command()
-async def servers(ctx):
- await ctx.message.delete()
- getserversURL = "https://api.truckersmp.com/v2/servers"
- r = requests.get(getserversURL)
- data = r.json()["response"]
- embed = discord.Embed(title="TMP Server Status",
-                       url="https://traffic.krashnz.com/", color=0xFF0000)
- embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
- embed.set_footer(
-     text="Bot code developed by Alle Devs")
- for server in data:
-    serverid = server["id"]
-    game = server["game"]
-    name = server["shortname"]
-    players = str(server["players"])
-    queue = str(server["queue"])
-    maxplayers = str(server["maxplayers"])
-    online = (server["online"])
-    if online:
-      online = " :white_check_mark:"
-    else:
-      online = " :x:"
-    embed.add_field(name=game + ": " + name + online,
-                    value=players + '/' + maxplayers, inline=True)
- await ctx.send(embed=embed)
-# command ofa
-
-
-
-
-
-
-
+# command o
 
 @bot.command()
 async def ping(ctx):
     await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
-
-
-
-
-#kick command
-
-
-@bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
-async def kick(ctx, member: discord.Member, *, reason=None):
-  await member.kick(reason=reason)
-  await ctx.send(f'{member.mention} has been kicked for the following reason{reason}')
-
-
-#use this to ban members / users
-
-
-@bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
-async def ban(ctx, member: discord.Member, *, reason=None):
-    await member.ban(reason=reason)
-    await ctx.send(f'{member.mention} has been banned for the following reason: {reason}')
-
-#use this to unban banned members
-
-
-@bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
-async def unban(ctx, *, member):
-    banned_users = await ctx.guild.bans()
-    member_name, member_discriminator = member.split("#")
-    for ban_entry in banned_users:
-        user = ban_entry.user
-        if (user.name, user.discriminator) == (member_name, member_discriminator):
-            await ctx.guild.unban(user)
-            await ctx.send(f"unbanned {user.mention}")
-
-# ust this to change nicknames of users. In your discord server.
-
-
-@bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
-async def chnick(ctx, member: discord.Member, *, nick):
-    await member.edit(nick=nick)
-    await ctx.send(f'Nickname was changed for {member.mention} ')
 
 
 @bot.command()
@@ -308,14 +199,6 @@ async def check(ctx, nameid):
       async with cs.get('http://51.195.223.137/users?name={nameid}') as r:
         res = await r.json()
         await ctx.send(res)
-
-
-
-
-
-
-
-
 
 #to fire users and drivers **(working) **
 @bot.command()
