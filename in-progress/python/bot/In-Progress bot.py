@@ -11,7 +11,7 @@ from discord.ext.commands import has_permissions, MissingPermissions
 import mysql.connector
 
 # this is the information needed for the bot, prefix is $. Just set up to say that the bot is Working as a Test In Progress
-token = 'Private Info'
+token = 'PRIVATE INFO'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 
 
@@ -23,6 +23,7 @@ async def on_ready():
 
 #Help command
 bot.remove_command('help')
+
 
 @bot.command()
 async def help(ctx):
@@ -38,6 +39,8 @@ async def help(ctx):
                   value="traffic, traffic2, traffic3, trafficarc, trafficus, trafficpm, trafficpmarc", inline=False)
   embed.add_field(name='ATS Server traffic',
                   value="atstrafficus, atstrafficusarc, atstrafficeu")
+  embed.add_field(name='Administation Commands (Admin Only)',
+                  value='clear, ')
   await ctx.send(embed=embed)
 
 
@@ -47,39 +50,19 @@ async def alleupperstaff(ctx):
     await ctx.message.delete()
     embed = discord.Embed(Title='Alle Group Upper Staff', color=0xFF0000)
     embed.add_field(name="CEO", value="Sully#3056", inline=False)
-    embed.add_field(
-        name="COO", value="CarlJL2006#8589 and Dr. Doof#1135", inline=False)
-    embed.add_field(name="CCO", value="Speedy#2286 and LC#2328", inline=False)
+    embed.add_field(name="COO",
+                    value="CarlJL2006#8589, ProjektSpeedy#2286, and Dr. Doof#1135", inline=False)
+    embed.add_field(name="CCO", value="spock#0001 and LC#2328", inline=False)
     embed.add_field(name="DIRECTOR OF AGRICULTURE",
                     value="NoahTheFox#4148", inline=False)
     embed.add_field(name="DIRECTOR OF TRANSPORT",
                     value="lewis#4672", inline=False)
     embed.add_field(name="DIRECTOR OF EVENTS/MEDIA",
-                    value="TRUCKERBEAN#2982", inline=False)
+                    value="Sani#0189", inline=False)
     embed.add_field(name="DIRECTOR OF DEVELOPEMENT",
                     value="_Guuuty#8864", inline=False)
-    embed.add_field(name="DIRECTOR OF HUMAN RESOURCES",
-                    value="Murphy#2843", inline=False)
     embed.add_field(name='DIRECTOR OF EXAMINATIONS',
                     value='Yzzoxi#3590', inline=False)
-    embed.set_thumbnail(
-        url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
-    await ctx.send(embed=embed)
-
-
-#Command for [A'G] Lower Staff
-@bot.command()
-async def allelowerstaff(ctx):
-    await ctx.message.delete()
-    embed = discord.Embed(Title='Alle Group Lower Staff', color=0xFF0000)
-    embed.add_field(name="Development Team",
-                    value="Adriano Trezub#3845, DaExodiaヰガび™#3621, StarAssassin64#9196", inline=False)
-    embed.add_field(name='Human Resources', value='Sani#4113', inline=False)
-    embed.add_field(name='Driver Supervisor', value='Maki#9235', inline=False)
-    embed.add_field(name='Department Manager',
-                    value='7celverboys#1346', inline=False)
-    embed.add_field(name='Event/Media Team',
-                    value='Vacant | Open for Applicants', inline=False)
     embed.set_thumbnail(
         url='https://alle-group.com/wp-content/uploads/2021/01/cropped-alle.png')
     await ctx.send(embed=embed)
@@ -142,8 +125,9 @@ async def servers(ctx):
                     value=players + '/' + maxplayers, inline=True)
  await ctx.send(embed=embed)
 
-
  #Commands for Traffic
+
+
 @bot.command()
 async def traffic(ctx):
   getinfoURL = "https://traffic.krashnz.com/api/v2/public/server/ets2/sim1/top.json"
@@ -364,8 +348,8 @@ async def gametime(ctx):
 
 
 #Command for Minecraft server Information
-@bot.command()
-@commands.has_role('Alle Group')
+@bot.command(pass_context=True)
+@commands.has_role(794865933487046677)
 async def minecraftinfo(ctx):
     embed = discord.Embed(title='Minecraft Server Info', color=0xFF0000)
     embed.add_field(name='Minecraft Small Server',
@@ -380,20 +364,20 @@ async def minecraftinfo(ctx):
 
 
 #Clear Commands
-@bot.command()
+@bot.command(pass_context=True)
+@commands.has_permissions(manage_messages=True)
 async def clear(ctx, limit: int = None):
-    passed = 0
-    failed = 0
-    async for msg in ctx.message.channel.history(limit=limit):
-        if msg.author.id == bot.user.id:
-            try:
-                await msg.delete()
-                passed += 1
-            except:
-                failed += 1
-    print(f"[Complete] Removed {passed} messages with {failed} fails")
+  await ctx.message.delete()
+  await ctx.channel.purge(limit=limit)
+  await ctx.send(f'Deleted {limit} messages')
+  channel = bot.get_channel(794888270923300884)
+  await channel.send(f"{ctx.author.name}#{ctx.author.discriminator} just purged a channel by {limit} messages")
 
-@bot.command()
+#nuke command
+
+
+@bot.command(pass_context=True)
+@commands.has_permissions(manage_messages=True)
 async def nuke(ctx, amount=1000):
     await ctx.channel.purge(limit=amount)
     await ctx.message.delete()
@@ -401,7 +385,8 @@ async def nuke(ctx, amount=1000):
 
 
 #Support Command
-@bot.command()
+@bot.command(pass_contex=True)
+@commands.has_permissions(administrator=True)
 async def supportmessage(ctx, user: discord.User, *, message):
     #user = bot.get_user(755493797160288286)
     await ctx.message.delete()
@@ -443,7 +428,7 @@ async def ban(ctx, member: discord.Member, *, reason=None):
 
 
 #Unban Command
-bot.command(pass_context=True)
+@bot.command(pass_context=True)
 @commands.has_permissions(administrator=True)
 async def unban(ctx, *, member):
     banned_users = await ctx.guild.bans()
@@ -461,7 +446,6 @@ async def unban(ctx, *, member):
 async def chnick(ctx, member: discord.Member, *, nick):
     await member.edit(nick=nick)
     await ctx.send(f'Nickname was changed for {member.mention} ')
-
 
 
 bot.run(token, bot=True)
