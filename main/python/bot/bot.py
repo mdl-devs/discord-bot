@@ -18,20 +18,15 @@ from discord.ext.commands import CommandNotFound
 token = 'Private Info'
 bot = commands.Bot(commands.when_mentioned_or('?'))
 # no longer needed game = discord.Game('Alle groups server')
-
 truckerbd = 'spock#0001'
 
 # a simple test message command
-
-
 @bot.command()
 async def test(ctx, *, message):
     embed = discord.Embed(description=message, color=0xFF0000)
     await ctx.send(embed=embed)
 
 #make user account for the alle hub
-
-
 @bot.command()
 async def hub(ctx, name, steam_ID, tmp_ID, password):
     await ctx.message.delete()
@@ -59,8 +54,6 @@ async def hub(ctx, name, steam_ID, tmp_ID, password):
     await ctx.send(embed=embed)
 
 #dm users by ping
-
-
 @bot.command()
 async def dm(ctx, user: discord.User, *, message):
     #user = bot.get_user(755493797160288286)
@@ -68,8 +61,6 @@ async def dm(ctx, user: discord.User, *, message):
     await user.send(f"{ctx.author.name}#{ctx.author.discriminator} just sent u a message contents = {message}")
 
 #to add a new driver to the vtc
-
-
 @bot.command()
 @commands.has_role('Human Resources')
 async def add(ctx, steamid, tmpid, name):
@@ -111,8 +102,6 @@ async def add(ctx, steamid, tmpid, name):
  await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{results} drivers"))
 
 #dev command
-
-
 @bot.command()
 async def dev1(ctx):
   if ctx.message.author.server_permissions.administrator:
@@ -133,8 +122,6 @@ async def dev1(ctx):
    await ctx.send(tabulate(myresult, headers=['users'], tablefmt='psql'))
 
 #shows the amount of drivers in our database in the VTC
-
-
 @bot.command()
 async def drivers(ctx):
   await ctx.message.delete()
@@ -156,7 +143,6 @@ async def drivers(ctx):
   #await ctx.send(tabulate(myresult, headers=['users'], tablefmt='psql'))
   await ctx.send(embed=embed)
   #results = result
-
   #channel = bot.get_channel(794888270923300884)
   #embed1 = discord.Embed(title=f"{ctx.author.name}#{ctx.author.discriminator}",
   # icon_url=ctx.author.avatar_url, color=0xFF0000)
@@ -165,8 +151,6 @@ async def drivers(ctx):
   #await channel.send(embed=embed1)
 
 #on ready showing presence etc..
-
-
 @bot.event
 async def on_ready():
    print("My body is ready")
@@ -188,8 +172,6 @@ async def ping(ctx):
     await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
 
 #status command for devs only
-
-
 @bot.command()
 async def statusapi(ctx):
     await ctx.message.delete()
@@ -201,8 +183,6 @@ async def statusapi(ctx):
     await ctx.send("https://tenor.com/view/lifeissohard-problems-life-homer-homer-simpson-gif-13342474")
 
 #check if a driver is on the API (currently not working)
-
-
 @bot.command()
 async def check(ctx, nameid):
     await ctx.message.delete()
@@ -212,8 +192,6 @@ async def check(ctx, nameid):
         await ctx.send(res)
 
 #to fire users and drivers **(working) **
-
-
 @bot.command()
 async def fire(ctx, *, name):
  await ctx.message.delete()
