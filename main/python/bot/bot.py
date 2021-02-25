@@ -15,7 +15,7 @@ import traceback
 import sys
 from discord.ext.commands import CommandNotFound
 
-token = 'NzcwMzQzMjM1MjE3Nzg0ODYy.X5cMCw.stMS01QFVChvz-8OQchATM8yTKk'
+token = 'Private Info'
 bot = commands.Bot(commands.when_mentioned_or('?'))
 # no longer needed game = discord.Game('Alle groups server')
 
