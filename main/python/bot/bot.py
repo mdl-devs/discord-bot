@@ -249,4 +249,9 @@ async def help(ctx):
     await ctx.send(embed=embed)
 
 
+@bot.command()
+async def status(self, ctx):
+    await ctx.send("Visit our status page to see our systems status https://allegroup.statuspage.io/")
+
+
 bot.run(token, bot=True)
