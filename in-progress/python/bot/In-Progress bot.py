@@ -409,15 +409,15 @@ async def supportmessage(ctx, user: discord.User, *, message):
 
 
 #Player report command
-@bot.command()
-async def bplayer(ctx, name, discordname, tmpid, steamid):
-  embed = discord.Embed(
-      title="New Player Issue Report Player Name" "=" f"{name}")
-  embed.add_field(name="Discord Tag/Name",
-                  value=f"{discordname}", inline=False)
-  embed.add_field(name="Tmp ID", value=f"{tmpid}", inline=False)
-  embed.add_field(name="Steam ID", value=f"{steamid}", inline=False)
-  await ctx.send(embed=embed)
+#@bot.command()
+#async def bplayer(ctx, name, discordname, tmpid, steamid):
+#  embed = discord.Embed(
+#      title="New Player Issue Report Player Name" "=" f"{name}")
+#  embed.add_field(name="Discord Tag/Name",
+#                  value=f"{discordname}", inline=False)
+#  embed.add_field(name="Tmp ID", value=f"{tmpid}", inline=False)
+#  embed.add_field(name="Steam ID", value=f"{steamid}", inline=False)
+#  await ctx.send(embed=embed)
 
 
 #Ping Command
