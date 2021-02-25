@@ -21,10 +21,12 @@ bot = commands.Bot(commands.when_mentioned_or('?'))
 
 truckerbd = 'spock#0001'
 
+
 @bot.command()
 async def test(ctx, *, message):
     embed = discord.Embed(description=message, color=0xFF0000)
     await ctx.send(embed=embed)
+
 
 @bot.command()
 async def hub(ctx, name, steam_ID, tmp_ID, password):
@@ -51,6 +53,7 @@ async def hub(ctx, name, steam_ID, tmp_ID, password):
     embed.add_field(
         name="Password", value="what ever u set it to :wink:", inline=False)
     await ctx.send(embed=embed)
+
 
 @bot.command()
 async def dm(ctx, user: discord.User, *, message):
@@ -144,9 +147,9 @@ async def drivers(ctx):
 
   #channel = bot.get_channel(794888270923300884)
   #embed1 = discord.Embed(title=f"{ctx.author.name}#{ctx.author.discriminator}",
-                        # icon_url=ctx.author.avatar_url, color=0xFF0000)
+  # icon_url=ctx.author.avatar_url, color=0xFF0000)
   #embed1.add_field(name="This user  just checked the amount of drivers using ",
-                  # value="`?drivers`", inline=False)
+  # value="`?drivers`", inline=False)
   #await channel.send(embed=embed1)
 
 
@@ -176,6 +179,7 @@ async def members(ctx):
 
 # command o
 
+
 @bot.command()
 async def ping(ctx):
     await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
@@ -201,6 +205,8 @@ async def check(ctx, nameid):
         await ctx.send(res)
 
 #to fire users and drivers **(working) **
+
+
 @bot.command()
 async def fire(ctx, *, name):
  await ctx.message.delete()
@@ -216,6 +222,31 @@ async def fire(ctx, *, name):
  mycursor.execute(sql)
 
  mydb.commit()
+
+#removing of the help command
+bot.remove_command('help')
+
+
+@bot.command()
+async def help(ctx):
+    await ctx.message.delete()
+    embed = discord.Embed(
+        title="Most Common Commands are listed below", color=0xFF0000)
+    embed.add_field(
+        name="?add", value="This command is locked for HR to add new drivers to our Databases", inline=True)
+    embed.add_field(
+        name="?ping", value="This command allows users to check the bots ping to and from the server", inline=True)
+    embed.add_field(
+        name="?members", value="This command uses the TMP api to display the number of drivers in our vtc at one time", inline=True)
+    embed.add_field(
+        name="?fire", value="This command is locked for HR and is used to kick people out of the VTC", inline=True)
+    embed.add_field(
+        name="?check", value="This command uses our own alle api to allow users to check if they are in our vtc or not (OUT OF USE)", inline=True)
+    embed.add_field(
+        name="?dm", value="This command allows u to message other people using the bot. This atm is not locked to a role but if missused it will be.", inline=True)
+    embed.add_field(
+        name="dev1", value="This command is for devs only (OUT OF USE)", inline=True)
+    await ctx.send(embed=embed)
 
 
 bot.run(token, bot=True)
