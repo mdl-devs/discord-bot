@@ -21,13 +21,13 @@ bot = commands.Bot(commands.when_mentioned_or('?'))
 
 truckerbd = 'spock#0001'
 
-
+# a simple test message command 
 @bot.command()
 async def test(ctx, *, message):
     embed = discord.Embed(description=message, color=0xFF0000)
     await ctx.send(embed=embed)
 
-
+#make user account for the alle hub
 @bot.command()
 async def hub(ctx, name, steam_ID, tmp_ID, password):
     await ctx.message.delete()
@@ -54,14 +54,14 @@ async def hub(ctx, name, steam_ID, tmp_ID, password):
         name="Password", value="what ever u set it to :wink:", inline=False)
     await ctx.send(embed=embed)
 
-
+#dm users by ping
 @bot.command()
 async def dm(ctx, user: discord.User, *, message):
     #user = bot.get_user(755493797160288286)
     await ctx.message.delete()
     await user.send(f"{ctx.author.name}#{ctx.author.discriminator} just sent u a message contents = {message}")
 
-
+#to add a new driver to the vtc
 @bot.command()
 @commands.has_role('Human Resources')
 async def add(ctx, steamid, tmpid, name):
@@ -102,7 +102,7 @@ async def add(ctx, steamid, tmpid, name):
  results = result
  await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{results} drivers"))
 
-
+#dev command
 @bot.command()
 async def dev1(ctx):
   if ctx.message.author.server_permissions.administrator:
@@ -122,7 +122,7 @@ async def dev1(ctx):
    result = cursor.fetchall()
    await ctx.send(tabulate(myresult, headers=['users'], tablefmt='psql'))
 
-
+#shows the amount of drivers in our database in the VTC
 @bot.command()
 async def drivers(ctx):
   await ctx.message.delete()
@@ -152,24 +152,15 @@ async def drivers(ctx):
   # value="`?drivers`", inline=False)
   #await channel.send(embed=embed1)
 
-
+#on ready showing presence etc.. 
 @bot.event
 async def on_ready():
-   mydb = mysql.connector.connect(
-       host="localhost",
-       user="root",
-       password="Fv4&4*JT61%8WGj&vwj",
-       database="alle_hub"
-   )
-   cursor = mydb.cursor()
-   cursor.execute("select count(name) from users;")
-   result = cursor.fetchall()
-   results = result
+   
    print("My body is ready")
    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"CONGRATS ALLE GROUP WE ARE SO PROUD OF U :)"))
-# change async def (members) change the members bit to what ever u want.
 
 
+#showing the member count of the vtc using the TMP api
 @bot.command()
 async def members(ctx):
  r = requests.get("https://api.truckersmp.com/v2/vtc/13006")
@@ -177,14 +168,14 @@ async def members(ctx):
  members_count = r.json()['response']['members_count']
  await ctx.send(f'The amount of drivers and staff in this vtc is {members_count}')
 
-# command o
 
 
+#server ping
 @bot.command()
 async def ping(ctx):
     await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
 
-
+#status command for devs only
 @bot.command()
 async def statusapi(ctx):
     await ctx.message.delete()
@@ -195,7 +186,7 @@ async def statusapi(ctx):
     await ctx.send(embed=embed)
     await ctx.send("https://tenor.com/view/lifeissohard-problems-life-homer-homer-simpson-gif-13342474")
 
-
+#check if a driver is on the API (currently not working)
 @bot.command()
 async def check(ctx, nameid):
     await ctx.message.delete()
@@ -205,8 +196,6 @@ async def check(ctx, nameid):
         await ctx.send(res)
 
 #to fire users and drivers **(working) **
-
-
 @bot.command()
 async def fire(ctx, *, name):
  await ctx.message.delete()
@@ -226,7 +215,7 @@ async def fire(ctx, *, name):
 #removing of the help command
 bot.remove_command('help')
 
-
+#simple help command
 @bot.command()
 async def help(ctx):
     await ctx.message.delete()
@@ -248,10 +237,11 @@ async def help(ctx):
         name="?dev1", value="This command is for devs only (OUT OF USE)", inline=True)
     await ctx.send(embed=embed)
 
-
+#simple status command giving a link to the alle groups status page
 @bot.command()
 async def status(self, ctx):
     await ctx.send("Visit our status page to see our systems status https://allegroup.statuspage.io/")
 
 
+#uses the token to run the bot
 bot.run(token, bot=True)
