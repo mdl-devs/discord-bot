@@ -21,64 +21,10 @@ bot = commands.Bot(commands.when_mentioned_or('?'))
 
 truckerbd = 'spock#0001'
 
-
-@bot.command()
-async def info(ctx):
-  await ctx.message.delete()
-  embed = discord.Embed(title="ALLE GROUP", color=0xFF0000)
-  embed.add_field(name="CEO", value="Sully#3056 ", inline=False)
-  embed.add_field(
-      name="COO", value="CarlJL2006#8589,Speedy#2286", inline=False)
-  embed.add_field(name="CCO", value=truckerbd + ",LC#2328", inline=False)
-  embed.add_field(name="DIRECTOR OF AGRICULTURE",
-                  value="NoahTheFox#4148", inline=False)
-  embed.add_field(name="TRANSPORT MANGER", value="lewis#4672", inline=False)
-  embed.add_field(name="EVENT MANAGER", value="Sani#0189", inline=False)
-  embed.add_field(name="DIRECTOR OF DEVELOPEMENT",
-                  value="_Guuuty#8864", inline=False)
-  embed.add_field(name="DIRECTOR OF HUMAN RESOURCES",
-                  value="Desmond Doss#9332", inline=False)
-  embed.add_field(name="DEX", value="Yzzoxi#3590", inline=False)
-  embed.add_field(
-      name="DEV TEAM", value="Adriano Trezub#3845, StarAssassin64#9196", inline=False)
-  embed.add_field(name="HUMAN RESOURCES",
-                  value="Saà¹‡à¹‡à¹‡ni#8080", inline=False)
-  embed.add_field(name="EVENT / MEDIA TEAM",
-                  value="currently hiring", inline=False)
-  await ctx.send(embed=embed)
-  await ctx.message.delete()
-
-
-
-
-
-@bot.command()
-async def apply(ctx):
-  embed = discord.Embed(title="WELCOME TO ALLE GROUP", color=0xFF0000)
-  embed.add_field(name="APPLY HERE",
-                  value=f"https://truckersmp.com/vtc/13006", inline=True)
-  await ctx.send(embed=embed)
-  await ctx.message.delete()
-
-
 @bot.command()
 async def test(ctx, *, message):
     embed = discord.Embed(description=message, color=0xFF0000)
     await ctx.send(embed=embed)
-
-
-# @bot.command()
-# async def announce(ctx, *, message):
-#     await ctx.message.delete()
-#     channel1 = bot.get_channel(794887947865817088)
-#     embed = discord.Embed(description=message, color=0xFF0000)
-#     embed.set_footer(
-#         text=f"sent by {ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url)
-#     await channel1.send(embed=embed)
-
-
-
-
 
 @bot.command()
 async def hub(ctx, name, steam_ID, tmp_ID, password):
@@ -105,31 +51,6 @@ async def hub(ctx, name, steam_ID, tmp_ID, password):
     embed.add_field(
         name="Password", value="what ever u set it to :wink:", inline=False)
     await ctx.send(embed=embed)
-
-
-
-@bot.command()
-async def clear(ctx, limit: int = None):
-    passed = 0
-    failed = 0
-    async for msg in ctx.message.channel.history(limit=limit):
-        if msg.author.id == bot.user.id:
-            try:
-                await msg.delete()
-                passed += 1
-            except:
-                failed += 1
-    print(f"[Complete] Removed {passed} messages with {failed} fails")
-
-
-@bot.command()
-async def nuke(ctx, amount=1000):
-    await ctx.channel.purge(limit=amount)
-    await ctx.message.delete()
-    await ctx.send(f"{ctx.author.name}#{ctx.author.discriminator} ")
-
-
-
 
 @bot.command()
 async def dm(ctx, user: discord.User, *, message):
@@ -215,19 +136,18 @@ async def drivers(ctx):
   myresult = mycursor.fetchall()
   cursor.execute("select count(name) from users;")
   result = cursor.fetchall()
-  embed = discord.Embed(title="Drivers List", color=0xFF0000)
-  embed.add_field(name="List of drivers", value=myresult, inline=False)
-  embed.add_field(name="Total Number Of Drivers", value=result, inline=False)
+  embed = discord.Embed(title="Total Number of drivers", color=0xFF0000)
+  embed.add_field(name="Number =", value=result, inline=False)
   #await ctx.send(tabulate(myresult, headers=['users'], tablefmt='psql'))
   await ctx.send(embed=embed)
-  results = result
+  #results = result
 
-  channel = bot.get_channel(794888270923300884)
-  embed1 = discord.Embed(title=f"{ctx.author.name}#{ctx.author.discriminator}",
-                         icon_url=ctx.author.avatar_url, color=0xFF0000)
-  embed1.add_field(name="This user  just checked the amount of drivers using ",
-                   value="`?drivers`", inline=False)
-  await channel.send(embed=embed1)
+  #channel = bot.get_channel(794888270923300884)
+  #embed1 = discord.Embed(title=f"{ctx.author.name}#{ctx.author.discriminator}",
+                        # icon_url=ctx.author.avatar_url, color=0xFF0000)
+  #embed1.add_field(name="This user  just checked the amount of drivers using ",
+                  # value="`?drivers`", inline=False)
+  #await channel.send(embed=embed1)
 
 
 @bot.event
@@ -254,136 +174,11 @@ async def members(ctx):
  members_count = r.json()['response']['members_count']
  await ctx.send(f'The amount of drivers and staff in this vtc is {members_count}')
 
-
-@bot.command()
-async def bplayer(ctx, name, discordname, tmpid, steamid):
-  embed = discord.Embed(
-      title="New Player Issue Report Player Name" "=" f"{name}")
-  embed.add_field(name="Discord Tag/Name",
-                  value=f"{discordname}", inline=False)
-  embed.add_field(name="Tmp ID", value=f"{tmpid}", inline=False)
-  embed.add_field(name="Steam ID", value=f"{steamid}", inline=False)
-  await ctx.send(embed=embed)
-
-
-@bot.command()
-async def vtchop(ctx, name, discordname, tmpid, steamid):
-  embed = discord.Embed(
-      title="New Vtc Hopper Report Player Name" "=" f"{name}")
-  embed.add_field(name="Discord Tag/Name",
-                  value=f"{discordname}", inline=False)
-  embed.add_field(name="Tmp ID", value=f"{tmpid}", inline=False)
-  embed.add_field(name="Steam ID", value=f"{steamid}", inline=False)
-  await ctx.send(embed=embed)
-
-
-@bot.command()
-async def servers(ctx):
- await ctx.message.delete()
- getserversURL = "https://api.truckersmp.com/v2/servers"
- r = requests.get(getserversURL)
- data = r.json()["response"]
- embed = discord.Embed(title="TMP Server Status",
-                       url="https://traffic.krashnz.com/", color=0xFF0000)
- embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
- embed.set_footer(
-     text="Bot code developed by Alle Devs")
- for server in data:
-    serverid = server["id"]
-    game = server["game"]
-    name = server["shortname"]
-    players = str(server["players"])
-    queue = str(server["queue"])
-    maxplayers = str(server["maxplayers"])
-    online = (server["online"])
-    if online:
-      online = " :white_check_mark:"
-    else:
-      online = " :x:"
-    embed.add_field(name=game + ": " + name + online,
-                    value=players + '/' + maxplayers, inline=True)
- await ctx.send(embed=embed)
-# command ofa
-
-
-
-
-
-#@bot.command()
-#async def status(ctx):
- #await ctx.message.delete()
- #embed = discord.Embed(title="ALLE SERVICES STATUS", color=0xFF0000)
- #embed.add_field(name=" BOT STATUS",
- #                value=":green_square:  BOT IS ONLINE", inline=True)
- #embed.add_field(name=" CONVOY ADDING STATUS",
- #                value=":yellow_square:  CONVOY ADDING IS IN BETA", inline=True)
- #embed.add_field(name="WEB SERVER STAUS",
- #                value=":red_square: WEB SERVER IS BROKEN", inline=True)
- #embed.add_field(name="ALLE DRIVERS HUB STAUS",
- #                value=":yellow_square:  ALLE DRIVERS HUB IS BETA", inline=True)
- #embed.add_field(name="DISCORD RICH PRESENCE STAUS",
- #                value=":red_square: DISCORD RICH PRESENCE IS OFFLINE", inline=True)
- #embed.add_field(name="API STAUS",
- #                value=":yellow_square: API IS IN BETA", inline=True)
- #embed.add_field(name="JOB TRACKING STAUS",
- #value=":yellow_square: JOB TRACKING IS IN BETA", inline=True)
- #embed.add_field(name=" ADD A DRIVER STAUS",
- #                value=":green_square: ADD A DRIVER IS ONLINE", inline=True)
- #embed.add_field(name=" MYSQL DATABASE STATUS",
- #               value=":green_square: MYSQL DATABASE IS ONLINE", inline=True)
- #embed.set_footer(
- #    text="ALLE SERVICES POWERED BY ALLE API. ANY SUPPORT ISSUES PLEASE EMAIL TruckerBean@alle-group.com OR DM ME")
- #await ctx.send(embed=embed)
-
+# command o
 
 @bot.command()
 async def ping(ctx):
     await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
-
-
-
-
-#kick command
-
-
-@bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
-async def kick(ctx, member: discord.Member, *, reason=None):
-  await member.kick(reason=reason)
-  await ctx.send(f'{member.mention} has been kicked for the following reason{reason}')
-
-
-#use this to ban members / users
-
-
-@bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
-async def ban(ctx, member: discord.Member, *, reason=None):
-    await member.ban(reason=reason)
-    await ctx.send(f'{member.mention} has been banned for the following reason: {reason}')
-
-#use this to unban banned members
-
-
-@bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
-async def unban(ctx, *, member):
-    banned_users = await ctx.guild.bans()
-    member_name, member_discriminator = member.split("#")
-    for ban_entry in banned_users:
-        user = ban_entry.user
-        if (user.name, user.discriminator) == (member_name, member_discriminator):
-            await ctx.guild.unban(user)
-            await ctx.send(f"unbanned {user.mention}")
-
-# ust this to change nicknames of users. In your discord server.
-
-
-@bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
-async def chnick(ctx, member: discord.Member, *, nick):
-    await member.edit(nick=nick)
-    await ctx.send(f'Nickname was changed for {member.mention} ')
 
 
 @bot.command()
@@ -405,19 +200,7 @@ async def check(ctx, nameid):
         res = await r.json()
         await ctx.send(res)
 
-@bot.command()
-async def job(ctx):
-    embed = discord.Embed(title="JOB COMPLETE", color=0xFF0000)
-    embed.add_field(name="From", value="BETA", inline=False)
-    await ctx.send(embed=embed)
-
-
-
-
-
-
-
-#to fire users and drivers
+#to fire users and drivers **(working) **
 @bot.command()
 async def fire(ctx, *, name):
  await ctx.message.delete()
