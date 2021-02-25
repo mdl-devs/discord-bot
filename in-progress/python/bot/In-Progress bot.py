@@ -40,7 +40,7 @@ async def help(ctx):
   embed.add_field(name='ATS Server traffic',
                   value="atstrafficus, atstrafficusarc, atstrafficeu")
   embed.add_field(name='Administation Commands (Admin Only)',
-                  value='clear, ')
+                  value='clear, nuke, ban, kick ')
   await ctx.send(embed=embed)
 
 
