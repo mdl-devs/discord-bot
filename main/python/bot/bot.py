@@ -245,7 +245,7 @@ async def help(ctx):
     embed.add_field(
         name="?dm", value="This command allows u to message other people using the bot. This atm is not locked to a role but if missused it will be.", inline=True)
     embed.add_field(
-        name="dev1", value="This command is for devs only (OUT OF USE)", inline=True)
+        name="?dev1", value="This command is for devs only (OUT OF USE)", inline=True)
     await ctx.send(embed=embed)
 
 
