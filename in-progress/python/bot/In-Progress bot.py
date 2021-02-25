@@ -421,7 +421,7 @@ async def kick(ctx, member: discord.Member, *, reason=None):
 
 #Ban Command
 @bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
+@commands.has_permissions(manage_roles=True, ban_members=True)
 async def ban(ctx, member: discord.Member, *, reason=None):
     await member.ban(reason=reason)
     await ctx.send(f'{member.mention} has been banned for the following reason: {reason}')
@@ -446,6 +446,5 @@ async def unban(ctx, *, member):
 async def chnick(ctx, member: discord.Member, *, nick):
     await member.edit(nick=nick)
     await ctx.send(f'Nickname was changed for {member.mention} ')
-
 
 bot.run(token, bot=True)
