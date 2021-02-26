@@ -42,7 +42,7 @@ async def help(ctx):
   embed.add_field(name='ATS Server traffic',
                   value="atstrafficus, atstrafficusarc, atstrafficeu")
   embed.add_field(name='Administation Commands (Admin Only)',
-                  value='clear, nuke, ban, kick ')
+                  value='clear, nuke, ban, kick, unban, mute, unmute, warn, lwarns, rwarn, rallwarns')
   await ctx.send(embed=embed)
 
 
@@ -482,6 +482,7 @@ async def unmute(ctx, member: discord.Member = None):
 
 @bot.command()
 async def warn(ctx, member: discord.Member = None, *, reason=None):
+ if ctx.message.author.guild_permissions.administrator:
   mydb = mysql.connector.connect(
       host="localhost",
       user="root",
@@ -498,9 +499,10 @@ async def warn(ctx, member: discord.Member = None, *, reason=None):
   await ctx.send(f"{member} was warned by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
 
 
-#command to remove warnings
+#command to remove warnings from one user
 @bot.command()
 async def rwarn(ctx, id):
+ if ctx.message.author.guild_permissions.administrator:
    mydb = mysql.connector.connect(
        host="localhost",
        user="root",
@@ -518,33 +520,35 @@ async def rwarn(ctx, id):
 #command to list users warnings
 @bot.command()
 async def lwarns(ctx, member: discord.Member = None):
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="Fv4&4*JT61%8WGj&vwj",
-        database="warnings"
-    )
-    mycursor = mydb.cursor()
-    cursor = mydb.cursor()
+  if ctx.message.author.guild_permissions.administrator:
+     mydb = mysql.connector.connect(
+         host="localhost",
+         user="root",
+         password="Fv4&4*JT61%8WGj&vwj",
+         database="warnings"
+     )
+     mycursor = mydb.cursor()
+     cursor = mydb.cursor()
 
-    mycursor.execute(
-        f"SELECT id FROM userwarns WHERE discordname = '{member}';")
+     mycursor.execute(
+         f"SELECT id FROM userwarns WHERE discordname = '{member}';")
 
-    myresult = mycursor.fetchall()
-    cursor.execute(
-        f"SELECT reason FROM userwarns WHERE discordname = '{member}';")
-    result = cursor.fetchall()
+     myresult = mycursor.fetchall()
+     cursor.execute(
+         f"SELECT reason FROM userwarns WHERE discordname = '{member}';")
+     result = cursor.fetchall()
 
-    embed = discord.Embed(title=f"warnings for {member}",  Color=0xFF0000)
-    embed.add_field(name="warning ids", value=f"{myresult}", inline=True)
-    embed.add_field(name="reason", value=f"{result}", inline=True)
-    await ctx.send(embed=embed)
+     embed = discord.Embed(title=f"warnings for {member}",  Color=0xFF0000)
+     embed.add_field(name="warning ids", value=f"{myresult}", inline=True)
+     embed.add_field(name="reason", value=f"{result}", inline=True)
+     await ctx.send(embed=embed)
 
-#command to remove warnings
+#command to remove all warnings from one user
 
 
 @bot.command()
 async def rallwarns(ctx, member: discord.Member = None):
+  if ctx.message.author.guild_permissions.administrator:
    mydb = mysql.connector.connect(
        host="localhost",
        user="root",
@@ -553,7 +557,7 @@ async def rallwarns(ctx, member: discord.Member = None):
    )
    mycursor = mydb.cursor()
    cursor = mydb.cursor()
-   sql = f"DELETE FROM userwarns WHERE discordname = {member}"
+   sql = f"DELETE FROM userwarns WHERE discordname = '{member}';"
    mycursor.execute(sql)
    mydb.commit()
    await ctx.send(f"removed all warnings for {member}")
