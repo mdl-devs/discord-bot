@@ -42,7 +42,7 @@ async def help(ctx):
   embed.add_field(name='ATS Server traffic',
                   value="atstrafficus, atstrafficusarc, atstrafficeu")
   embed.add_field(name='Administation Commands (Admin Only)',
-                  value='clear, nuke, ban, kick, unban, mute, unmute, warn, lwarns, rwarn, rallwarns')
+                  value='clear, nuke, ban, kick, unban, mute, unmute, warn, lwarns, rwarn, rallwarns, chnick')
   await ctx.send(embed=embed)
 
 
@@ -449,13 +449,14 @@ async def unban(ctx, *, member):
 async def chnick(ctx, member: discord.Member, *, nick):
     if ctx.message.author.guild_permissions.administrator:
       await member.edit(nick=nick)
-      await ctx.send(f'Nickname was changed for {member.mention} ')
+      await ctx.send(f'Nickname was changed for {member.mention}')
+      await member.send(f"Your nickname has been changed to {nick} :rofl:")
 
 #command to mute users
 
 
 @bot.command()
-async def mute(ctx, member: discord.Member = None):
+async def mute(ctx, member: discord.Member = None, reason=None):
     if ctx.message.author.guild_permissions.administrator:
      role = discord.utils.get(ctx.guild.roles, name="Muted")
      if not member:
@@ -463,8 +464,9 @@ async def mute(ctx, member: discord.Member = None):
        return
      mutememe = 'https://tenor.com/view/shhh-shush-silence-nose-gif-17895433'
      await member.add_roles(role)
-     await ctx.send(f"{member} was muted")
+     await ctx.send(f"{member.mention} was muted")
      await ctx.send(mutememe)
+     await member.send(f"You have been muted in one of Alle Groups servers by {ctx.author.name}#{ctx.author.discriminator} the reason is {reason}.")
 
 
 #command to unmute users
@@ -474,8 +476,9 @@ async def unmute(ctx, member: discord.Member = None):
       role = discord.utils.get(ctx.guild.roles, name="Muted")
       unmutememe = 'https://tenor.com/view/start-speaking-loretta-scott-kemushichan-kemushichan%E3%83%AD%E3%83%AC%E3%83%83%E3%82%BF-say-something-gif-17871953'
       await member.remove_roles(role)
-      await ctx.send(f"{member} was unmuted")
+      await ctx.send(f"{member.mention} speak")
       await ctx.send(unmutememe)
+      await member.send(f"You have now been unmuted by {ctx.author.name}#{ctx.author.discriminator} you can now speak enjoy :)")
 
 #command to warn people
 
@@ -496,7 +499,8 @@ async def warn(ctx, member: discord.Member = None, *, reason=None):
          f"{ctx.author.name}#{ctx.author.discriminator}")
   mycursor.execute(sql, val)
   mydb.commit()
-  await ctx.send(f"{member} was warned by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
+  await member.send(f"You have been warned in one of Alle Groups discord servers by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
+  await ctx.send(f"{member.mention} was warned by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
 
 
 #command to remove warnings from one user
@@ -557,10 +561,13 @@ async def rallwarns(ctx, member: discord.Member = None):
    )
    mycursor = mydb.cursor()
    cursor = mydb.cursor()
+   cursor.execute("select count(id) from userwarns;")
+   result = cursor.fetchall()
    sql = f"DELETE FROM userwarns WHERE discordname = '{member}';"
    mycursor.execute(sql)
    mydb.commit()
-   await ctx.send(f"removed all warnings for {member}")
+   await ctx.send(f"removed all warnings for {member} Total Removed: {result}")
+   await member.send(f"Congrats all your warnings were removed by {ctx.author.name}#{ctx.author.discriminator} you should thank them :) ")
 
 
 bot.run(token, bot=True)
