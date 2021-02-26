@@ -27,31 +27,7 @@ async def test(ctx, *, message):
     await ctx.send(embed=embed)
 
 #make user account for the alle hub
-@bot.command()
-async def hub(ctx, name, steam_ID, tmp_ID, password):
-    await ctx.message.delete()
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="Fv4&4*JT61%8WGj&vwj",
-        database="user_hub_info"
-    )
-    mycursor = mydb.cursor()
-
-    sql = "INSERT INTO user_info_basic  (steamID, tmpID, name, password) VALUES (%s, %s, %s, %s)"
-    val = (f"{steam_ID}", f"{tmp_ID}", f"{name}", f"{password}")
-    mycursor.execute(sql, val)
-    mydb.commit()
-
-    embed = discord.Embed(
-        title=" Alle Hub Account Made", color=0xFF0000
-    )
-    embed.add_field(name="UserName", value=name, inline=False)
-    embed.add_field(name="Tmp ID", value=tmp_ID, inline=False)
-    embed.add_field(name="Steam ID", value=steam_ID, inline=False)
-    embed.add_field(
-        name="Password", value="what ever u set it to :wink:", inline=False)
-    await ctx.send(embed=embed)
+#closed
 
 #dm users by ping
 @bot.command()
