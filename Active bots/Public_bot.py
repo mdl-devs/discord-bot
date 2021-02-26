@@ -403,11 +403,22 @@ async def nuke(ctx, amount=1000):
 
 #Support Command
 @bot.command(pass_contex=True)
-@commands.has_permissions(administrator=True)
-async def supportmessage(ctx, user: discord.User, *, message):
-    #user = bot.get_user(755493797160288286)
-    await ctx.message.delete()
-    await user.send(f"{ctx.author.name}#{ctx.author.discriminator} just sent u a message contents = {message}")
+async def ticket(ctx, reason=None):
+  channel = bot.get_channel(814701287643545630)
+  await ctx.message.delete()
+  embed = discord.Embed(title='Support Ticket Created', color=0xFF0000)
+  embed.add_field(value='Please wait for staff to respond...', inline=True)
+  await ctx.send(embed=embed)
+  await channel.send(f'Support Ticket | Created by {ctx.author.name}#{ctx.author.discriminator} | Reason: "' + reason + '"')
+
+
+#Claim Support Ticket Command
+@bot.command()
+async def claim(ctx, *, msgid):
+    channel = bot.get_channel('814701287643545630')
+    msg =  channel.fetch_message(f'{msgid}')
+    await bot.add_reaction(msg, ":white_check_mark:")
+    await ctx.send(f"{ctx.author.name}#{ctx.author.discriminator} just clamied a ticket")
 
 
 #Ping Command

@@ -3,3 +3,5 @@
                        - Fixed $clear command
 
  25/2/21 (1:10 am GMT) - Updated README.md
+         (4:50 am GMT) - Worked on ticket command
+                            - Claim command is a work in progress
