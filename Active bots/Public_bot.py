@@ -13,11 +13,20 @@ from discord import Member
 
 
 # this is the information needed for the bot, prefix is $. Just set up to say that the bot is Working as a Test In Progress
-token = 'private info'
+token = 'private stuff'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 
+#bot updates to a channel
+
+
+@bot.command()
+async def feed(ctx, channel: discord.channel = None):
+  channel = ctx.message.channel
+  await channel.send(f"Bot updates will now appear in this channel {channel}")
 
 #Changes Presence
+
+
 @bot.event
 async def on_ready():
   await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"over the Alle Public Server"))
@@ -569,5 +578,8 @@ async def rallwarns(ctx, member: discord.Member = None):
    await ctx.send(f"removed all warnings for {member} Total Removed: {result}")
    await member.send(f"Congrats all your warnings were removed by {ctx.author.name}#{ctx.author.discriminator} you should thank them :) ")
 
+#@bot.command()
+#async def update(ctx, *, message):
+  #await channel.send(f"new bot update {message}")
 
 bot.run(token, bot=True)
