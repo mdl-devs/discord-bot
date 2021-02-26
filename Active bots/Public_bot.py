@@ -13,7 +13,7 @@ from discord import Member
 
 
 # this is the information needed for the bot, prefix is $. Just set up to say that the bot is Working as a Test In Progress
-token = 'private'
+token = 'private stuff'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 
 #bot updates to a channel
@@ -416,10 +416,9 @@ async def ticket(ctx, reason=None):
 @bot.command()
 async def claim(ctx, *, msgid):
     channel = bot.get_channel('814701287643545630')
-    msg = channel.fetch_message(f'{msgid}')
+    msg =  channel.fetch_message(f'{msgid}')
     await bot.add_reaction(msg, ":white_check_mark:")
     await ctx.send(f"{ctx.author.name}#{ctx.author.discriminator} just clamied a ticket")
-
 
 
 #Ping Command
