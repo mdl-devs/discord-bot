@@ -22,8 +22,7 @@ async def members(ctx):
  await ctx.send(members_count
 
 @bot.command()
-async def servers(ctx):
-    
+async def servers(ctx):    
 getserversURL = "https://api.truckyapp.com/v2/truckersmp/servers"
 b = requests.get(getserversURL)
 data = b.json()["response"]
@@ -47,6 +46,15 @@ async def servers(ctx):
     await ctx.send("Drivers online: " + players + "/" + maxplayers)
     await ctx.send("Players in queue: " + queue)
 
-
+     #Player report command
+     #@bot.command()
+     #async def bplayer(ctx, name, discordname, tmpid, steamid):
+     #  embed = discord.Embed(
+     #      title="New Player Issue Report Player Name" "=" f"{name}")
+     #  embed.add_field(name="Discord Tag/Name",
+     #                  value=f"{discordname}", inline=False)
+     #  embed.add_field(name="Tmp ID", value=f"{tmpid}", inline=False)
+     #  embed.add_field(name="Steam ID", value=f"{steamid}", inline=False)
+     #  await ctx.send(embed=embed)
 
 Bot.run('Nzk3NjE4MTQzMTczMjc5NzU0.X_pFyA.N75wby0uAALjGP-rFUCjIDYVSo0', bot=True)
