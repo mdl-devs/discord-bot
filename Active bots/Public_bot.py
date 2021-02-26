@@ -9,9 +9,11 @@ import datetime
 import json
 from discord.ext.commands import has_permissions, MissingPermissions
 import mysql.connector
+from discord import Member
+
 
 # this is the information needed for the bot, prefix is $. Just set up to say that the bot is Working as a Test In Progress
-token = 'PRIVATE INFO'
+token = 'ODAyNjgxODE0NDEzMzQ0ODA5.YAyxsQ.UYvvQk-gFHwtPWY0y542WnjBB-U'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 
 
@@ -413,24 +415,26 @@ async def ping(ctx):
 
 #Kick Command
 @bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
 async def kick(ctx, member: discord.Member, *, reason=None):
-  await member.kick(reason=reason)
-  await ctx.send(f'{member.mention} has been kicked for the following reason{reason}')
+  if ctx.message.author.guild_permissions.administrator:
+   await member.kick(reason=reason)
+   await ctx.send(f'{member.mention} has been kicked for the following reason{reason}')
 
 
 #Ban Command
 @bot.command(pass_context=True)
-@commands.has_permissions(manage_roles=True, ban_members=True)
+#@commands.has_permissions(manage_roles=True, ban_members=True)
 async def ban(ctx, member: discord.Member, *, reason=None):
-    await member.ban(reason=reason)
-    await ctx.send(f'{member.mention} has been banned for the following reason: {reason}')
+    if ctx.message.author.guild_permissions.administrator:
+     await member.ban(reason=reason)
+     await ctx.send(f'{member.mention} has been banned for the following reason: {reason}')
 
 
 #Unban Command
 @bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
+#@commands.has_permissions(administrator=True)
 async def unban(ctx, *, member):
+  if ctx.message.author.guild_permissions.administrator:
     banned_users = await ctx.guild.bans()
     member_name, member_discriminator = member.split("#")
     for ban_entry in banned_users:
@@ -442,9 +446,10 @@ async def unban(ctx, *, member):
 
 #Command for force nickname command
 @bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
 async def chnick(ctx, member: discord.Member, *, nick):
-    await member.edit(nick=nick)
-    await ctx.send(f'Nickname was changed for {member.mention} ')
+    if ctx.message.author.guild_permissions.administrator:
+      await member.edit(nick=nick)
+      await ctx.send(f'Nickname was changed for {member.mention} ')
+
 
 bot.run(token, bot=True)
