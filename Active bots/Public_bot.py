@@ -13,7 +13,7 @@ from discord import Member
 
 
 # this is the information needed for the bot, prefix is $. Just set up to say that the bot is Working as a Test In Progress
-token = 'ODAyNjgxODE0NDEzMzQ0ODA5.YAyxsQ.UYvvQk-gFHwtPWY0y542WnjBB-U'
+token = 'private info'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 
 
