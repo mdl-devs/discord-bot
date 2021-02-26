@@ -413,26 +413,24 @@ async def ping(ctx):
     await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
 
 
-#Kick Command
+#Kick Command (working)
 @bot.command(pass_context=True)
 async def kick(ctx, member: discord.Member, *, reason=None):
   if ctx.message.author.guild_permissions.administrator:
    await member.kick(reason=reason)
-   await ctx.send(f'{member.mention} has been kicked for the following reason{reason}')
+   await ctx.send(f'{member.mention} has been kicked for the following reason {reason}')
 
 
-#Ban Command
+#Ban Command (working)
 @bot.command(pass_context=True)
-#@commands.has_permissions(manage_roles=True, ban_members=True)
 async def ban(ctx, member: discord.Member, *, reason=None):
     if ctx.message.author.guild_permissions.administrator:
      await member.ban(reason=reason)
      await ctx.send(f'{member.mention} has been banned for the following reason: {reason}')
 
 
-#Unban Command
+#Unban Command (working)
 @bot.command(pass_context=True)
-#@commands.has_permissions(administrator=True)
 async def unban(ctx, *, member):
   if ctx.message.author.guild_permissions.administrator:
     banned_users = await ctx.guild.bans()
@@ -444,7 +442,7 @@ async def unban(ctx, *, member):
             await ctx.send(f"unbanned {user.mention}")
 
 
-#Command for force nickname command
+#Command for force nickname command (working)
 @bot.command(pass_context=True)
 async def chnick(ctx, member: discord.Member, *, nick):
     if ctx.message.author.guild_permissions.administrator:
