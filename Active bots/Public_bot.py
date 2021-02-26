@@ -13,7 +13,7 @@ from discord import Member
 
 
 # this is the information needed for the bot, prefix is $. Just set up to say that the bot is Working as a Test In Progress
-token = 'private stuff'
+token = 'private info'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 
 #bot updates to a channel
@@ -384,7 +384,7 @@ async def clear(ctx, limit: int = None):
   clearmeme = 'https://tenor.com/view/-gif-9146411'
   await ctx.send(clearmeme)
   channel = bot.get_channel(794888270923300884)
-  await channel.send(f"{ctx.author.name}#{ctx.author.discriminator} just cleared a channel by {limit} messages")
+  await channel.send(f"{ctx.author.mention}{ctx.author.name}#{ctx.author.discriminator} just cleared a channel by {limit} messages")
 
 #nuke command
 
@@ -416,12 +416,13 @@ async def ticket(ctx, reason=None):
 @bot.command()
 async def claim(ctx, *, msgid):
     channel = bot.get_channel('814701287643545630')
-    msg =  channel.fetch_message(f'{msgid}')
+    msg = channel.fetch_message(f'{msgid}')
     await bot.add_reaction(msg, ":white_check_mark:")
     await ctx.send(f"{ctx.author.name}#{ctx.author.discriminator} just clamied a ticket")
 
-
 #Ping Command
+
+
 @bot.command()
 async def ping(ctx):
     await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
@@ -492,17 +493,21 @@ async def mute(ctx, member: discord.Member = None, reason=None):
 #command to unmute users
 @bot.command()
 async def unmute(ctx, member: discord.Member = None):
-    if ctx.message.author.guild_permissions.administrator:
-      role = discord.utils.get(ctx.guild.roles, name="Muted")
-      unmutememe = 'https://tenor.com/view/start-speaking-loretta-scott-kemushichan-kemushichan%E3%83%AD%E3%83%AC%E3%83%83%E3%82%BF-say-something-gif-17871953'
-      await member.remove_roles(role)
-      await ctx.send(f"{member.mention} speak")
-      await ctx.send(unmutememe)
-      await member.send(f"You have now been unmuted by {ctx.author.name}#{ctx.author.discriminator} you can now speak enjoy :)")
+  if ctx.message.author.guild_permissions.administrator:
+
+    try:
+        role = discord.utils.get(ctx.guild.roles, name="Muted")
+        unmutememe = 'https://tenor.com/view/start-speaking-loretta-scott-kemushichan-kemushichan%E3%83%AD%E3%83%AC%E3%83%83%E3%82%BF-say-something-gif-17871953'
+        await member.remove_roles(role)
+        await ctx.send(f"{member.mention} speak")
+        await ctx.send(unmutememe)
+        await member.send(f"You have now been unmuted by {ctx.author.name}#{ctx.author.discriminator} you can now speak enjoy :)")
+
+    except:
+        await ctx.send(f"It would appear {member.mention} does not have the {role} role :( or is not allowing me to dm them ")
+
 
 #command to warn people
-
-
 @bot.command()
 async def warn(ctx, member: discord.Member = None, *, reason=None):
  if ctx.message.author.guild_permissions.administrator:
@@ -519,29 +524,37 @@ async def warn(ctx, member: discord.Member = None, *, reason=None):
          f"{ctx.author.name}#{ctx.author.discriminator}")
   mycursor.execute(sql, val)
   mydb.commit()
-  await member.send(f"You have been warned in one of Alle Groups discord servers by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
-  await ctx.send(f"{member.mention} was warned by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
+ try:
+     await member.send(f"You have been warned in one of Alle Groups discord servers by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
+     await ctx.send(f"{member.mention} was warned by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
+ except:
+     await ctx.send(f"{member.mention} I can not dm u the warning message")
+     await ctx.send(f"{member.mention} was warned by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
 
 
 #command to remove warnings from one user
 @bot.command()
 async def rwarn(ctx, id):
  if ctx.message.author.guild_permissions.administrator:
-   mydb = mysql.connector.connect(
-       host="localhost",
-       user="root",
-       password="Fv4&4*JT61%8WGj&vwj",
-       database="warnings"
-   )
-   mycursor = mydb.cursor()
-   cursor = mydb.cursor()
-   sql = f"DELETE FROM userwarns WHERE id = {id}"
-   mycursor.execute(sql)
-   mydb.commit()
-   await ctx.send(f"removed warning with id {id}")
-
+  try:
+      mydb = mysql.connector.connect(
+          host="localhost",
+          user="root",
+          password="Fv4&4*JT61%8WGj&vwj",
+          database="warnings"
+      )
+      mycursor = mydb.cursor()
+      cursor = mydb.cursor()
+      sql = f"DELETE FROM userwarns WHERE id = {id}"
+      mycursor.execute(sql)
+      mydb.commit()
+      await ctx.send(f"removed warning with id {id}")
+  except:
+      await ctx.send("I could not find that id in the database please try again")
 
 #command to list users warnings
+
+
 @bot.command()
 async def lwarns(ctx, member: discord.Member = None):
   if ctx.message.author.guild_permissions.administrator:
@@ -589,8 +602,5 @@ async def rallwarns(ctx, member: discord.Member = None):
    await ctx.send(f"removed all warnings for {member} Total Removed: {result}")
    await member.send(f"Congrats all your warnings were removed by {ctx.author.name}#{ctx.author.discriminator} you should thank them :) ")
 
-#@bot.command()
-#async def update(ctx, *, message):
-  #await channel.send(f"new bot update {message}")
 
 bot.run(token, bot=True)
