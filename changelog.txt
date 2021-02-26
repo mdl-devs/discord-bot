@@ -1,3 +1,5 @@
 #bots change log
  24/2/21 (3:20 am GMT) - Updated required permissions for some admin only commands
                        - Fixed $clear command
+
+ 25/2/21 (1:10 am GMT) - Updated README.md
