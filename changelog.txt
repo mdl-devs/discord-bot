@@ -5,3 +5,7 @@
  25/2/21 (1:10 am GMT) - Updated README.md
          (4:50 am GMT) - Worked on ticket command
                             - Claim command is a work in progress
+ 26/2/21 (Unknown GMT) - Added GM and GN commands
+                       - Worked on admin commands
+         (4:10 am GMT) - Edited Ticket command to help with Claim command
+                       - Finished Claim command

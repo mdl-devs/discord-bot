@@ -396,28 +396,35 @@ async def nuke(ctx, amount=1000):
 
 
 #Support Command
-@bot.command(pass_contex=True)
-async def ticket(ctx, reason=None):
+client.counter = 0
+@bot.command()
+async def ticket(ctx, *, reason):
   channel = bot.get_channel(814701287643545630)
   await ctx.message.delete()
   embed = discord.Embed(title="Support Ticket Created ",
-                        description="Your support ticket has been made please await staff", color=0xFF0000)
+                        description="Your support ticket has been made please await staff",
+                        color=0xFF0000)
   await ctx.send(embed=embed) 
+  client.counter += 1
+  embed2 = discord.Embed(title=f"Support Ticket #{client.counter}", description="use $claim [msgid] to claim the ticket", color=0xFF0000)
+  embed2.add_field(name="Created by", value=f"{ctx.author.mention}", inline=False)
+  embed2.add_field(name="Reason", value=reason)
+  moderator = discord.utils.get(ctx.guild.roles, id=794866561029767189)
+  await channel.send(f'{moderator.mention}')
+  await channel.send(embed=embed2)
 
-from discord.utils import get
+
 #Claim Support Ticket Command
 @bot.command()
-async def claim(ctx, *, msgid):
-    channel = bot.get_channel(814701287643545630)
-    msg = channel.get_message(msgid)
-    await bot.add_reaction(msg, ":white_check_mark:")
-    await ctx.send(f"{ctx.author.name}#{ctx.author.discriminator} just clamied a ticket")
+async def claim(ctx, tknum):
+  await ctx.message.delete()
+  await ctx.send(f"{ctx.author.mention} just clamied ticket #{tknum}")
 
 
 #Ping Command
 @bot.command()
 async def ping(ctx):
-    await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
+  await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
 
 
 #Kick Command (working)
