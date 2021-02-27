@@ -430,7 +430,7 @@ async def ping(ctx):
 #Kick Command (working)
 @bot.command(pass_context=True)
 async def kick(ctx, member: discord.Member, *, reason=None):
-  if ctx.message.author.guild_permissions.administrator:
+  if ctx.message.author.guild_permissions.kick_members:
    await member.kick(reason=reason)
    await ctx.send(f'{member.mention} has been kicked for the following reason {reason}')
    kickmeme = 'https://tenor.com/view/get-out-the-lion-king-comedy-humor-throw-gif-9615975'
@@ -439,7 +439,7 @@ async def kick(ctx, member: discord.Member, *, reason=None):
 #Ban Command (working)
 @bot.command(pass_context=True)
 async def ban(ctx, member: discord.Member, *, reason=None):
-    if ctx.message.author.guild_permissions.administrator:
+    if ctx.message.author.guild_permissions.ban_members:
      await member.ban(reason=reason)
      await ctx.send(f'{member.mention} has been banned for the following reason: {reason}')
      banmeme = 'https://tenor.com/view/bane-no-banned-and-you-are-explode-gif-16047504'
@@ -448,7 +448,7 @@ async def ban(ctx, member: discord.Member, *, reason=None):
 #Unban Command (working)
 @bot.command(pass_context=True)
 async def unban(ctx, *, member):
-  if ctx.message.author.guild_permissions.administrator:
+  if ctx.message.author.guild_permissions.ban_members:
     banned_users = await ctx.guild.bans()
     member_name, member_discriminator = member.split("#")
     for ban_entry in banned_users:
@@ -471,7 +471,7 @@ async def chnick(ctx, member: discord.Member, *, nick):
 #command to mute users
 @bot.command()
 async def mute(ctx, member: discord.Member=None, reason=None):
-    if ctx.message.author.guild_permissions.administrator:
+    if ctx.message.author.guild_permissions.mute_members:
      role = discord.utils.get(ctx.guild.roles, name="Muted")
      if not member:
        await ctx.send("please specify a member")
@@ -486,7 +486,7 @@ async def mute(ctx, member: discord.Member=None, reason=None):
 #command to unmute users
 @bot.command()
 async def unmute(ctx, member: discord.Member=None):
-  if ctx.message.author.guild_permissions.administrator:   
+  if ctx.message.author.guild_permissions.mute_members:   
       
     try: 
          role = discord.utils.get(ctx.guild.roles, name="Muted")
