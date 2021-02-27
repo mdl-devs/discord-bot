@@ -1,11 +1,12 @@
 #bots change log
- 24/2/21 (3:20 am GMT) - Updated required permissions for some admin only commands
-                       - Fixed $clear command
+ 24/2/21 (03:20 am GMT) - Updated required permissions for some admin only commands
+                        - Fixed $clear command
 
- 25/2/21 (1:10 am GMT) - Updated README.md
-         (4:50 am GMT) - Worked on ticket command
+ 25/2/21 (01:10 am GMT) - Updated README.md
+         (04:50 am GMT) - Worked on ticket command
                             - Claim command is a work in progress
- 26/2/21 (Unknown GMT) - Added GM and GN commands
-                       - Worked on admin commands
-         (4:10 am GMT) - Edited Ticket command to help with Claim command
-                       - Finished Claim command
+ 26/2/21 (Unknown  GMT) - Added GM and GN commands
+                        - Worked on admin commands
+         (04:10 am GMT) - Edited Ticket command to help with Claim command
+                        - Finished Claim command
+ 27/2/21 (11:10 pm GMT) - Updated ban/unban/kick/mute/unmute commands to only need the required permissions to do said command
