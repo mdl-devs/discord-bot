@@ -10,23 +10,19 @@ import json
 from discord.ext.commands import has_permissions, MissingPermissions
 import mysql.connector
 from discord import Member
-
+from discord.utils import get
 
 # this is the information needed for the bot, prefix is $. Just set up to say that the bot is Working as a Test In Progress
 token = 'private info'
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 
 #bot updates to a channel
-
-
 @bot.command()
 async def feed(ctx, channel: discord.channel = None):
   channel = ctx.message.channel
   await channel.send(f"Bot updates will now appear in this channel {channel}")
 
 #Changes Presence
-
-
 @bot.event
 async def on_ready():
   await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"over the Alle Public Server"))
@@ -380,20 +376,18 @@ async def minecraftinfo(ctx):
 async def clear(ctx, limit: int = None):
   await ctx.message.delete()
   await ctx.channel.purge(limit=limit)
-  await ctx.send(f'@{ctx.author.name}#{ctx.author.discriminator} {limit} messages cleared')
+  await ctx.send(f'{ctx.author.mention} {limit} messages cleared')
   clearmeme = 'https://tenor.com/view/-gif-9146411'
   await ctx.send(clearmeme)
   channel = bot.get_channel(794888270923300884)
   await channel.send(f"{ctx.author.mention}{ctx.author.name}#{ctx.author.discriminator} just cleared a channel by {limit} messages")
 
 #nuke command
-
-
 @bot.command(pass_context=True)
 @commands.has_permissions(manage_messages=True)
 async def nuke(ctx, amount=1000):
-    await ctx.channel.purge(limit=amount)
     await ctx.message.delete()
+    await ctx.channel.purge(limit=amount)
     await ctx.send(f"@{ctx.author.name}#{ctx.author.discriminator} messages nuked.")
     nukememe = 'https://tenor.com/view/explosion-explode-clouds-of-smoke-gif-17216934'
     await ctx.send(nukememe)
@@ -406,23 +400,21 @@ async def nuke(ctx, amount=1000):
 async def ticket(ctx, reason=None):
   channel = bot.get_channel(814701287643545630)
   await ctx.message.delete()
-  embed = discord.Embed(title='Support Ticket Created', color=0xFF0000)
-  embed.add_field(value='Please wait for staff to respond...', inline=True)
-  await ctx.send(embed=embed)
-  await channel.send(f'Support Ticket | Created by {ctx.author.name}#{ctx.author.discriminator} | Reason: "' + reason + '"')
+  embed = discord.Embed(title="Support Ticket Created ",
+                        description="Your support ticket has been made please await staff", color=0xFF0000)
+  await ctx.send(embed=embed) 
 
-
+from discord.utils import get
 #Claim Support Ticket Command
 @bot.command()
 async def claim(ctx, *, msgid):
-    channel = bot.get_channel('814701287643545630')
-    msg = channel.fetch_message(f'{msgid}')
+    channel = bot.get_channel(814701287643545630)
+    msg = channel.get_message(msgid)
     await bot.add_reaction(msg, ":white_check_mark:")
     await ctx.send(f"{ctx.author.name}#{ctx.author.discriminator} just clamied a ticket")
 
+
 #Ping Command
-
-
 @bot.command()
 async def ping(ctx):
     await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
@@ -438,19 +430,15 @@ async def kick(ctx, member: discord.Member, *, reason=None):
    await ctx.send(kickmeme)
 
 #Ban Command (working)
-
-
 @bot.command(pass_context=True)
 async def ban(ctx, member: discord.Member, *, reason=None):
     if ctx.message.author.guild_permissions.administrator:
      await member.ban(reason=reason)
      await ctx.send(f'{member.mention} has been banned for the following reason: {reason}')
      banmeme = 'https://tenor.com/view/bane-no-banned-and-you-are-explode-gif-16047504'
-     await ctx.send(banmeme)
+     await ctx.send(banmeme) 
 
 #Unban Command (working)
-
-
 @bot.command(pass_context=True)
 async def unban(ctx, *, member):
   if ctx.message.author.guild_permissions.administrator:
@@ -474,10 +462,8 @@ async def chnick(ctx, member: discord.Member, *, nick):
       await member.send(f"Your nickname has been changed to {nick} :rofl:")
 
 #command to mute users
-
-
 @bot.command()
-async def mute(ctx, member: discord.Member = None, reason=None):
+async def mute(ctx, member: discord.Member=None, reason=None):
     if ctx.message.author.guild_permissions.administrator:
      role = discord.utils.get(ctx.guild.roles, name="Muted")
      if not member:
@@ -485,31 +471,34 @@ async def mute(ctx, member: discord.Member = None, reason=None):
        return
      mutememe = 'https://tenor.com/view/shhh-shush-silence-nose-gif-17895433'
      await member.add_roles(role)
-     await ctx.send(f"{member.mention} was muted")
+     await ctx.send(f"{member.mention} was muted")  
      await ctx.send(mutememe)
      await member.send(f"You have been muted in one of Alle Groups servers by {ctx.author.name}#{ctx.author.discriminator} the reason is {reason}.")
 
 
 #command to unmute users
 @bot.command()
-async def unmute(ctx, member: discord.Member = None):
-  if ctx.message.author.guild_permissions.administrator:
-
-    try:
-        role = discord.utils.get(ctx.guild.roles, name="Muted")
-        unmutememe = 'https://tenor.com/view/start-speaking-loretta-scott-kemushichan-kemushichan%E3%83%AD%E3%83%AC%E3%83%83%E3%82%BF-say-something-gif-17871953'
-        await member.remove_roles(role)
-        await ctx.send(f"{member.mention} speak")
-        await ctx.send(unmutememe)
-        await member.send(f"You have now been unmuted by {ctx.author.name}#{ctx.author.discriminator} you can now speak enjoy :)")
-
+async def unmute(ctx, member: discord.Member=None):
+  if ctx.message.author.guild_permissions.administrator:   
+      
+    try: 
+         role = discord.utils.get(ctx.guild.roles, name="Muted")
+         unmutememe = 'https://tenor.com/view/start-speaking-loretta-scott-kemushichan-kemushichan%E3%83%AD%E3%83%AC%E3%83%83%E3%82%BF-say-something-gif-17871953'
+         await member.remove_roles(role)
+         await ctx.send(f"{member.mention} speak")
+         await ctx.send(unmutememe)   
+         await member.send(f"You have now been unmuted by {ctx.author.name}#{ctx.author.discriminator} you can now speak enjoy :)")
+          
+      
     except:
-        await ctx.send(f"It would appear {member.mention} does not have the {role} role :( or is not allowing me to dm them ")
+          await ctx.send(f"It would appear {member.mention} does not have the {role} role :( or is not allowing me to dm them ")  
 
+           
+    
 
 #command to warn people
 @bot.command()
-async def warn(ctx, member: discord.Member = None, *, reason=None):
+async def warn(ctx, member: discord.Member=None, *, reason=None):
  if ctx.message.author.guild_permissions.administrator:
   mydb = mysql.connector.connect(
       host="localhost",
@@ -520,71 +509,64 @@ async def warn(ctx, member: discord.Member = None, *, reason=None):
   mycursor = mydb.cursor()
   cursor = mydb.cursor()
   sql = "INSERT INTO userwarns  (discordname, reason, warnedby) VALUES (%s, %s, %s)"
-  val = (f"{member}", f"{reason}",
-         f"{ctx.author.name}#{ctx.author.discriminator}")
+  val = (f"{member}", f"{reason}", f"{ctx.author.name}#{ctx.author.discriminator}")
   mycursor.execute(sql, val)
   mydb.commit()
- try:
+ try:  
      await member.send(f"You have been warned in one of Alle Groups discord servers by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
      await ctx.send(f"{member.mention} was warned by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
  except:
-     await ctx.send(f"{member.mention} I can not dm u the warning message")
-     await ctx.send(f"{member.mention} was warned by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
+        await ctx.send(f"{member.mention} I can not dm u the warning message")     
+        await ctx.send(f"{member.mention} was warned by {ctx.author.name}#{ctx.author.discriminator} for {reason}")
 
 
 #command to remove warnings from one user
 @bot.command()
 async def rwarn(ctx, id):
  if ctx.message.author.guild_permissions.administrator:
-  try:
-      mydb = mysql.connector.connect(
-          host="localhost",
-          user="root",
-          password="Fv4&4*JT61%8WGj&vwj",
-          database="warnings"
-      )
-      mycursor = mydb.cursor()
-      cursor = mydb.cursor()
-      sql = f"DELETE FROM userwarns WHERE id = {id}"
-      mycursor.execute(sql)
-      mydb.commit()
-      await ctx.send(f"removed warning with id {id}")
+  try: 
+       mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="Fv4&4*JT61%8WGj&vwj",
+        database="warnings"
+       )
+       mycursor = mydb.cursor()
+       cursor = mydb.cursor()
+       sql = f"DELETE FROM userwarns WHERE id = {id}"
+       mycursor.execute(sql)
+       mydb.commit()
+       await ctx.send(f"removed warning with id {id}")
   except:
-      await ctx.send("I could not find that id in the database please try again")
+           await ctx.send("I could not find that id in the database please try again")
 
 #command to list users warnings
-
-
 @bot.command()
-async def lwarns(ctx, member: discord.Member = None):
+async def lwarns(ctx, member: discord.Member=None):
   if ctx.message.author.guild_permissions.administrator:
      mydb = mysql.connector.connect(
-         host="localhost",
-         user="root",
-         password="Fv4&4*JT61%8WGj&vwj",
-         database="warnings"
-     )
+       host="localhost",
+       user="root",
+       password="Fv4&4*JT61%8WGj&vwj",
+       database="warnings"
+     ) 
      mycursor = mydb.cursor()
      cursor = mydb.cursor()
 
-     mycursor.execute(
-         f"SELECT id FROM userwarns WHERE discordname = '{member}';")
-
+     mycursor.execute(f"SELECT id FROM userwarns WHERE discordname = '{member}';")
+ 
      myresult = mycursor.fetchall()
-     cursor.execute(
-         f"SELECT reason FROM userwarns WHERE discordname = '{member}';")
+     cursor.execute(f"SELECT reason FROM userwarns WHERE discordname = '{member}';")
      result = cursor.fetchall()
-
+  
      embed = discord.Embed(title=f"warnings for {member}",  Color=0xFF0000)
-     embed.add_field(name="warning ids", value=f"{myresult}", inline=True)
+     embed.add_field(name="warning ids",value=f"{myresult}", inline=True)
      embed.add_field(name="reason", value=f"{result}", inline=True)
      await ctx.send(embed=embed)
 
 #command to remove all warnings from one user
-
-
 @bot.command()
-async def rallwarns(ctx, member: discord.Member = None):
+async def rallwarns(ctx, member: discord.Member=None):
   if ctx.message.author.guild_permissions.administrator:
    mydb = mysql.connector.connect(
        host="localhost",
@@ -602,5 +584,19 @@ async def rallwarns(ctx, member: discord.Member = None):
    await ctx.send(f"removed all warnings for {member} Total Removed: {result}")
    await member.send(f"Congrats all your warnings were removed by {ctx.author.name}#{ctx.author.discriminator} you should thank them :) ")
 
+
+@bot.command()
+async def gm(ctx):
+  await ctx.message.delete()
+  await ctx.send(f"good morning {ctx.author.mention}")
+  gmmeme = 'https://tenor.com/view/puppy-cup-good-morning-cute-puppy-yawn-gif-14168332'
+  await ctx.send(gmmeme)
+
+@bot.command()
+async def gn(ctx):
+  await ctx.message.delete()
+  await ctx.send(f"good night {ctx.author.mention}")
+  gnmeme = 'https://tenor.com/view/night-good-night-sleep-tired-collapse-gif-10609182'
+  await ctx.send(gnmeme)
 
 bot.run(token, bot=True)
