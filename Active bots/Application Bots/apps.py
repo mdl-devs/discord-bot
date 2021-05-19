@@ -19,23 +19,46 @@ from dhooks import Webhook
 from datetime import datetime as dt
 import time
 from datetime import datetime
+from discord_slash import SlashCommand, SlashContext
+
+intents = intents = discord.Intents.all()
+
+
 # Bots token
-token = 'ODIxMzY2NDg2NDUzOTc3MTA5.YFCrJg.voB8yvcVVx0IgUtbBR7kotIk-PQ'
+token = 'ODM3ODAwNjk4MDY2MTA4NDM2.YIx0tA.QbeQPybTciQBMh69wiTmrUl9KhQ'
 
 # Bots prefix
-bot = commands.Bot(command_prefix=('a/'))
-
+bot = commands.Bot(command_prefix=('a/'), intents=intents)
+slash = SlashCommand(bot)
 #global variables go here (if any)
+
+
+
+# sending startup message to server
+@bot.event
+async def on_ready():
+    startup_msg = bot.get_channel(837713193672900688)
+    await startup_msg.send('Alle Applications Bot has started.')
+
+
+#send a dm to every user new user. 
+@bot.event
+async def on_member_join(member):
+    bot_commands_channel = bot.get_channel(837712738636922920)
+    await member.send(f'Welcome to Alle Group | If you would like to join our vtc do `a/apply` in {bot_commands_channel.mention}')
 
 
 #starting off with removing the help command
 bot.remove_command('help')
 
-#staring to build the applications command
-
-
+# ping command
 @bot.command()
-async def apply(ctx,  *, args=None):
+async def ping(ctx):
+    await ctx.send('Pong! {0}'.format(round(bot.latency, 1)))
+
+#Apply Command (allows users to apply to join the vtc.)
+@bot.command()
+async def apply(ctx, *, args=None):
     applied_times = 0
     rate_limit_for_applications = 5
     time_to_wait_to_avoid_rate_limit = 60
@@ -55,10 +78,10 @@ async def apply(ctx,  *, args=None):
 
     with open("data.json") as f:
         data = json.load(f)
-
     ticket_number = int(data["ticket-counter"])
     ticket_number += 1
-    category = discord.utils.get(ctx.guild.categories, name="Applications")
+    category = discord.utils.get(
+        ctx.guild.categories, name="| 𝐀𝐝𝐦𝐢𝐬𝐬𝐢𝐨𝐧𝐬 𝐓𝐞𝐚𝐦")
     ticket_channel = await ctx.guild.create_text_channel("application-{}".format(ticket_number), category=category)
     await ticket_channel.set_permissions(ctx.guild.get_role(ctx.guild.id), send_messages=False, read_messages=False)
 
@@ -73,7 +96,7 @@ async def apply(ctx,  *, args=None):
         ctx.author.name, ctx.author.discriminator), description="{}".format(message_content), color=0x00a8ff)
     await ticket_channel.send(embed=em)
     em2 = discord.Embed(title="Welcome to ALLE Groups Applications System",
-                        description="To Become a driver at Alle Group we ask u submit an application. To do this, reply to this message answering in this template ```Your TMP name = _________   Your TMP ID = _____________ Your Steam ID = __________ What department are you applying for e.g Driver __________ What country are your from __________ Your age__________``` Once you have done a member of our Admissions Team will reply and take your application further. **It could take up to 1 - 2 days for a application to be viewed.**")
+                        description="To Become a driver at Alle Group we ask u submit an application. To do this, reply to all the messages the bot will send you one at a time **It could take up to 1 - 2 days for a application to be viewed.**")
     await ticket_channel.send(embed=em2)
     pinged_msg_content = ""
     non_mentionable_roles = []
@@ -102,7 +125,6 @@ async def apply(ctx,  *, args=None):
     data["ticket-counter"] = int(ticket_number)
     with open("data.json", 'w') as f:
         json.dump(data, f)
-
     created_em = discord.Embed(title="Alle Group Applications", description="Your application ticket has been created at {}".format(
         ticket_channel.mention), color=0x00a8ff)
     hook = Webhook(
@@ -111,6 +133,30 @@ async def apply(ctx,  *, args=None):
                                 description=f"{ctx.author.mention} Has applied.  Channel name:{ticket_channel.mention}")
     hook.send(embed=userapplyed)
     await ctx.send(embed=created_em)
+
+    await asyncio.sleep(20)
+
+    def check(message):
+        return message.author == ctx.author and message.channel == ticket_channel
+    await ticket_channel.send(f"Hey {ctx.author.mention}, what is your name?")
+    msg = await bot.wait_for('message', check=check)
+    response = (msg.content)
+    await ticket_channel.send("What is your TMP ID?")
+    msg2 = await bot.wait_for('message', check=check)
+    response2 = (msg2.content)
+    await ticket_channel.send("What department are your applying for e.g Driver?")
+    msg3 = await bot.wait_for('message', check=check)
+    response3 = (msg3.content)
+    await ticket_channel.send("What country are you from?")
+    msg4 = await bot.wait_for('message', check=check)
+    response4 = (msg4.content)
+    await ticket_channel.send("What is your age?")
+    msg5 = await bot.wait_for('message', check=check)
+    response5 = (msg5.content)
+    await ticket_channel.send("Thanks for answering all questions :)")
+    questionr = discord.Embed(title="Alle Group Applications",
+                              description=f"Name = {response}, TMPID = {response2}, Department = {response3}, Country = {response4}, Age = {response5}")
+    await ticket_channel.send(embed=questionr)
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
@@ -120,24 +166,119 @@ async def apply(ctx,  *, args=None):
     mycursor = mydb.cursor()
 
     day = dt.now()
-    sql = "INSERT INTO  applications(discordname, applicationdate, applicationid, status, statusaddedby) VALUES (%s, %s, %s, %s, %s)"
+    sql = "INSERT INTO  applications(discordname, applicationdate, applicationid, status, statusaddedby, tmpid) VALUES (%s, %s, %s, %s, %s, %s)"
     val = (f"{ctx.author.name}#{ctx.author.discriminator}",
-           f"{day}", f"{ticket_number}", f"Sent", f"applications bot",)
+           f"{day}", f"{ticket_number}", f"Sent", f"applications bot", f"{response2}")
     mycursor.execute(sql, val)
     mydb.commit()
+    try:
+     getplayerinfourl = f"https://api.truckersmp.com/v2/player/{response2}"
+     r = requests.get(getplayerinfourl)
+     data = r.json()["response"]
+     hook = Webhook(
+         'https://discord.com/api/webhooks/843949554738135091/gFJX3o2BTLPK2758j0G3t-ZtNDL8Yx4Md_S05ImrW6sBCIQrB-WuOo-L3zUUInpRQY3V')
+     for server in data:
+      em2 = discord.Embed(title="Player lookup (tmp)",
+                          url=f"https://truckersmp.com/user/{response2}", color=0x00FF00)
+      em2.set_thumbnail(
+          url=data["avatar"])
+      em2.add_field(name="Name", value=data["name"], inline=True)
+      em2.add_field(name="Tmp id", value=data["id"], inline=True)
+      em2.add_field(name="Steam id", value=data["steamID64"], inline=True)
+      em2.add_field(name="Banned", value=data["banned"], inline=True)
+      em2.add_field(name="Banned until",
+                    value=data["bannedUntil"], inline=True)
+      em2.add_field(name="Bans count", value=data["bansCount"], inline=True)
+      em2.add_field(name="Join Date", value=data["joinDate"], inline=True)
+      em2.add_field(name="Discord User ID",
+                    value=data["discordSnowflake"], inline=True)
+     hook.send(embed=em2)
+     banned = (data["banned"])
+     if banned == False:
+        bannedem = discord.Embed(
+            title=f":green_circle: {ctx.author} is **not** currently  banned. :green_circle: ", color=0x00FF00)
+        hook.send(embed=bannedem)
+     else:
+        bannedem = discord.Embed(
+            title=f":warning: {ctx.author} is currently banned. Until:" + data["bannedUntil"] + ":warning:", color=0x00FF00)
+        hook.send(embed=bannedem)
+     if banned > 2 and banned < 5:
+        banned4 = f"{ctx.author.mention} HAS MORE THEN 2 BANS BUT IS LESS THEN 5"
+        hook.send(banned4)
+     else:
+        banned5 = f"{ctx.author.mention} HAS LESS THEN 2 BANS"
+        hook.send(banned5)
+     if banned == 5:
+        hook3 = webhook(
+            'https://discord.com/api/webhooks/843949554738135091/gFJX3o2BTLPK2758j0G3t-ZtNDL8Yx4Md_S05ImrW6sBCIQrB-WuOo-L3zUUInpRQY3V'
+        )
+        em34 = discord.Embed(title=f":warning: DRIVER IS PERM BANNED :warning:", description=f"Someone has tired to apply when they are perm banned on TMP this was dected by Alles auto ban detection system. Drivers info TMP Name:" +
+                             data["name"] + "" f"Discord Name and ID: {ctx.author} {ctx.author.id}" + "" + "TMP ID:" + "" + data["id"])
+        hook3.send(embed=em34)
+        await ctx.channel.delete()
+        role = discord.utils.get(ctx.guild.roles, name="Applicant")
+        await ctx.author.remove_roles(role)
+        index = data["ticket-channel-ids"].index(ticket_channel.id)
+        del data["ticket-channel-ids"][index]
 
-    cursor = mydb.cursor()
-    cursor.execute(
-        f"SELECT id FROM applications WHERE applicationid = '{ticket_number}';")
-    myresult = cursor.fetchall()
+        with open('data.json', 'w') as f:
+            json.dump(data, f)
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Fv4&4*JT61%8WGj&vwj",
+            database="alleapi"
+        )
+        mycursor = mydb.cursor()
+        sql = f"UPDATE applications SET status = 'Closed', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
+        mycursor.execute(sql)
+        mydb.commit()
+        hook1 = Webhook(
+            'https://discord.com/api/webhooks/827502772291239996/sH6UfgNFrVvKwAbdsFH2svKOGSEgHNhxwZ7V8UHyWikR3O4bFxID5QwSxNx3XKQcRq7c')
+        userapplyed = discord.Embed(title="Alle Group Applications",
+                                    description=f"Updated Mysql applications to 'closed'.")
+        hook1.send(embed=userapplyed)
+        hook1.send(
+            f"{ticket_channel.mention} has been removed as the user had 5 bans.")
+        ctx.author.send("Your application with Alle Group has been canceled. Reason: `5 bans or more` **This is a auto system action if this is wrong please contact a member of the upper staff team**")
+
+     else:
+         pass
+         print("channel not removed")
+
+    except:
+        em3 = discord.Embed(title="Player lookup (tmp) Error",
+                            description="we could not lookup this user", color=0xFF0000)
+        hook.send(embed=em3)
+        error34 = discord.Embed(title="Alle Group Applications",
+                                description=f"The TMPID you gave does not seem to exist or belongs to a diffrent user. TMPID = {response2}")
+        await ticket_channel.send(embed=error34)
+
     warningmsg = discord.Embed(title="Alle Group Applications",
-                               description=f"To see the status of your application do `a/status id` your Application ID is {myresult} .")
+                               description=f"To see the status of your application do `a/status id` your Application ID is {ticket_number}")
     await asyncio.sleep(60)
     await ticket_channel.send(embed=warningmsg)
 
 
+@apply.error
+async def apply_handler(ctx, error):
+    if isinstance(error, commands.MissingPermissions, commands.MissingRole):
+        await ctx.send('You do not have the required permssions or you are missing the correct role.')
+
+@apply.error 
+async def apply_handler_bot_noperms(ctx, error):
+    if isinstance(error, commands.BotMissingPermissions):
+        await ctx.send('The bot does not have the required permssions to run this command.')        
+
+
+@apply.error 
+async def apply_handler_msg_not_found(ctx, error):
+    if isinstance(error, commands.MessageNotFound):
+        await ctx.send('Message not found.')        
+
 @bot.command()
-async def close(ctx, *, id):
+async def close(ctx, id, user: discord.Member):
+    await ctx.message.delete()
     with open('data.json') as f:
         data = json.load(f)
 
@@ -156,7 +297,8 @@ async def close(ctx, *, id):
             await ctx.send(embed=em)
             await bot.wait_for('message', check=check, timeout=60)
             await ctx.channel.delete()
-
+            role = discord.utils.get(ctx.guild.roles, name="Applicant")
+            await member.remove_roles(role)
             index = data["ticket-channel-ids"].index(channel_id)
             del data["ticket-channel-ids"][index]
 
@@ -169,7 +311,7 @@ async def close(ctx, *, id):
                 database="alleapi"
             )
             mycursor = mydb.cursor()
-            sql = f"UPDATE applications SET status = 'Closed', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
+            sql = f"UPDATE applications SET status = 'Closed', statusaddedby = '{ctx.author}' WHERE applicationid = '{id}'"
             mycursor.execute(sql)
             mydb.commit()
             hook = Webhook(
@@ -192,9 +334,22 @@ async def close(ctx, *, id):
             await ctx.send(embed=em)
 
 
+@close.error 
+async def close_handler_missing_arg(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send('You forgot to include `id` and `member`')
+
+@close.error
+async def close_handler(ctx, error):
+    if isinstance(error, commands.BadArgument): 
+        close_no_user_found = discord.Embed(
+            title=":warning: Close Command Error :warning:", description=f"I could not find that user!", color=0xeb3434
+        )
+        await ctx.send(embed=close_no_user_found)
+
 @bot.command()
 async def hire(ctx, id, tmpid,  member: discord.Member):
-  role = discord.utils.get(ctx.guild.roles, id=794865611956158484)
+  role = discord.utils.get(ctx.guild.roles, id=837606126795227136)
   if role in ctx.author.roles:
     await ctx.message.delete()
     mydb = mysql.connector.connect(
@@ -204,7 +359,7 @@ async def hire(ctx, id, tmpid,  member: discord.Member):
         database="alleapi"
     )
     mycursor = mydb.cursor()
-    sql = f"UPDATE applications SET status = 'Hired', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
+    sql = f"UPDATE applications SET status = 'Hired', statusaddedby = '{ctx.author}' WHERE applicationid = '{id}'"
     mycursor.execute(sql)
     mydb.commit()
     with open('data.json') as f:
@@ -219,10 +374,9 @@ async def hire(ctx, id, tmpid,  member: discord.Member):
 
         try:
 
-            em = discord.Embed(
+            em3445 = discord.Embed(
                 title="Alle Group Applications", description="Are you sure you want to hire this driver? Reply with `yes` if you are sure.", color=0x00a8ff)
-
-            await ctx.send(embed=em)
+            await ctx.send(embed=em3445)
             await bot.wait_for('message', check=check, timeout=60)
             index = data["ticket-channel-ids"].index(channel_id)
             del data["ticket-channel-ids"][index]
@@ -230,7 +384,8 @@ async def hire(ctx, id, tmpid,  member: discord.Member):
             with open('data.json', 'w') as f:
                 json.dump(data, f)
             role = discord.utils.get(ctx.guild.roles, name="Applicant")
-            role2 = discord.utils.get(ctx.guild.roles, name="Trainee")
+            role2 = discord.utils.get(
+                ctx.guild.roles, name="Probationary Driver")
             await member.remove_roles(role)
             await member.add_roles(role2)
 
@@ -245,25 +400,48 @@ async def hire(ctx, id, tmpid,  member: discord.Member):
             cursor = mydb.cursor()
             sql = "INSERT INTO drivers (name, discordname, tmpid, steamid, role) VALUES (%s, %s, %s, %s, %s)"
             val = (data["name"], f"{member}", f"{tmpid}",
-                   data["steamID64"], f"Trainee")
+                   data["steamID64"], f"Probationary Driver")
             cursor.execute(sql, val)
             mydb.commit()
             await member.send(f"{ctx.author} just updated your application at Alle Group to `Hired`")
-            await member.send("Welcome to Alle Group Your role is `Trainee`")
+            await member.send("Welcome to Alle Group Your role is `Probationary Driver`")
             channel1 = bot.get_channel(797186729232433193)
-            await channel1.send(f"Welcome to alle group {member.mention}. A member of the Examantions team will contact you to do your training.")
+            #await channel1.send(f"Welcome to alle group {member.mention}. Please Book your training here https://alle-group.com/book-training/")
             hook = Webhook(
                 'https://discord.com/api/webhooks/822167721016819716/nQRa4Eehf-DRFQuFTEdoqSs6_7t3h5miB5LOGwahyM2NJLDcsHmMWm4488cIAGeMSmC_')
             em2 = discord.Embed(
-                title=f"{member.mention} has been promoted to trainee", description="")
-            hook.send(embed=em2)
+                title=f"{member} has been promoted to Probationary Driver", description="")
+            #hook.send(embed=em2)
             userapplyed = discord.Embed(title="Alle Group Applications",
                                         description=f"{ctx.author.mention} Hired {member.mention}")
             hook.send(embed=userapplyed)
             await ctx.send("Driver added to our database and to our company")
             await ctx.channel.delete()
+            
 
-        #this will happen if it times out after 60 secs
+            # Adding in #staff-logs logging for this bot!
+            try:
+                hire_log_msg = discord.Embed(
+                    title="Alle | Applications", description=f"New driver hired by {ctx.author.mention} | Addded to the company api and database | Please add to the staff hub (coming soon!!)")
+                staff_logs_channel = bot.get_channel(837715287092232264)
+                await staff_logs_channel.send(embed=hire_log_msg)
+
+            except:
+                   hire_log_err_msg = discord.Embed(title="Alle | Applications | Error", descrition=f"Error could not send the log message to {staff_logs_channel.mention}.")  
+                   await ctx.author.send(embed=hire_log_err_msg)
+
+            # Add to staff hub message (send in dms). 
+            try:
+                advice_msg = discord.Embed(title="Alle | Applications", descrition=f"{member} | has been hired. | Please add them to the staff hub.")
+                await ctx.author.send(embed=advice_msg)
+
+
+            except:         
+                  advice_msg_error = discord.Embed(title="Alle | Applications", descrition=f"{ctx.author.mention} I tried to send you a msg in dms but i could not. pepesad")  
+                  main_chat_channel = bot.get_channel(837713193672900688)
+                  await ctx.main_chat_channel.send(embed=advice_msg_error)
+        
+         #this will happen if it times out after 60 secs
         except asyncio.TimeoutError:
             em = discord.Embed(
                 title="Alle Group Applications", description="You have run out of time to hire this driver. Please run the command again.", color=0x00a8ff)
@@ -271,9 +449,18 @@ async def hire(ctx, id, tmpid,  member: discord.Member):
 
   else:
       errormsg = discord.Embed(
-           title="Alle Group applications", description="You do not have the correct roles or perms to use the command `hire`", color=0xFF0000
-           )
-      await ctx.send(errormsg)
+          title="Alle Group applications", description="You do not have the correct roles or perms to use the command `hire`", color=0xFF0000
+      )
+      await ctx.send(embed=errormsg)
+
+
+
+@hire.error
+async def hire_handler(ctx, error):
+    #await ctx.send('Debugging Mode Enabled.')
+    await ctx.send(error)
+
+
 
 
 @bot.command()
@@ -304,7 +491,6 @@ async def pinfo(ctx, tmpid):
                             description="we could not lookup this user", color=0xFF0000)
         await ctx.send(embed=em3)
 
-
 @bot.command()
 async def claim(ctx, id):
  role = discord.utils.get(ctx.guild.roles, id=794865611956158484)
@@ -318,17 +504,23 @@ async def claim(ctx, id):
    )
 
    mycursor = mydb.cursor()
-   sql = f"UPDATE applications SET status = 'Claimed/inprogress', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
+   sql = f"UPDATE applications SET status = 'Claimed/inprogress', statusaddedby = '{ctx.author}' WHERE applicationid = '{id}'"
    mycursor.execute(sql)
    mydb.commit()
-   getapplicationinfourl = f"http://51.195.223.137/api/v2/applications/{id}"
+   getapplicationinfourl = f"https://api-alle-group.com/api/v2/applications/{id}"
    em2 = discord.Embed(description=f"{ctx.author.mention} just claimed application id {id}",
-                       url=f"http://51.195.223.137/api/v2/applications/{id}")
+                       url=f"https://api-alle-group.com/api/v2/applications/{id}")
    await ctx.send(embed=em2)
 
+
+@claim.error
+async def claim_handler(ctx, error):
+    claimerrorem = discord.Embed(
+        title=":warning: Claim Command Error :warning:", description=f"{error}", color=0x03fcb1)
+    await ctx.send(embed=claimerrorem)
+
+
 #command to request training.
-
-
 @bot.command()
 async def request(ctx, date, time, *, message):
     await ctx.message.delete()
@@ -359,7 +551,7 @@ async def request(ctx, date, time, *, message):
 
 
 @bot.command()
-async def confirm(ctx, tmpid, status, videourl=None, *, notes):
+async def confirm(ctx, tmpid, status, date, time, server, orgin, destination, videourl):
     await ctx.message.delete()
     mydb = mysql.connector.connect(
         host="localhost",
@@ -372,9 +564,9 @@ async def confirm(ctx, tmpid, status, videourl=None, *, notes):
     data = r.json()["response"]
     for server in data:
      mycursor = mydb.cursor()
-     sql = "INSERT INTO trainings(tmpid, steamid, trainedby, videoevidence, traineename, notes, status) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+     sql = "INSERT INTO trainings(tmpid, steamid, trainedby, videoevidence, traineename, status, date, time, server, orgin, destinaton) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
      val = (f"{tmpid}", data["steamID64"], f"{ctx.author}",
-            f"{videourl}", data["name"], f"{notes}", f"{status}")
+            f"{videourl}", data["name"],  f"{status}", f"{date}", f"{time}", f"{server}", f"{orgin}", f"{destination}")
     mycursor.execute(sql, val)
     mydb.commit()
     hook = Webhook(
@@ -382,29 +574,62 @@ async def confirm(ctx, tmpid, status, videourl=None, *, notes):
     em2 = discord.Embed(
         title=data["name"], description=f"You have {status} your training", color=0x00FF00)
     hook.send(embed=em2)
+    hook2 = webhook(
+        'https: // discord.com/api/webhooks/833366266332708894/xoL7IBrAFGRpcUaIi2NMbLgEpQJqQ8nB-ogQe9AYEuJG2Tt9JQ8qOFBF1qvFtEHxLlq2'
+    )
+    em3 = discord.Embed(
+        title=data["name"], description=f"Has passed there training. Trained by:{ctx.author}", color=0x00FF00)
+    hook2.send(embed=em3)
+
+
+@bot.command()
+async def checkt(ctx, tmpid):
+    gettraininginfourl = f'https://api-alle-group.com/api/v2/trainings{tmpid}'
+    r = requests.get(gettraininginfourl)
+    data = r.json()
+    for data in data:
+        embed = discord.Embed(title='Training Informaiton',
+                              url=f'https://api-alle-group.com/api/v2/trainings{tmpid}', color=0xff0000)
+        embed.add_field(name="Trainee Name",
+                        value=data['traineename'], inline=False)
+        embed.add_field(name='Trained By',
+                        value=data['trainedby'], inline=False)
+        embed.add_field(name='Status of Training',
+                        value=data['status'], inline=False)
+        embed.add_field(name='Date and Time',
+                        value=f"{data['date']} {data['time']}", inline=False)
+        embed.add_field(name='Server', value=data['server'], inline=False)
+        embed.add_field(name='Training Origin and Destination',
+                        value=f"Origin: {data['orgin']} | Destination: {data['destinaton']}", inline=False)
+    await ctx.send(embed=embed)
+
+
+@bot.command()
+async def wtrainings(ctx):
+  await ctx.message.delete()
+  role = discord.utils.get(ctx.guild.roles, id=794865611956158484)
+  if role in ctx.author.roles:
+    await ctx.author.send("To view all web booked trainings go to this link http://www.staff-alle-group.com/exams/training/staff/training/")
+    await ctx.send("I've sent u a dm :) credit:`truckerbean`")
+  else:
+      await ctx.author.send("You dont have the right perms to use this command :(. If you think u need these perms then alert yzzoxi")
 
 
 @bot.command()
 async def status(ctx, id):
     await ctx.message.delete()
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="Fv4&4*JT61%8WGj&vwj",
-        database="alleapi"
-    )
-    cursor = mydb.cursor()
-    cursor.execute(
-        f"SELECT status FROM applications WHERE  id = '{id}';")
-    myresult = cursor.fetchall()
-    em = discord.Embed(title="Your application status is", url=f"http://51.195.223.137/api/v2/applications/{id}",
-                       description=f"{myresult}")
-    await ctx.send(embed=em)
+    getstatusinfourl = f"https://api-alle-group.com/api/v2/applications/checkstatus/{id}"
+    r = requests.get(getstatusinfourl)
+    data = r.json()
+    for data in data:
+     em = discord.Embed(title="Your application status is", url=f"https://api-alle-group.com/api/v2/applications/checkstatus/{id}",
+                       description=data['status']) 
+     await ctx.send(embed=em)
 #black list a user from applying by there steamid (BETA)
 
 
 @bot.command()
-async def blacklist(ctx, steamid, tmpid=None):
+async def blacklist(ctx, tmpname, discordid, tmpid=None, *, reason):
     await ctx.message.delete()
     mydb = mysql.connector.connect(
         host="localhost",
@@ -412,17 +637,17 @@ async def blacklist(ctx, steamid, tmpid=None):
         password="Fv4&4*JT61%8WGj&vwj",
         database="alleapi"
     )
-    mycursor = mydb.cursor()
-    sql = "INSERT INTO  blacklistvtc(tmpid, steamid, addedby) VALUES (%s, %s, %s)"
-    val = (f"{tmpid}", f"{steamid}",
-           f"{ctx.author.name}#{ctx.author.discriminator}")
-    mycursor.execute(sql, val)
+    sql = "INSERT INTO blacklist(tmpname, discordid, tmpid, reason) VALUES (%s, %s, %s, %s)"
+    val = (f"{tmpname}", f"{discordid}", f"{tmpid}", f"{reason}")
+    cursor = mydb.cursor()
+    cursor.execute(sql, val)
     mydb.commit()
-    await ctx.send(f"User Blacklisted {steamid}")
+    em3 = discord.Embed(title="Alle Applications Blacklist System",
+                        description=f"Blacklisted {tmpname} from alle groups application system. Reason: {reason}, DiscordID: {discordid}, TmpID: {tmpid}. BLACKLISTED by **{ctx.author.mention}**")
+    await ctx.send(embed=em3)
+
 
 #check drivers / users bans
-
-
 @bot.command()
 async def checkb(ctx, tmpid):
     await ctx.message.delete()
@@ -434,50 +659,49 @@ async def checkb(ctx, tmpid):
            title=f"Ban lookup for {tmpid}", url=f"https://api.truckersmp.com/v2/bans/{tmpid}", description=f"{data}", color=0x00FF00)
        await ctx.send(embed=embed)
     except:
-            em = discord.Embed(
-                 title=f"Ban Lookup Error", description=f"we could not look up the bans for player with id {tmpid}", color=0xFF0000
-                 )
-            await ctx.send(embed=em)
+        em = discord.Embed(
+            title=f"Ban Lookup Error", description=f"we could not look up the bans for player with id {tmpid}", color=0xFF0000
+        )
+        await ctx.send(embed=em)
 
 
-@bot.command()
-async def look(ctx, tmpid):
-    await ctx.message.delete()
+
 
 
 @bot.command()
 async def reply(ctx, *, message):
     await ctx.message.delete()
-    em = discord.Embed(title="", description=f"{message}")
+    em = discord.Embed(
+        title="Message From Alle | Admissions  Team", description=f"{message}")
     await ctx.send(embed=em)
 
 
 @bot.command()
 async def promote(ctx, roled,  member: discord.Member, roleid=None):
-       role = discord.utils.get(ctx.guild.roles, id=794865611956158484)
-       if role in ctx.author.roles:
-          await ctx.message.delete()
-          mydb = mysql.connector.connect(
-              host="localhost",
-              user="root",
-              password="Fv4&4*JT61%8WGj&vwj",
-              database="alleapi"
-          )
-          mycursor = mydb.cursor()
-          sql = f"UPDATE applications SET status = '{roled}' WHERE discordname = '{member}'"
-          mycursor.execute(sql)
-          mydb.commit()
-          em = discord.Embed(
-              title=f"Promoted driver {member}", description=f"{ctx.author.mention} you promoted {member} to {roled}")
-          await ctx.send(embed=em)
-          await member.send(f"{ctx.author.mention} just promoted you to {roled}.")
-          hook = Webhook(
-              'https://discord.com/api/webhooks/822167721016819716/nQRa4Eehf-DRFQuFTEdoqSs6_7t3h5miB5LOGwahyM2NJLDcsHmMWm4488cIAGeMSmC_')
-          em2 = discord.Embed(
-              title=f"{member.mention} has been promoted to {roled}", description="")
-          hook.send(embed=em2)
-          role = f"{roleid}"
-          await member.add_roles(role)
+    role = discord.utils.get(ctx.guild.roles, id=794865611956158484)
+    if role in ctx.author.roles:
+        await ctx.message.delete()
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Fv4&4*JT61%8WGj&vwj",
+            database="alleapi"
+        )
+        mycursor = mydb.cursor()
+        sql = f"UPDATE applications SET status = '{roled}' WHERE discordname = '{member}'"
+        mycursor.execute(sql)
+        mydb.commit()
+        em = discord.Embed(
+            title=f"Promoted driver {member}", description=f"{ctx.author.mention} you promoted {member} to {roled}")
+        await ctx.send(embed=em)
+        await member.send(f"{ctx.author.mention} just promoted you to {roled}.")
+        hook = Webhook(
+            'https://discord.com/api/webhooks/822167721016819716/nQRa4Eehf-DRFQuFTEdoqSs6_7t3h5miB5LOGwahyM2NJLDcsHmMWm4488cIAGeMSmC_')
+        em2 = discord.Embed(
+            title=f"{member} has been promoted to {roled}", description="")
+        hook.send(embed=em2)
+        role = f"{roleid}"
+        await member.add_roles(role)
 
 
 @bot.command()
@@ -581,27 +805,9 @@ async def convertd(ctx, ):
     await ctx.author.send(embed=embed)
 # Fire a driver
 
-##removed due to not working
-#@bot.event
-#async def on_message(message):
- #   id = bot.get_guild(688060261470568567)
 
-  #  if message.content.find("hello") != -1:
-   #     await message.channel.send(f"Hi {message.author.mention}")
-   # elif message.content == "!users":
-  # #     await message.channel.send(f"""# of Members: {id.member_count}""")
-   # elif message.content == "trucker bean":
-   #     await message.channel.send(f"""bean is a nub""")
-   # elif message.content == "antonio":
-   #     await message.channel.send(f"""Disco Truck time""")
-  #  elif message.content == "star":
- #       await message.channel.send(f"""Hey <@344999742847320064>, someone is talking about you""")
-#
 
-#@bot.event
-#async def on_message(message):
- # if message == "StarAssassin" or "starassassin" or "star":
-  #  await bot.send_message(message.channel, "Hey <@344999742847320064>, someone is talking about you")
+
 
 
 @bot.command()
@@ -637,7 +843,7 @@ async def apinfo(ctx, tmpid):
       # find ID by right clicking on server icon and choosing "copy id" at the bottom
       guild = bot.get_guild(688060261470568567)
     # find ID by right clicking on a user and choosing "copy id" at the bottom
-      if guild.get_member(755493797160288286)is not None:
+      if guild.get_member(755493797160288286):
         em2.add_field(name="In Discord server?",
                       value="Yes", inline=True)
       else:
@@ -649,5 +855,19 @@ async def apinfo(ctx, tmpid):
         em3 = discord.Embed(title="Player lookup (tmp) Error",
                             description="we could not lookup this user", color=0xFF0000)
         await ctx.send(embed=em3)
+
+
+async def bot_command_error(self, ctx: commands.Context, error: commands.CommandError):
+    await ctx.send('An error occurred: {}'.format(str(error)))
+
+
+
+
+
+
+
+
+
 # start the bot
 bot.run(token, bot=True)
+
