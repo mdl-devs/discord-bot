@@ -37,8 +37,10 @@ slash = SlashCommand(bot)
 # sending startup message to server
 @bot.event
 async def on_ready():
-    startup_msg = bot.get_channel(837713193672900688)
-    await startup_msg.send('Alle Applications Bot has started.')
+    startup_msg = bot.get_channel(844657769822945310)
+    message = await startup_msg.send('Alle Applications Bot has started.')
+    await asyncio.sleep(60)
+    await message.delete()
 
 
 #send a dm to every user new user. 
@@ -54,7 +56,14 @@ bot.remove_command('help')
 # ping command
 @bot.command()
 async def ping(ctx):
-    await ctx.send('Pong! {0}'.format(round(bot.latency, 1)))
+    await ctx.message.delete()
+    await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
+
+
+@ping.error
+async def apply_handler(ctx, error):
+    pingerr = discord.Embed(title="Ping command error", description=f"{error}", color=0xFF0000)
+    await ctx.send(embed=pingerr) 
 
 #Apply Command (allows users to apply to join the vtc.)
 @bot.command()
@@ -298,7 +307,7 @@ async def close(ctx, id, user: discord.Member):
             await bot.wait_for('message', check=check, timeout=60)
             await ctx.channel.delete()
             role = discord.utils.get(ctx.guild.roles, name="Applicant")
-            await member.remove_roles(role)
+            await user.remove_roles(role)
             index = data["ticket-channel-ids"].index(channel_id)
             del data["ticket-channel-ids"][index]
 
@@ -332,20 +341,28 @@ async def close(ctx, id, user: discord.Member):
                 title="Alle Group Applications", description="You have run out of time to close this ticket. Please run the command again.", color=0x00a8ff)
             await asyncio.sleep(60)
             await ctx.send(embed=em)
-
+    else: 
+        # sends error if the command has not be used in a application ticket channel.
+        not_a_ticket_channel = discord.Embed(title="Alle Group Applications | `close` error",
+                                             description="This command can only be used in a application channel.", color=0xFF0000)
+        await ctx.send(embed=not_a_ticket_channel)
 
 @close.error 
 async def close_handler_missing_arg(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send('You forgot to include `id` and `member`')
+        # sends error if the command has not be used in a application ticket channel.
+        provide_args = discord.Embed(title="Alle Group Applications | `close` error",
+                                             description="Please include `id` and `member` at the end of the command `a/close`", color=0xFF0000)
+        await ctx.send(embed=provide_args)
 
 @close.error
 async def close_handler(ctx, error):
     if isinstance(error, commands.BadArgument): 
-        close_no_user_found = discord.Embed(
-            title=":warning: Close Command Error :warning:", description=f"I could not find that user!", color=0xeb3434
-        )
-        await ctx.send(embed=close_no_user_found)
+        no_member = discord.Embed(title="Alle Group Applications | `close` error",
+                                     description="I cant find that member in this guild :(", color=0xFF0000)
+        await ctx.send(embed=no_member)
+
+
 
 @bot.command()
 async def hire(ctx, id, tmpid,  member: discord.Member):
@@ -366,7 +383,7 @@ async def hire(ctx, id, tmpid,  member: discord.Member):
         data = json.load(f)
 
     if ctx.channel.id in data["ticket-channel-ids"]:
-
+    
         channel_id = ctx.channel.id
 
         def check(message):
@@ -417,7 +434,22 @@ async def hire(ctx, id, tmpid,  member: discord.Member):
             hook.send(embed=userapplyed)
             await ctx.send("Driver added to our database and to our company")
             await ctx.channel.delete()
-            
+
+            try: 
+                    role1 = discord.utils.get(ctx.guild.roles, id=837666217413967882)    
+                    role2 = discord.utils.get(
+                        ctx.guild.roles, id=837607050417537045)
+                    role3 = discord.utils.get(
+                        ctx.guild.roles, id=837608034721071104)
+                    hours = 60*60
+                    await asyncio.sleep(1008 * hours)
+                    await member.remove_roles(role3)
+                    await member.add_roles(role1)
+                    await member.add_roles(role2)
+                    joined_server = member.joined_at.strftime("%b %d, %Y")
+                    await member.send(f"Hey, your probation period is up congrats. You have been in Alle Groups Discord server since: {joined_server}")
+            except:
+                  await ctx.send("oh it did not work")     
 
             # Adding in #staff-logs logging for this bot!
             try:
@@ -446,20 +478,34 @@ async def hire(ctx, id, tmpid,  member: discord.Member):
             em = discord.Embed(
                 title="Alle Group Applications", description="You have run out of time to hire this driver. Please run the command again.", color=0x00a8ff)
             await ctx.send(embed=em)
-
+    else: 
+        # sends error if the command has not be used in a application ticket channel.
+        not_a_ticket_channel = discord.Embed(title="Alle Group Applications | `hire` error",
+                                             description="This command can only be used in a application channel.", color=0xFF0000)
+        await ctx.send(embed=not_a_ticket_channel)
   else:
       errormsg = discord.Embed(
           title="Alle Group applications", description="You do not have the correct roles or perms to use the command `hire`", color=0xFF0000
       )
       await ctx.send(embed=errormsg)
+    
+     
 
 
 
 @hire.error
 async def hire_handler(ctx, error):
-    #await ctx.send('Debugging Mode Enabled.')
-    await ctx.send(error)
+    if isinstance(error, commands.MissingRequiredArgument):
+       forgotiderr = discord.Embed(
+            title="Alle Group Applications | `hire` error", description=f"This command requires the following arguments `id` `tmpid` `member` one of these are not present in your command `(a/hire application-id, tmpid, member(discord ping))`", color=0xFF0000)
+    await ctx.send(embed=forgotiderr)
 
+@hire.error 
+async def hire_handler2(ctx, error):
+    if isinstance(error, commands.BadArgument):
+        no_member = discord.Embed(title="Alle Group Applications | `close` error",
+                                  description="I cant find that member in this guild :(", color=0xFF0000)
+        await ctx.send(embed=no_member)
 
 
 
@@ -491,33 +537,53 @@ async def pinfo(ctx, tmpid):
                             description="we could not lookup this user", color=0xFF0000)
         await ctx.send(embed=em3)
 
+
+
+# fixed claim command. 
 @bot.command()
 async def claim(ctx, id):
- role = discord.utils.get(ctx.guild.roles, id=794865611956158484)
- if role in ctx.author.roles:
-   await ctx.message.delete()
-   mydb = mysql.connector.connect(
+    await ctx.message.delete()
+    with open('data.json') as f:
+        data = json.load(f)
+    
+    # if statement checks if the channel id the command was used in is a application channel or not ONLY WORKS FOR ACTIVE APPLICATION CHANNELS
+    if ctx.channel.id in data["ticket-channel-ids"]:
+     role = discord.utils.get(ctx.guild.roles, id=777459663343714304)
+     # if statement checks if the author of the command has the role mentioned above.
+     if role in ctx.author.roles:
+        channel_id = ctx.channel.id
+        mydb = mysql.connector.connect(
        host="localhost",
        user="root",
        password="Fv4&4*JT61%8WGj&vwj",
        database="alleapi"
-   )
-
-   mycursor = mydb.cursor()
-   sql = f"UPDATE applications SET status = 'Claimed/inprogress', statusaddedby = '{ctx.author}' WHERE applicationid = '{id}'"
-   mycursor.execute(sql)
-   mydb.commit()
-   getapplicationinfourl = f"https://api-alle-group.com/api/v2/applications/{id}"
-   em2 = discord.Embed(description=f"{ctx.author.mention} just claimed application id {id}",
+    )
+   
+        mycursor = mydb.cursor()
+        sql = f"UPDATE applications SET status = 'Claimed/inprogress', statusaddedby = '{ctx.author}' WHERE applicationid = '{id}'"
+        mycursor.execute(sql)
+        mydb.commit()
+        em2 = discord.Embed(description=f"{ctx.author.mention} just claimed application id {id}",
                        url=f"https://api-alle-group.com/api/v2/applications/{id}")
-   await ctx.send(embed=em2)
+        await ctx.send(embed=em2)                   
+     else: 
+           # sends error msg if the user does not have the right role.
+           does_not_have_role = discord.Embed(title="Alle Group Applications | `claim` error",
+                                                description=f"This command can only be used by people with the `Director` Role", color=0xFF0000)
+           await ctx.send(embed=does_not_have_role)
+    else:
+        # sends error if the command has not be used in a application ticket channel.
+        not_a_ticket_channel = discord.Embed(title="Alle Group Applications | `claim` error", description="This command can only be used in a application channel.", color=0xFF0000)
+        await ctx.send(embed=not_a_ticket_channel)
+   
 
-
+# send error if they do not provide a application id.
 @claim.error
-async def claim_handler(ctx, error):
-    claimerrorem = discord.Embed(
-        title=":warning: Claim Command Error :warning:", description=f"{error}", color=0x03fcb1)
-    await ctx.send(embed=claimerrorem)
+async def claim_handler2(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        forgotiderr = discord.Embed(
+            title="Alle Group Applications | `claim` error", description=f"Please provide a `id`", color=0xFF0000)
+    await ctx.send(embed=forgotiderr)
 
 
 #command to request training.
@@ -704,6 +770,43 @@ async def promote(ctx, roled,  member: discord.Member, roleid=None):
         await member.add_roles(role)
 
 
+# command to allow the instant promotion for drivers currently on probation that are to be upped before the auto system ups them. 
+@bot.command()
+async def finished(ctx, member: discord.Member):
+    role = discord.utils.get(ctx.guild.roles, id=837606126795227136)
+    if role in ctx.author.roles:
+        await ctx.message.delete()
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Fv4&4*JT61%8WGj&vwj",
+            database="alleapi"
+        )
+        mycursor = mydb.cursor()
+        sql = f"UPDATE applications SET status = 'Driver' WHERE discordname = '{member}'"
+        mycursor.execute(sql)
+        mydb.commit()
+        role3 = discord.utils.get(
+            ctx.guild.roles, id=837608034721071104)
+        await member.remove_roles(role3)
+        role1 = discord.utils.get(ctx.guild.roles, id=837666217413967882)
+        await member.add_roles(role1)
+        role2 = discord.utils.get(ctx.guild.roles, id=837607050417537045)
+        await member.add_roles(role2)
+        joined_server = member.joined_at.strftime("%b %d, %Y")
+        await member.send(f"Hey, your probation period is up congrats. You have been in Alle Groups Discord server since: {joined_server}")
+    
+    else:    
+          await ctx.send()
+
+
+@finished.error
+async def finished_handler2(ctx, error):
+    if isinstance(error, commands.BadArgument):
+        cant_find_member = discord.Embed(
+            title="Alle Group Applications | `finished` error", description=f"I cant cant find that member in this guild :(", color=0xFF0000)
+    await ctx.send(embed=cant_find_member)
+
 @bot.command()
 async def demote(ctx, role, member: discord.Member):
     await ctx.message.delete()
@@ -860,14 +963,14 @@ async def apinfo(ctx, tmpid):
 async def bot_command_error(self, ctx: commands.Context, error: commands.CommandError):
     await ctx.send('An error occurred: {}'.format(str(error)))
 
-
-
-
-
-
-
-
+@apinfo.error
+async def apinfo_handler(ctx, error):
+    if isinstance(error, commands.BadArgument):
+        cant_find_member = discord.Embed(
+            title="Alle Group Applications | `apinfo` error", description=f"Please provide a `tmpid`", color=0xFF0000)
+    await ctx.send(embed=cant_find_member)
 
 # start the bot
 bot.run(token, bot=True)
+
 
