@@ -26,7 +26,7 @@ intents = intents = discord.Intents.all()
 
 
 # Bots token
-token = 'ODM3ODAwNjk4MDY2MTA4NDM2.YIx0tA.QbeQPybTciQBMh69wiTmrUl9KhQ'
+token = 'WITHHEALD FOR PRIVACY'
 
 # Bots prefix
 bot = commands.Bot(command_prefix=('a/'), intents=intents)
