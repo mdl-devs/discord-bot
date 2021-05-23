@@ -885,9 +885,10 @@ async def blacklist(ctx, tmpname, discordid, tmpid=None, *, reason):
         cursor.execute(sql, val)
         # This will try to commit the above sql statement but if it there already is an entry then it will return an error.
         mydb.commit()
-        em3 = discord.Embed(title="Alle Applications Blacklist System",
+        Blacklisted_message = discord.Embed(title="Alle Group Applications | Blacklist System",
                             description=f"Blacklisted {tmpname} from alle groups application system. Reason: {reason}, DiscordID: {discordid}, TmpID: {tmpid}. BLACKLISTED by **{ctx.author.mention}**")
-        await ctx.send(embed=em3)
+        Blacklisted_message.set_footer(text='Alle Group Applications |  Blacklist System • 2021')
+        await ctx.send(embed=Blacklisted_message)
     # If there is already a blacklist report in for the member then it will return this error.
 
 
