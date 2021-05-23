@@ -26,7 +26,7 @@ intents = intents = discord.Intents.all()
 
 
 # Bots token
-token = 'WITHHEALD FOR PRIVACY'
+token = 'ODM3ODAwNjk4MDY2MTA4NDM2.YIx0tA.QbeQPybTciQBMh69wiTmrUl9KhQ'
 
 # Bots prefix
 bot = commands.Bot(command_prefix=('a/'), intents=intents)
@@ -202,24 +202,68 @@ async def apply(ctx, *, args=None):
 
     def check(message):
         return message.author == ctx.author and message.channel == ticket_channel
-    await ticket_channel.send(f"Hey {ctx.author.mention}, what is your name?")
+    await ticket_channel.send(f"{ctx.author.mention}")
+    question1_em = discord.Embed(
+        title="Alle Group Applications | Question 1 ", description=f"Hey, {ctx.author.name} what is your name?", color=0xFF0000)
+    question1_em.set_footer(
+        text="Alle Group Applications | Question 1 • 2021")
+    await ticket_channel.send(embed=question1_em)    
     msg = await bot.wait_for('message', check=check)
     response = (msg.content)
-    await ticket_channel.send("What is your TMP ID?")
+    question2_em = discord.Embed(
+        title="Alle Group Applications | Question 2 ", description=f"Hey, {ctx.author.name} what is your TMPID?", color=0xFF0000)
+    question2_em.set_footer(
+        text="Alle Group Applications | Question 2 • 2021")
+    await ticket_channel.send(embed=question2_em)
     msg2 = await bot.wait_for('message', check=check)
     response2 = (msg2.content)
-    await ticket_channel.send("What department are your applying for e.g Driver?")
-    msg3 = await bot.wait_for('message', check=check)
-    response3 = (msg3.content)
-    await ticket_channel.send("What country are you from?")
+    # question 3 removed due to no longer being needed
+    question3_em = discord.Embed(
+        title="Alle Group Applications | Question 3 ", description=f"Hey, {ctx.author.name} what country are you from?", color=0xFF0000)
+    question3_em.set_footer(
+        text="Alle Group Applications | Question 3 • 2021")
+    await ticket_channel.send(embed=question3_em)
     msg4 = await bot.wait_for('message', check=check)
     response4 = (msg4.content)
-    await ticket_channel.send("What is your age?")
+    question4_em = discord.Embed(
+        title="Alle Group Applications | Question 4 ", description=f"Hey, {ctx.author.name} what is your age?", color=0xFF0000)
+    question4_em.set_footer(
+        text="Alle Group Applications | Question 4 • 2021")
+    await ticket_channel.send(embed=question4_em)
     msg5 = await bot.wait_for('message', check=check)
     response5 = (msg5.content)
+    
+     #checks if they are older then 
+    #if msg5.content < 16: 
+        #your_not_old_enough = discord.Embed(
+          #  title="Alle Group Applications | Age Check ", description=f"Hey, {ctx.author.name} your application has been **`Automatically Denied`** as you are under the age of 16.", color=0xFF0000)
+        #your_not_old_enough.set_footer(
+        #text="Alle Group Applications | Age Check • 2021")
+        #await ctx.author.send(embed=your_not_old_enough)
+     #   await ticket_channel.delete()
+        #role = discord.utils.get(ctx.guild.roles, id=837608034721071104)
+        #await ctx.author.remove_roles(role)
+        #index = data["ticket-channel-ids"].index(ticket_channel.id)
+        #del data["ticket-channel-ids"][index]
+        #with open('data.json', 'w') as f:
+         #json.dump(data, f)
+        #mydb = mysql.connector.connect(
+            #host="localhost",
+           # user="root",
+         #   password="Fv4&4*JT61%8WGj&vwj",
+          #  database="alleapi"
+        #)
+        #mycursor = mydb.cursor()
+        #sql = f"UPDATE applications SET status = 'Closed / Under Age', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
+        #mycursor.execute(sql)
+        #mydb.commit()
+
+
+
+
     await ticket_channel.send("Thanks for answering all questions :)")
     questionr = discord.Embed(title="Alle Group Applications",
-                              description=f"Name = {response}, TMPID = {response2}, Department = {response3}, Country = {response4}, Age = {response5}")
+                              description=f"Name = {response}, TMPID = {response2},  Country = {response4}, Age = {response5}")
     await ticket_channel.send(embed=questionr)
     mydb = mysql.connector.connect(
             host="localhost",
