@@ -205,18 +205,57 @@ async def apply(ctx, *, args=None):
     def check(message):
         return message.author == ctx.author and message.channel == ticket_channel
     await ticket_channel.send(f"{ctx.author.mention}")
-    question1_em = discord.Embed(
+    try:
+     question1_em = discord.Embed(
         title="Alle Group Applications | Question 1 ", description=f"Hey, {ctx.author.name} what is your name?", color=0xFF0000)
-    question1_em.set_footer(
+     question1_em.set_footer(
         text="Alle Group Applications | Question 1 • 2021")
-    await ticket_channel.send(embed=question1_em)
-    msg = await bot.wait_for('message', check=check)
-    response = (msg.content)
+     remove1 = await ticket_channel.send(embed=question1_em)
+     msg = await bot.wait_for('message', check=check, timeout=3600)
+     response = (msg.content)
+    except asyncio.TimeoutError:
+            em = discord.Embed(
+                title="Alle Group Applications", description=f"Hey {ctx.author.name}, are you there? You opened up a application @ alle group and have not answered any of the questions after 1hr.", color=0x00a8ff)
+            await asyncio.sleep(3600)
+            await ctx.author.send(embed=em)
+            try: 
+             question1_em = discord.Embed(
+        title="Alle Group Applications | Question 1 ", description=f"Hey, {ctx.author.name} what is your name?", color=0xFF0000)
+             question1_em.set_footer(
+        text="Alle Group Applications | Question 1 • 2021")
+             remove1 = await ticket_channel.send(embed=question1_em)
+             msg = await bot.wait_for('message', check=check, timeout=7200)
+             response = (msg.content)
+            except:
+                  em2 = discord.Embed(
+                title="Alle Group Applications", description=f"Hey {ctx.author.name}, Your application with Alle Group will be closed in 5 mins as you have not responded to any of the questions in 2hrs", color=0x00a8ff)
+                  await asyncio.sleep(3600)
+                  await ctx.author.send(embed=em2)
+                  await asyncio.sleep(300)
+                  await ticket_channel.delete()
+                  await ctx.author.send(f"{ctx.author.name} Your Application Has been closed.")
+                  role = discord.utils.get(
+                      ctx.guild.roles, id=837608034721071104)
+                  await ctx.author.remove_roles(role)
+                  index = data["ticket-channel-ids"].index(ticket_channel.id)
+                  del data["ticket-channel-ids"][index]
+                  with open('data.json', 'w') as f:
+                   json.dump(data, f)
+                  mydb = mysql.connector.connect(
+                  host="localhost",
+                  user="root",
+                  password="Fv4&4*JT61%8WGj&vwj",
+                  database="alleapi"
+                  )
+                  mycursor = mydb.cursor()
+                  sql = f"UPDATE applications SET status = 'Closed', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
+                  mycursor.execute(sql)
+                  mydb.commit()
     question2_em = discord.Embed(
         title="Alle Group Applications | Question 2 ", description=f"Hey, {ctx.author.name} what is your TMPID?", color=0xFF0000)
     question2_em.set_footer(
         text="Alle Group Applications | Question 2 • 2021")
-    await ticket_channel.send(embed=question2_em)
+    remove2 = await ticket_channel.send(embed=question2_em)
     msg2 = await bot.wait_for('message', check=check)
     response2 = (msg2.content)
     # question 3 removed due to no longer being needed
@@ -224,16 +263,17 @@ async def apply(ctx, *, args=None):
         title="Alle Group Applications | Question 3 ", description=f"Hey, {ctx.author.name} what country are you from?", color=0xFF0000)
     question3_em.set_footer(
         text="Alle Group Applications | Question 3 • 2021")
-    await ticket_channel.send(embed=question3_em)
+    remove3 = await ticket_channel.send(embed=question3_em)
     msg4 = await bot.wait_for('message', check=check)
     response4 = (msg4.content)
     question4_em = discord.Embed(
         title="Alle Group Applications | Question 4 ", description=f"Hey, {ctx.author.name} what is your age?", color=0xFF0000)
     question4_em.set_footer(
         text="Alle Group Applications | Question 4 • 2021")
-    await ticket_channel.send(embed=question4_em)
+    remove4 = await ticket_channel.send(embed=question4_em)
     msg5 = await bot.wait_for('message', check=check)
     response5 = (msg5.content)
+    
 
     #checks if they are older then
     #if msg5.content < 16:
@@ -259,10 +299,21 @@ async def apply(ctx, *, args=None):
     #sql = f"UPDATE applications SET status = 'Closed / Under Age', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
     #mycursor.execute(sql)
     #mydb.commit()
-
-    await ticket_channel.send("Thanks for answering all questions :)")
-    questionr = discord.Embed(title="Alle Group Applications",
-                              description=f"Name = {response}, TMPID = {response2},  Country = {response4}, Age = {response5}")
+    timestamp = datetime.now()
+    thanks_for_answering_alle_questions = discord.Embed(title="Alle Group Applications | Your Application Has Been Recived.", description=f"Hey {ctx.author.name}, Thanks for answering all the questions a member of staff will now deal with your application. **Please remember it can take up to 2 days for your application to be viewed.**", color=0xFF0000)
+    thanks_for_answering_alle_questions.set_footer(
+        text="Alle Group Applications | Applications System • 2021")
+    await ctx.author.send(embed=thanks_for_answering_alle_questions)
+    questionr = discord.Embed(title="Alle Group Applications | Answers To Application Questions",
+                              description=f"Here are the answers to the application questions:", color=0xFF0000)
+    questionr.add_field(name="Name", value=f"{response}", inline=True)  
+    questionr.add_field(name="TMPID", value=f"{response2}", inline=True)
+    questionr.add_field(name="Country", value=f"{response4}", inline=True)
+    questionr.add_field(name="Age", value=f"{response5}", inline=True)
+    questionr.add_field(name="Applicant's Discord:", value=f"{ctx.author}", inline=True)
+    questionr.add_field(name="Application Submitted:", value=timestamp.strftime(
+        r"On: %d/%m/%Y At: %I:%M %p"), inline=True)
+    questionr.set_footer(text="Alle Group Applications | Applications System • 2021")
     await ticket_channel.send(embed=questionr)
     mydb = mysql.connector.connect(
         host="localhost",
@@ -278,7 +329,15 @@ async def apply(ctx, *, args=None):
            f"{day}", f"{ticket_number}", f"Sent", f"applications bot", f"{response2}")
     mycursor.execute(sql, val)
     mydb.commit()
+    await remove1.delete()
+    await remove2.delete()
+    await remove3.delete()
+    await remove4.delete()
 
+    await msg.delete()
+    await msg2.delete()
+    await msg4.delete()
+    await msg5.delete()
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
@@ -568,7 +627,7 @@ async def hire(ctx, id, tmpid,  member: discord.Member):
             #hook.send(embed=em2)
             userapplyed = discord.Embed(title="Alle Group Applications",
                                         description=f"{ctx.author.mention} Hired {member.mention}")
-            hook.send(embed=userapplyed)
+            #hook.send(embed=userapplyed)
             await ctx.send("Driver added to our database and to our company")
             await ctx.channel.delete()
 
@@ -580,7 +639,7 @@ async def hire(ctx, id, tmpid,  member: discord.Member):
                 role3 = discord.utils.get(
                     ctx.guild.roles, id=837608034721071104)
                 hours = 60*60
-                await asyncio.sleep(1008 * hours)
+                await asyncio.sleep(3628800)
                 await member.remove_roles(role3)
                 await member.add_roles(role1)
                 await member.add_roles(role2)
@@ -946,9 +1005,18 @@ async def checkb(ctx, tmpid):
 @bot.command()
 async def reply(ctx, *, message):
     await ctx.message.delete()
-    em = discord.Embed(
-        title="Message From Alle | Admissions  Team", description=f"{message}")
-    await ctx.send(embed=em)
+    with open('data.json') as f:
+        data = json.load(f)
+    # if statement checks if the channel id the command was used in is a application channel or not ONLY WORKS FOR ACTIVE APPLICATION CHANNELS
+    if ctx.channel.id in data["ticket-channel-ids"]:      
+           em = discord.Embed(
+           title="Message From Alle | Admissions  Team", description=f"{message}")
+           await ctx.send(embed=em)
+    else:
+        # sends error if the command has not be used in a application ticket channel.
+        not_a_ticket_channel = discord.Embed(title="Alle Group Applications | `claim` error",
+                                             description="This command can only be used in a application channel.", color=0xFF0000)
+        await ctx.send(embed=not_a_ticket_channel)
 
 
 @bot.command()
@@ -1129,7 +1197,7 @@ async def bug(ctx):
         title="Alle Group Applications | Bug Report System ", description=f"Hey, {ctx.author.name} what is the bug?", color=0xFF0000)
     what_is_the_bug_em.set_footer(
         text="Alle Group Applications | Bug Report System • 2021")
-    await ctx.send(embed=what_is_the_bug_em)
+    message = await ctx.send(embed=what_is_the_bug_em)
     msg = await bot.wait_for('message', check=check)
     response = (msg.content)
     if 'applications' and 'application' and 'apps' in response:
@@ -1154,11 +1222,12 @@ async def bug(ctx):
         channel = discord.utils.get(ctx.guild.channels, id=837713484673712128)
         await channel.send(embed=new_applications_bug2_em)
     await msg.delete()
-
+    await message.delete()
 
 @bot.command()
 async def apinfo(ctx, tmpid):
     await ctx.message.delete()
+
 
     getplayerinfourl = f"https://api.truckersmp.com/v2/player/{tmpid}"
     r = requests.get(getplayerinfourl)
