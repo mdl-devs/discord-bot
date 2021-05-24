@@ -69,6 +69,8 @@ async def apply_handler(ctx, error):
     await ctx.send(embed=pingerr)
 
 #Apply Command (allows users to apply to join the vtc.)
+
+
 @bot.command()
 # cool down of 4 mins to counter spamming
 @commands.cooldown(1, 240, commands.BucketType.user)
@@ -145,7 +147,7 @@ async def apply(ctx, *, args=None):
                                 description=f"{ctx.author.mention} Has applied.  Channel name:{ticket_channel.mention}")
     hook.send(embed=userapplyed)
     await ctx.send(embed=created_em)
-    
+
     # checks to see if the user is a Diretor if they are then they will not be allowed to apply
     Diretor_role = discord.utils.get(ctx.guild.roles, id=837606126795227136)
     if Diretor_role in ctx.author.roles:
@@ -155,14 +157,14 @@ async def apply(ctx, *, args=None):
         Member_has_too_high_role.set_footer(
             text="Alle Group Applications | Apply Error Message • 2021")
         await ctx.author.send(embed=Member_has_too_high_role)
-    # sends a embed message logging to staff-logs stating that they tried to apply 
+    # sends a embed message logging to staff-logs stating that they tried to apply
         channel3 = discord.utils.get(ctx.guild.channels, id=837714802049679451)
         staff_log_messageing_1 = discord.Embed(
             ttitle="Alle Group Applications | `apply` Logging Message", description=f"{ctx.author.name} Tried to apply to join the vtc tho there attempt was blocked because `They had the role name` **`Director`**", color=0xFF0000)
         staff_log_messageing_1.set_footer(
             text="Alle Group Applications | Apply Logging Message • 2021")
         await channel3.send(embed=staff_log_messageing_1)
-    
+
     # checks to see if the user is already a driver and then they dont need to apply / cant apply. If they are abusing the system then it will flag to the staff team.
     Drivers_role = discord.utils.get(ctx.guild.roles, id=837666217413967882)
     if Drivers_role in ctx.author.roles:
@@ -179,9 +181,10 @@ async def apply(ctx, *, args=None):
         staff_log_messageing_1.set_footer(
             text="Alle Group Applications | Apply Logging Message • 2021")
         await channel2.send(embed=staff_log_messageing_2)
-    
-    # checks to see if the user is a member of lower staff, however they should have the above role anyway :) 
-    lower_staff_role = discord.utils.get(ctx.guild.roles, id=837606669830848523)
+
+    # checks to see if the user is a member of lower staff, however they should have the above role anyway :)
+    lower_staff_role = discord.utils.get(
+        ctx.guild.roles, id=837606669830848523)
     if lower_staff_role in ctx.author.roles:
         await ticket_channel.delete()
         Member_has_too_high_role_3 = discord.Embed(
@@ -196,8 +199,7 @@ async def apply(ctx, *, args=None):
         staff_log_messageing_3.set_footer(
             text="Alle Group Applications | Apply Logging Message • 2021")
         await channel1.send(embed=staff_log_messageing_3)
-    
-    
+
     await asyncio.sleep(20)
 
     def check(message):
@@ -207,7 +209,7 @@ async def apply(ctx, *, args=None):
         title="Alle Group Applications | Question 1 ", description=f"Hey, {ctx.author.name} what is your name?", color=0xFF0000)
     question1_em.set_footer(
         text="Alle Group Applications | Question 1 • 2021")
-    await ticket_channel.send(embed=question1_em)    
+    await ticket_channel.send(embed=question1_em)
     msg = await bot.wait_for('message', check=check)
     response = (msg.content)
     question2_em = discord.Embed(
@@ -232,45 +234,42 @@ async def apply(ctx, *, args=None):
     await ticket_channel.send(embed=question4_em)
     msg5 = await bot.wait_for('message', check=check)
     response5 = (msg5.content)
-    
-     #checks if they are older then 
-    #if msg5.content < 16: 
-        #your_not_old_enough = discord.Embed(
-          #  title="Alle Group Applications | Age Check ", description=f"Hey, {ctx.author.name} your application has been **`Automatically Denied`** as you are under the age of 16.", color=0xFF0000)
-        #your_not_old_enough.set_footer(
-        #text="Alle Group Applications | Age Check • 2021")
-        #await ctx.author.send(embed=your_not_old_enough)
-     #   await ticket_channel.delete()
-        #role = discord.utils.get(ctx.guild.roles, id=837608034721071104)
-        #await ctx.author.remove_roles(role)
-        #index = data["ticket-channel-ids"].index(ticket_channel.id)
-        #del data["ticket-channel-ids"][index]
-        #with open('data.json', 'w') as f:
-         #json.dump(data, f)
-        #mydb = mysql.connector.connect(
-            #host="localhost",
-           # user="root",
-         #   password="Fv4&4*JT61%8WGj&vwj",
-          #  database="alleapi"
-        #)
-        #mycursor = mydb.cursor()
-        #sql = f"UPDATE applications SET status = 'Closed / Under Age', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
-        #mycursor.execute(sql)
-        #mydb.commit()
 
-
-
+    #checks if they are older then
+    #if msg5.content < 16:
+    #your_not_old_enough = discord.Embed(
+    #  title="Alle Group Applications | Age Check ", description=f"Hey, {ctx.author.name} your application has been **`Automatically Denied`** as you are under the age of 16.", color=0xFF0000)
+    #your_not_old_enough.set_footer(
+    #text="Alle Group Applications | Age Check • 2021")
+    #await ctx.author.send(embed=your_not_old_enough)
+    #   await ticket_channel.delete()
+    #role = discord.utils.get(ctx.guild.roles, id=837608034721071104)
+    #await ctx.author.remove_roles(role)
+    #index = data["ticket-channel-ids"].index(ticket_channel.id)
+    #del data["ticket-channel-ids"][index]
+    #with open('data.json', 'w') as f:
+    #json.dump(data, f)
+    #mydb = mysql.connector.connect(
+    #host="localhost",
+    # user="root",
+    #   password="Fv4&4*JT61%8WGj&vwj",
+    #  database="alleapi"
+    #)
+    #mycursor = mydb.cursor()
+    #sql = f"UPDATE applications SET status = 'Closed / Under Age', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
+    #mycursor.execute(sql)
+    #mydb.commit()
 
     await ticket_channel.send("Thanks for answering all questions :)")
     questionr = discord.Embed(title="Alle Group Applications",
                               description=f"Name = {response}, TMPID = {response2},  Country = {response4}, Age = {response5}")
     await ticket_channel.send(embed=questionr)
     mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="Fv4&4*JT61%8WGj&vwj",
-            database="alleapi"
-        )
+        host="localhost",
+        user="root",
+        password="Fv4&4*JT61%8WGj&vwj",
+        database="alleapi"
+    )
     mycursor = mydb.cursor()
 
     day = dt.now()
@@ -279,8 +278,7 @@ async def apply(ctx, *, args=None):
            f"{day}", f"{ticket_number}", f"Sent", f"applications bot", f"{response2}")
     mycursor.execute(sql, val)
     mydb.commit()
-    
-    
+
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
@@ -301,7 +299,7 @@ async def apply(ctx, *, args=None):
             title="Alle Group Applications | Blacklist System", description=f"Your application with Alle Group has been **Automatically Denied** because  you are **blacklisted** from applying. If you attempt to evade this then you will be banned.", color=0xFF0000)
         you_are_blacklisted.set_footer(
             text=f"Alle Group Applications | Blacklist System • 2021")
-        await ctx.author.send(embed=you_are_blacklisted)    
+        await ctx.author.send(embed=you_are_blacklisted)
 
         await ticket_channel.delete()
         role = discord.utils.get(ctx.guild.roles, id=837608034721071104)
@@ -320,11 +318,6 @@ async def apply(ctx, *, args=None):
         sql = f"UPDATE applications SET status = 'Closed', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
         mycursor.execute(sql)
         mydb.commit()
-    
-
-
-
-
 
     try:
      getplayerinfourl = f"https://api.truckersmp.com/v2/player/{response2}"
@@ -416,17 +409,17 @@ async def apply(ctx, *, args=None):
     await ticket_channel.send(embed=warningmsg)
 
 
-
 @apply.error
 async def apply_handler_command_cooldown(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         await ctx.send(f"{ctx.author.mention}")
         # sends error if the command has not be used in a application ticket channel.
         apply_on_cooldown = discord.Embed(title="Alle Group Applications | `apply` error",
-                                     description=f"Im sorry but at this time this command is on a cooldown please try again in {error.retry_after:.2f}s", color=0xFF0000)
+                                          description=f"Im sorry but at this time this command is on a cooldown please try again in {error.retry_after:.2f}s", color=0xFF0000)
         apply_on_cooldown.set_footer(
             text="Alle Group Applications |  apply error message • 2021")
         await ctx.send(embed=apply_on_cooldown)
+
 
 @bot.command()
 async def close(ctx, id, user: discord.Member):
@@ -732,98 +725,136 @@ async def claim_handler2(ctx, error):
 
 #command to request training.
 @bot.command()
-async def request(ctx, date, time, *, message):
+async def request(ctx):
     await ctx.message.delete()
-    day = dt.now()
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="Fv4&4*JT61%8WGj&vwj",
-        database="alleapi"
-    )
-    mycursor = mydb.cursor()
-    mycursor.execute(
-        f"SELECT COUNT(discordname) FROM applications WHERE discordname = '{ctx.author}'")
-    result = mycursor.fetchall()
-    hook = Webhook(
-        'https://discord.com/api/webhooks/825657922703982622/frltOXWR9Di-VYeNelDDHoLiO3sqcO7o6FgxHWt68MTzL3wZpQOrxlqRuNe0IU9LY-CO')
-    em2 = discord.Embed(title=f"New training request.", color=0x00FF00)
-    em2.add_field(
-        name="User", value=f"{ctx.author.name}#{ctx.author.discriminator}")
-    em2.add_field(name="Requested Date", value=f"{date}", inline=True)
-    em2.add_field(name="Requested Time", value=f"{time}", inline=True)
-    em2.add_field(name="Message", value=f"{message}", inline=False)
-    em2.add_field(name="Request date and time", value=f"{day}", inline=True)
-    em2.add_field(name="Number of applications from user",
-                  value=f"{result}", inline=False)
-    hook.send(embed=em2)
-    await ctx.send("Your Training request has been sent to the admissions team.")
+    #day = dt.now()
+    #mydb = mysql.connector.connect(
+        #host="localhost",
+       # user="root",
+      #  password="Fv4&4*JT61%8WGj&vwj",
+     #   database="alleapi"
+    #)
+    #mycursor = mydb.cursor()
+    #mycursor.execute(
+   #     f"SELECT COUNT(discordname) FROM applications WHERE discordname = '{ctx.author}'")
+   # result = mycursor.fetchall()
+   # hook = Webhook(
+    #    'https://discord.com/api/webhooks/825657922703982622/frltOXWR9Di-VYeNelDDHoLiO3sqcO7o6FgxHWt68MTzL3wZpQOrxlqRuNe0IU9LY-CO')
+   # em2 = discord.Embed(title=f"New training request.", color=0x00FF00)
+   # em2.add_field(
+   #     name="User", value=f"{ctx.author.name}#{ctx.author.discriminator}")
+   # em2.add_field(name="Requested Date", value=f"{date}", inline=True)
+   # em2.add_field(name="Requested Time", value=f"{time}", inline=True)
+   # em2.add_field(name="Message", value=f"{message}", inline=False)
+    #em2.add_field(name="Request date and time", value=f"{day}", inline=True)
+    #em2.add_field(name="Number of applications from user",
+   #               value=f"{result}", inline=False)
+   # hook.send(embed=em2)
+   # await ctx.send("Your Training request has been sent to the admissions team.")
+    we_dont_do_trainings = discord.Embed(title="Alle Group Applications | Out Of Date Command", description=f"Hey {ctx.author.name}, we no longer offer driver training. As there is a new system in place now :)")
+    we_dont_do_trainings.set_footer(
+        text="Alle Group Applications | Apply Logging Message • 2021")
+    await ctx.send("Look in your dms")
+    try:
+        await ctx.author.send(embed=we_dont_do_trainings)
+    except:
+        your_dms_are_disabled = discord.Embed(
+            title="Alle Group Applications | Out Of Date Command Error", description=f"{ctx.author.mention} i tried to dm you but i could not :(")
+        your_dms_are_disabled.set_footer(
+            text="Alle Group Applications | Error Logging Message • 2021")
+        await ctx.send(embed=your_dms_are_disabled)
 
 
 @bot.command()
-async def confirm(ctx, tmpid, status, date, time, server, orgin, destination, videourl):
+async def confirm(ctx):
     await ctx.message.delete()
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="Fv4&4*JT61%8WGj&vwj",
-        database="alleapi"
-    )
-    getplayerinfourl = f"https://api.truckersmp.com/v2/player/{tmpid}"
-    r = requests.get(getplayerinfourl)
-    data = r.json()["response"]
-    for server in data:
-     mycursor = mydb.cursor()
-     sql = "INSERT INTO trainings(tmpid, steamid, trainedby, videoevidence, traineename, status, date, time, server, orgin, destinaton) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-     val = (f"{tmpid}", data["steamID64"], f"{ctx.author}",
-            f"{videourl}", data["name"],  f"{status}", f"{date}", f"{time}", f"{server}", f"{orgin}", f"{destination}")
-    mycursor.execute(sql, val)
-    mydb.commit()
-    hook = Webhook(
-        'https://discord.com/api/webhooks/825683286428483594/nQbl4rw8fBcD_Q1Ig9ceNgUsHy9lQ-EOtTwCCyYTges0W8J2OIPVpXNQl6rLCWrj4JhF')
-    em2 = discord.Embed(
-        title=data["name"], description=f"You have {status} your training", color=0x00FF00)
-    hook.send(embed=em2)
-    hook2 = webhook(
-        'https: // discord.com/api/webhooks/833366266332708894/xoL7IBrAFGRpcUaIi2NMbLgEpQJqQ8nB-ogQe9AYEuJG2Tt9JQ8qOFBF1qvFtEHxLlq2'
-    )
-    em3 = discord.Embed(
-        title=data["name"], description=f"Has passed there training. Trained by:{ctx.author}", color=0x00FF00)
-    hook2.send(embed=em3)
-
+    #mydb = mysql.connector.connect(
+      #  host="localhost",
+       # user="root",
+     #   password="Fv4&4*JT61%8WGj&vwj",
+      #  database="alleapi"
+    #)
+    #getplayerinfourl = f"https://api.truckersmp.com/v2/player/{tmpid}"
+    #r = requests.get(getplayerinfourl)
+    #data = r.json()["response"]
+    #for server in data:
+    # mycursor = mydb.cursor()
+    # sql = "INSERT INTO trainings(tmpid, steamid, trainedby, videoevidence, traineename, status, date, time, server, orgin, destinaton) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    # val = (f"{tmpid}", data["steamID64"], f"{ctx.author}",
+    #        f"{videourl}", data["name"],  f"{status}", f"{date}", f"{time}", f"{server}", f"{orgin}", f"{destination}")
+    #mycursor.execute(sql, val)
+    #mydb.commit()
+    #hook = Webhook(
+    #    'https://discord.com/api/webhooks/825683286428483594/nQbl4rw8fBcD_Q1Ig9ceNgUsHy9lQ-EOtTwCCyYTges0W8J2OIPVpXNQl6rLCWrj4JhF')
+    #em2 = discord.Embed(
+     #   title=data["name"], description=f"You have {status} your training", color=0x00FF00)
+    ##hook.send(embed=em2)
+    #hook2 = webhook(
+     #   'https: // discord.com/api/webhooks/833366266332708894/xoL7IBrAFGRpcUaIi2NMbLgEpQJqQ8nB-ogQe9AYEuJG2Tt9JQ8qOFBF1qvFtEHxLlq2'
+    #)
+    #em3 = discord.Embed(
+     #   title=data["name"], description=f"Has passed there training. Trained by:{ctx.author}", color=0x00FF00)
+    #hook2.send(embed=em3)
+    we_dont_do_trainings = discord.Embed(title="Alle Group Applications | Out Of Date Command",
+                                         description=f"Hey {ctx.author.name}, we no longer offer driver training. As there is a new system in place now :)")
+    we_dont_do_trainings.set_footer(
+        text="Alle Group Applications | Apply Logging Message • 2021")
+    await ctx.send("Look in your dms")
+    try:
+        await ctx.author.send(embed=we_dont_do_trainings)
+    except:
+        your_dms_are_disabled = discord.Embed(
+            title="Alle Group Applications | Out Of Date Command Error", description=f"{ctx.author.mention} i tried to dm you but i could not :(")
+        your_dms_are_disabled.set_footer(
+            text="Alle Group Applications | Error Logging Message • 2021")
+        await ctx.send(embed=your_dms_are_disabled)
 
 # allows anyone to view a training that has been added to the DB.
 @bot.command()
 async def checkt(ctx, tmpid):
+   await ctx.message.delete()
+   we_dont_do_trainings = discord.Embed(title="Alle Group Applications | Out Of Date Command",
+                                         description=f"Hey {ctx.author.name}, we no longer offer driver training. As there is a new system in place now :)")
+   we_dont_do_trainings.set_footer(
+        text="Alle Group Applications | Apply Logging Message • 2021")
+   await ctx.send("Look in your dms")
    try:
-    gettraininginfourl = f'https://api-alle-group.com/api/v2/trainings{tmpid}'
-    r = requests.get(gettraininginfourl)
-    data = r.json()
-    for data in data:
-        embed = discord.Embed(title='Training Informaiton',
-                              url=f'https://api-alle-group.com/api/v2/trainings{tmpid}', color=0xff0000)
-        embed.add_field(name="Trainee Name",
-                        value=data['traineename'], inline=False)
-        embed.add_field(name='Trained By',
-                        value=data['trainedby'], inline=False)
-        embed.add_field(name='Status of Training',
-                        value=data['status'], inline=False)
-        embed.add_field(name='Date and Time',
-                        value=f"{data['date']} {data['time']}", inline=False)
-        embed.add_field(name='Server', value=data['server'], inline=False)
-        embed.add_field(name='Training Origin and Destination',
-                        value=f"Origin: {data['orgin']} | Destination: {data['destinaton']}", inline=False)
-    try:
-      await ctx.send(embed=embed)
-    except:
-        cannot_send_embed = discord.Embed(
-            title="Alle Group Applications | `checkt` error", description=f"I cant send the results embed :(", color=0xFF0000)
-        await ctx.send(embed=cannot_send_embed)
+        await ctx.author.send(embed=we_dont_do_trainings)
    except:
-       cannot_find_training = discord.Embed(
-           title="Alle Group Applications | `checkt` error", description=f"That training does not appear to exist :(", color=0xFF0000)
-       await ctx.send(embed=cannot_find_training)
-
+        your_dms_are_disabled = discord.Embed(
+            title="Alle Group Applications | Out Of Date Command Error", description=f"{ctx.author.mention} i tried to dm you but i could not :(")
+        your_dms_are_disabled.set_footer(
+            text="Alle Group Applications | Error Logging Message • 2021")
+        await ctx.send(embed=your_dms_are_disabled)
+    #try:
+     #gettraininginfourl = f'https://api-alle-group.com/api/v2/trainings{tmpid}'
+     #r = requests.get(gettraininginfourl)
+     #data = r.json()
+    #for data in data:
+      #   embed = discord.Embed(title='Training Informaiton',
+       #                        url=f'https://api-alle-group.com/api/v2/trainings{tmpid}', color=0xff0000)
+        # embed.add_field(name="Trainee Name",
+         #                value=data['traineename'], inline=False)
+         #embed.add_field(name='Trained By',
+         #                value=data['trainedby'], inline=False)
+         #embed.add_field(name='Status of Training',
+          #               value=data['status'], inline=False)
+         #embed.add_field(name='Date and Time',
+         #                value=f"{data['date']} {data['time']}", inline=False)
+         #embed.add_field(name='Server', value=data['server'], inline=False)
+         #embed.add_field(name='Training Origin and Destination',
+          #               value=f"Origin: {data['orgin']} | Destination: {data['destinaton']}", inline=False)
+      # try:
+       #   await ctx.send(embed=embed)
+            #except:
+            #   cannot_send_embed = discord.Embed(
+               #       title="Alle Group Applications | `checkt` error", description=f"I cant send the results embed :(", color=0xFF0000)
+                #  await ctx.send(embed=cannot_send_embed)
+                    #except:
+                                 #   cannot_find_training = discord.Embed(
+           #      title="Alle Group Applications | `checkt` error", description=f"That training does not appear to exist :(", color=0xFF0000)
+                   # await ctx.send(embed=cannot_find_training)
+   
 
 @checkt.error
 async def checkt_handler(ctx, error):
@@ -833,15 +864,15 @@ async def checkt_handler(ctx, error):
         await ctx.send(embed=cannot_find_training)
 
 
-@bot.command()
-async def wtrainings(ctx):
-  await ctx.message.delete()
-  role = discord.utils.get(ctx.guild.roles, id=794865611956158484)
-  if role in ctx.author.roles:
-    await ctx.author.send("To view all web booked trainings go to this link http://www.staff-alle-group.com/exams/training/staff/training/")
-    await ctx.send("I've sent u a dm :) credit:`truckerbean`")
-  else:
-      await ctx.author.send("You dont have the right perms to use this command :(. If you think u need these perms then alert yzzoxi")
+#@bot.command()
+#async def wtrainings(ctx):
+ # await ctx.message.delete()
+ # role = discord.utils.get(ctx.guild.roles, id=794865611956158484)
+  #if role in ctx.author.roles:
+  #  await ctx.author.send("To view all web booked trainings go to this link http://www.staff-alle-group.com/exams/training/staff/training/")
+   # await ctx.send("I've sent u a dm :) credit:`truckerbean`")
+  #else:
+   #   await ctx.author.send("You dont have the right perms to use this command :(. If you think u need these perms then alert yzzoxi")
 
 
 # get the application status (changing to make sure it it is being used in a application channel)
@@ -880,14 +911,16 @@ async def blacklist(ctx, tmpname, discordid, tmpid=None, *, reason):
         await ctx.send(embed=Member_already_blacklisted)
     else:
         await ctx.send("Done")
+        # the member is not in the server, do something #
         sql = "INSERT INTO blacklist(tmpname, discordid, tmpid, reason) VALUES (%s, %s, %s, %s)"
         val = (f"{tmpname}", f"{discordid}", f"{tmpid}", f"{reason}")
         cursor.execute(sql, val)
         # This will try to commit the above sql statement but if it there already is an entry then it will return an error.
         mydb.commit()
         Blacklisted_message = discord.Embed(title="Alle Group Applications | Blacklist System",
-                            description=f"{ctx.author.mention}, Blacklisted the discord id {discord.id} from applying with Alle Group. More Info: TMPID: {tmpid}, Blacklist Reason: {reason}. **This action is irreversible**")
-        Blacklisted_message.set_footer(text='Alle Group Applications |  Blacklist System • 2021')
+                                            description=f"{ctx.author.mention}, Blacklisted the discord id {discordid} from applying with Alle Group. More Info: TMPID: {tmpid}, Blacklist Reason: {reason}. **This action is irreversible**")
+        Blacklisted_message.set_footer(
+            text='Alle Group Applications |  Blacklist System • 2021')
         await ctx.send(embed=Blacklisted_message)
     # If there is already a blacklist report in for the member then it will return this error.
 
@@ -1084,6 +1117,43 @@ async def convertd(ctx, ):
     await ctx.send("Look in your dms :)")
     await ctx.author.send(embed=embed)
 # Fire a driver
+
+@bot.command()
+async def bug(ctx):
+    await ctx.message.delete()
+    # this command needs to send data to devs and stuff that has applications in it is to be sent to Bean.
+
+    def check(message):
+        return message.author == ctx.author and message.channel == ctx.channel
+    what_is_the_bug_em = discord.Embed(
+        title="Alle Group Applications | Bug Report System ", description=f"Hey, {ctx.author.name} what is the bug?", color=0xFF0000)
+    what_is_the_bug_em.set_footer(
+        text="Alle Group Applications | Bug Report System • 2021")
+    await ctx.send(embed=what_is_the_bug_em)
+    msg = await bot.wait_for('message', check=check)
+    response = (msg.content)
+    if 'applications' and 'application' and 'apps' in response:
+        new_applications_bug_em = discord.Embed(title="Alle Group Applications | New Bug Report Submitted", description=f"Yo Bean, {ctx.author.name} has submitted the following bug: **`{response}`**", color=0xFF0000)
+        new_applications_bug_em.add_field(name="Reporting User's ID:", value=f"{ctx.author.id}", inline=False)
+        timestamp = datetime.now()
+        new_applications_bug_em.add_field(name="Report Submitted:", value=timestamp.strftime(r"On: %d/%m/%Y At: %I:%M %p"))
+        new_applications_bug_em.set_footer(text="Alle Group Applications | Bug Report System • 2021")
+        user = bot.get_user(755493797160288286)
+        await user.send(embed=new_applications_bug_em)
+    
+    else:
+        new_applications_bug2_em = discord.Embed(title="Alle Group Applications | New Bug Report Submitted",
+                                                description=f"Yo Devs, {ctx.author.name} has submitted the following bug: **`{response}`**", color=0xFF0000)
+        new_applications_bug2_em.add_field(
+            name="Reporting User's ID:", value=f"{ctx.author.id}", inline=False)
+        timestamp2 = datetime.now()
+        new_applications_bug2_em.add_field(
+            name="Report Submitted:", value=timestamp2.strftime(r"On: %d/%m/%Y At: %I:%M %p"))
+        new_applications_bug2_em.set_footer(
+            text="Alle Group Applications | Bug Report System • 2021")
+        channel = discord.utils.get(ctx.guild.channels, id=837713484673712128)
+        await channel.send(embed=new_applications_bug2_em)
+    await msg.delete()
 
 
 @bot.command()
