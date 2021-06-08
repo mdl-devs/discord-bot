@@ -1,4 +1,5 @@
 from dhooks import Webhook
+from discord.colour import Color
 from discord.ext.commands import CommandNotFound
 from tabulate import tabulate
 import discord
@@ -2282,13 +2283,17 @@ bot.add_cog(Music(bot))
 
 @bot.command(pass_context=True)
 async def ban(ctx, member: discord.Member, *, reason=None):
-    if ctx.message.author.guild_permissions.ban_members:
+    if ctx.message.author.guild_permissions.ban_members is True:
+        await member.send(f'You have been banned for `{reason}`')
         await member.ban(reason=reason)
         await ctx.send(f'{member.mention} has been banned for the following reason: ```{reason}```')
+        
+    else:
+        await ctx.send(f'You do not have permission to use this command.')
 
 @bot.command(pass_context=True)
 async def unban(ctx, *, member):
-    if ctx.message.author.guild_permissions.ban_members:
+    if ctx.message.author.guild_permissions.ban_members is True:
         banned_users = await ctx.guild.bans()
         member_name, member_discriminator = member.split('#')
         for ban_entery in banned_users:
@@ -2296,18 +2301,45 @@ async def unban(ctx, *, member):
             if (user.name, user.discriminator) == (member_name, member_discriminator):
                 await ctx.guild.unban(user)
                 await ctx.send(f'Unbanned {user.mention}. Make sure they behave!')
+    else:
+        await ctx.send(f'You do not have permission to use this command.')
 
 @bot.command(pass_context=True)
 async def kick(ctx, member: discord.Member, *, reason=None):
-    if ctx.message.author.guild_permissions.kick_member:
+    await ctx.message.delete()
+    if ctx.message.author.guild_permissions.kick_members is True:
+        await member.send(f"You have been kicked for `{reason}`. Please don't make the same mistake on other servers.")
         await member.kick(reason=reason)
         await ctx.send(f'{member.mention} has been kicked for the following reason: ```{reason}```')
+        
+    else:
+        await ctx.send(f'You do not have permission to use this command.')
 
 @bot.command(pass_context=True)
 async def warn(ctx, member: discord.Member, *, reason):
-    await ctx.send(f'{member.mention} has been warned for ```{reason}```, do not do it again')
-    await member.send(f'You have been warned for ```{reason}```, do not do it again. Repeated offences will result in getting kicked or banned from the server. You have been warned')
+    await ctx.message.delete()
+    if ctx.message.author.guild_permissions.manage_messages is True:
+        await ctx.send(f'{member.mention} has been warned for `{reason}`, do not do it again')
+        await member.send(
+            f'You have been warned for `{reason}`, do not do it again. Repeated offences will result in getting kicked or banned from the server. You have been warned')
+    else:
+        await ctx.send(f'You do not have permission to use this command.')
 
+@bot.command()
+async def help(ctx):
+    await ctx.message.delete()
+    embed = discord.Embed(title='Command List', description='Because you forgot all the commands.', Color=0xff0000)
+    embed.set_thumbnail(
+        url='https://alle-group.com/wp-content/uploads/2021/05/cropped-cropped-png-transparent-church-logo-mountain-microsoft-azure-text-line3-1.png')
+    embed.add_field(name=f'ETS Traffic Commands', 
+        value=f'`Servers`, `Traffic`, `Traffic2`, `Traffic3`, `TrafficARC`, `TrafficUS`, `TrafficPM`, `TrafficPMARC`', inline=False)
+    embed.add_field(name=f'ATS Traffic Commands', value=f'`Servers`, `ATSTrafficUS`, `ATSTrafficUSARC`, `ATSTrafficEU`', inline=False)
+    embed.add_field(name=f'Music Commands', 
+    value=f'`Join`, `Summon`, `Leave`, `Volume`, `Now` (can also use `Current` or `Playing`), `Pause`, `Resume`, `Stop`, `Skip`, `Queue`, `Shuffle`, `Remove`, `Loop`, `Play`', 
+        inline=False)
+    embed.add_field(name=f'Other Commands', value=f'`Ping`, `Apply`, `Help`, `Convert`, `ConvertD`, `Bug`, `Report`, `Suggest`', inline=False)
+    await ctx.send(embed=embed)
+    
 
 # start the bot
 bot.run(token, bot=True)
