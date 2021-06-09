@@ -136,47 +136,47 @@ async def apply_handler(ctx, error):
     await ctx.send(embed=pingerr)
 
 
-@bot.command()
-async def joinvtc(ctx):
-     await ctx.message.delete()
-      mydb = mysql.connector.connect(
-           host="localhost",
-           user="root",
-           password="Fv4&4*JT61%8WGj&vwj",
-           database="userprofiles"
-           )
-       mycursor = mydb.cursor()
-        mycursor.execute(
-            f"SELECT  discord_name  FROM userprofiles WHERE discord_name  = '{ctx.author.name}'")
-        results = mycursor.fetchall()
-        # gets the number of rows affected by the command executed
-        row_count = mycursor.rowcount
-        if ctx.author.name == 'PDragon_7':
-            await ctx.send("ITS PD!!!!, Hey PD")
-            joined_server = ctx.author.joined_at.strftime("%d/%b/%Y")
-            joined_server_time = ctx.author.joined_at.strftime("%I:%M %p")
-            sql = "INSERT INTO  userprofiles (id, join_date, join_time, discord_name,  have_they_applied, applied_date, applied_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            val = (f"{userid}",
-                   f"{joined_server}", f"{joined_server_time}", f"{ctx.author.name}",  f"Yes", "N/A", "N/A")
-            mycursor.execute(sql, val)
-            mydb.commit()
-            await ctx.send(f"{ctx.author.mention} Your Basic Driver Profile Has Been Made :clap:")
-        else:
-            print("not PD")
-        if row_count > 0:
-           Member_already_blacklisted = discord.Embed(
-               title="Alle Group Applications | `join` error", description=f"Hey {ctx.author.mention} you have already made an account please dont make another.. DiscordID: {ctx.author.id}", color=0xFF0000)
-           await ctx.send(embed=Member_already_blacklisted)
-        else:
+# @bot.command()
+# async def joinvtc(ctx):
+#      await ctx.message.delete()
+#       mydb = mysql.connector.connect(
+#            host="localhost",
+#            user="root",
+#            password="Fv4&4*JT61%8WGj&vwj",
+#            database="userprofiles"
+#            )
+#       mycursor = mydb.cursor()
+#       mycursor.execute(
+#             f"SELECT  discord_name  FROM userprofiles WHERE discord_name  = '{ctx.author.name}'")
+#       results = mycursor.fetchall()
+#         # gets the number of rows affected by the command executed
+#       row_count = mycursor.rowcount
+#       if ctx.author.name == 'PDragon_7':
+#             await ctx.send("ITS PD!!!!, Hey PD")
+#             joined_server = ctx.author.joined_at.strftime("%d/%b/%Y")
+#             joined_server_time = ctx.author.joined_at.strftime("%I:%M %p")
+#             sql = "INSERT INTO  userprofiles (id, join_date, join_time, discord_name,  have_they_applied, applied_date, applied_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+#             val = (f"{userid}",
+#                    f"{joined_server}", f"{joined_server_time}", f"{ctx.author.name}",  f"Yes", "N/A", "N/A")
+#             mycursor.execute(sql, val)
+#             mydb.commit()
+#             await ctx.send(f"{ctx.author.mention} Your Basic Driver Profile Has Been Made :clap:")
+#         else:
+#             print("not PD")
+#         if row_count > 0:
+#            Member_already_blacklisted = discord.Embed(
+#                title="Alle Group Applications | `join` error", description=f"Hey {ctx.author.mention} you have already made an account please dont make another.. DiscordID: {ctx.author.id}", color=0xFF0000)
+#            await ctx.send(embed=Member_already_blacklisted)
+#         else:
 
-         joined_server = ctx.author.joined_at.strftime("%d/%b/%Y")
-         joined_server_time = ctx.author.joined_at.strftime("%I:%M %p")
-         sql = "INSERT INTO  userprofiles (id, join_date, join_time, discord_name,  have_they_applied, applied_date, applied_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-         val = (f"{userid}",
-                f"{joined_server}", f"{joined_server_time}", f"{ctx.author.name}",  f"Yes", "N/A", "N/A")
-         mycursor.execute(sql, val)
-         mydb.commit()
-         await ctx.send(f"{ctx.author.mention} Your Basic Driver Profile Has Been Made :clap:")
+#          joined_server = ctx.author.joined_at.strftime("%d/%b/%Y")
+#          joined_server_time = ctx.author.joined_at.strftime("%I:%M %p")
+#          sql = "INSERT INTO  userprofiles (id, join_date, join_time, discord_name,  have_they_applied, applied_date, applied_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+#          val = (f"{userid}",
+#                 f"{joined_server}", f"{joined_server_time}", f"{ctx.author.name}",  f"Yes", "N/A", "N/A")
+#          mycursor.execute(sql, val)
+#          mydb.commit()
+#          await ctx.send(f"{ctx.author.mention} Your Basic Driver Profile Has Been Made :clap:")
 
 #Apply Command (allows users to apply to join the vtc.)
 
@@ -327,9 +327,9 @@ async def apply(ctx, *, args=None):
     except asyncio.TimeoutError:
         em = discord.Embed(
              title="Alle Group Applications", description=f"Hey {ctx.author.name}, are you there? You opened up a application @ alle group and have not answered any of the questions after 1hr.", color=0x00a8ff)
-         await asyncio.sleep(3600)
-          await ctx.author.send(embed=em)
-           try:
+        await asyncio.sleep(3600)
+        await ctx.author.send(embed=em)
+        try:
              question1_em = discord.Embed(
                  title="Alle Group Applications | Question 1 ", description=f"Hey, {ctx.author.name} what is your name?", color=0xFF0000)
              question1_em.set_footer(
@@ -337,31 +337,31 @@ async def apply(ctx, *, args=None):
              remove1 = await ticket_channel.send(embed=question1_em)
              msg = await bot.wait_for('message', check=check, timeout=7200)
              response = (msg.content)
-            except:
+        except:
                 em2 = discord.Embed(
                     title="Alle Group Applications", description=f"Hey {ctx.author.name}, Your application with Alle Group will be closed in 5 mins as you have not responded to any of the questions in 2hrs", color=0x00a8ff)
                 await asyncio.sleep(3600)
                 await ctx.author.send(embed=em2)
-                 await asyncio.sleep(300)
-                  await ticket_channel.delete()
-                  await ctx.author.send(f"{ctx.author.name} Your Application Has been closed.")
-                  role = discord.utils.get(
+                await asyncio.sleep(300)
+                await ticket_channel.delete()
+                await ctx.author.send(f"{ctx.author.name} Your Application Has been closed.")
+                role = discord.utils.get(
                       ctx.guild.roles, id=837608034721071104)
-                  await ctx.author.remove_roles(role)
-                  index = data["ticket-channel-ids"].index(ticket_channel.id)
-                  del data["ticket-channel-ids"][index]
-                  with open('data.json', 'w') as f:
+                await ctx.author.remove_roles(role)
+                index = data["ticket-channel-ids"].index(ticket_channel.id)
+                del data["ticket-channel-ids"][index]
+                with open('data.json', 'w') as f:
                    json.dump(data, f)
-                  mydb = mysql.connector.connect(
+                mydb = mysql.connector.connect(
                       host="localhost",
                       user="root",
                       password="Fv4&4*JT61%8WGj&vwj",
                       database="alleapi"
                   )
-                  mycursor = mydb.cursor()
-                  sql = f"UPDATE applications SET status = 'Closed', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
-                  mycursor.execute(sql)
-                  mydb.commit()
+                mycursor = mydb.cursor()
+                sql = f"UPDATE applications SET status = 'Closed', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
+                mycursor.execute(sql)
+                mydb.commit()
     question2_em = discord.Embed(
         title="Alle Group Applications | Question 2 ", description=f"Hey, {ctx.author.name} what is your TMPID?", color=0xFF0000)
     question2_em.set_footer(
@@ -1571,23 +1571,23 @@ async def suggest(ctx):
 async def lookup(ctx, tmpid):
     await ctx.message.delete()
     getapplicationsdataurl = f'https://api-alle-group.com/api/v2/applications/{tmpid}'
-     r = requests.get(getapplicationsdataurl)
-      data = r.json()
-       for data in data:
+    r = requests.get(getapplicationsdataurl)
+    data = r.json()
+    for data in data:
             embed = discord.Embed(title='User Info',
                                    url=f'https://api-alle-group.com/api/v2/applications/{tmpid}', color=0xff0000)
-             embed.add_field(name="Name",
+            embed.add_field(name="Name",
                               value=data['discordname'], inline=False)
-              embed.add_field(name='Application ID',
+            embed.add_field(name='Application ID',
                                value=data['applicationid'], inline=False)
-               embed.add_field(name='Status of Applications',
+            embed.add_field(name='Status of Applications',
                                 value=data['status'], inline=False)
-                embed.add_field(name='Date and Time',
+            embed.add_field(name='Date and Time',
                                 value=f"{data['applicationdate']}", inline=False)
 
                 #embed.add_field(name="TMPID", value=data[tmpid])
 
-                await ctx.send(embed=embed)
+    await ctx.send(embed=embed)
 
 
 # events bot section of bot.
@@ -2573,4 +2573,3 @@ async def meme(ctx):
 
 # start the bot
 bot.run(token, bot=True)
-
