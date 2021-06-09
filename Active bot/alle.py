@@ -1,5 +1,4 @@
 from dhooks import Webhook
-from discord.colour import Color
 from discord.ext.commands import CommandNotFound
 from tabulate import tabulate
 import discord
@@ -29,7 +28,8 @@ import youtube_dl
 from async_timeout import timeout
 import math
 import random
-
+from discord.utils import get
+import string
 
 intents = intents = discord.Intents.all()
 
@@ -38,17 +38,19 @@ intents = intents = discord.Intents.all()
 token = 'ODM3ODAwNjk4MDY2MTA4NDM2.YIx0tA.QbeQPybTciQBMh69wiTmrUl9KhQ'
 
 # Bots prefix
-bot = commands.Bot(command_prefix=('a/'), intents=intents)
+bot = commands.Bot(commands.when_mentioned_or('a/'), intents=intents)
 slash = SlashCommand(bot)
 #global variables go here (if any)
 userid = 0
 eventid = 0
+bug_id = 12
 timestamp67 = datetime.now(pytz.timezone("Europe/London"))
 timestamp68 = datetime.now(pytz.timezone("Europe/London"))
 time_main = timestamp67.strftime(r"On: %d/%m/%Y At: %H:%M %p")
 time_main2 = timestamp68.strftime(r"%H:%M %p")
+time_main3 = timestamp67.strftime(r"%d/%m/%Y")
+# when a user boosts the server
 
-# when a user boosts the server 
 
 @bot.event
 async def on_member_update(before, after):
@@ -56,10 +58,13 @@ async def on_member_update(before, after):
         await on_nitro_boost(after)
 
 # sending startup message to server
+
+
 @bot.event
 async def on_ready():
     global command_prefix
-    activity = discord.Game(name=f"Being a Bot | My Command prefix is a/", type=3)
+    activity = discord.Game(
+        name=f"Forgot a Command? Use a/help | Dennis Skinner is a legend. | Dodgy Dave", type=3)
     await bot.change_presence(status="Test", activity=activity)
 
 
@@ -67,15 +72,19 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
     welcome_channel = bot.get_channel(837601222348636212)
-    welcome_em = discord.Embed(title="User Joined | Welcome", description=f"{member.mention} {member}", icon_url=f"{member.avatar_url}", color=0x00993C)
+    welcome_em = discord.Embed(
+        description=f"{member.mention} {member}", icon_url=f"{member.avatar_url}", color=0x00993C)
+    welcome_em.set_author(name="User Joined | Welcome",
+                          icon_url=f"{member.avatar_url}")
+    welcome_em.set_footer(text=f"ID: {member.id} • {time_main3}")
     await welcome_channel.send(embed=welcome_em)
-    
+
     bot_commands_channel = bot.get_channel(837712738636922920)
     await member.send(f'Welcome to Alle Group | If you would like to join our vtc do `a/apply` in {bot_commands_channel.mention}')
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
-       password="Fv4&4*JT61%8WGj&vwj",
+        password="Fv4&4*JT61%8WGj&vwj",
         database="userprofiles"
     )
     cursor = mydb.cursor()
@@ -83,23 +92,33 @@ async def on_member_join(member):
     jointime = member.joined_at.strftime(" %I:%M %p")
     sql = f"INSERT INTO  userprofiles (id, join_date, join_time, discord_name) VALUES (%s, %s, %s, %s)"
     global userid
-    userid +=1
-    
+    userid += 1
+
     val = (f"{userid}",
            f"{joindate}", f"{jointime}", f"{member.name}")
     cursor.execute(sql, val)
     mydb.commit()
-   
+    com_member_role = discord.utils.get(
+        welcome_channel.guild.roles, id=837609123755327508)
+    await member.add_roles(com_member_role)
+
+
 @bot.event
 async def on_member_remove(member):
     leaving_channel = bot.get_channel(837601355748737054)
-    welcome_em = discord.Embed(title="User Left | Goodbye :wave:", description=f"{member.mention} {member}", icon_url=f"{member.avatar_url}", color=0x00993C)
+    global time_main3
+    welcome_em = discord.Embed(
+        description=f"{member.mention} {member}", icon_url=f"{member.avatar_url}", color=0x00993C)
+    welcome_em.add_field(name="Roles", value=f"")
+    welcome_em.set_author(name="User Left | Goodbye :wave:",
+                          icon_url=f"{member.avatar.url}")
+    welcome_em.set_footer(text=f"ID: {member.id} • {time_main3}")
     await leaving_channel.send(embed=welcome_em)
-    
 
 
 #starting off with removing the help command
 bot.remove_command('help')
+
 
 # ping command
 
@@ -116,16 +135,17 @@ async def apply_handler(ctx, error):
                             description=f"{error}", color=0xFF0000)
     await ctx.send(embed=pingerr)
 
+
 @bot.command()
 async def joinvtc(ctx):
-        await ctx.message.delete() 
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="Fv4&4*JT61%8WGj&vwj",
-            database="userprofiles"
-        )
-        mycursor = mydb.cursor()
+     await ctx.message.delete()
+      mydb = mysql.connector.connect(
+           host="localhost",
+           user="root",
+           password="Fv4&4*JT61%8WGj&vwj",
+           database="userprofiles"
+           )
+       mycursor = mydb.cursor()
         mycursor.execute(
             f"SELECT  discord_name  FROM userprofiles WHERE discord_name  = '{ctx.author.name}'")
         results = mycursor.fetchall()
@@ -137,7 +157,7 @@ async def joinvtc(ctx):
             joined_server_time = ctx.author.joined_at.strftime("%I:%M %p")
             sql = "INSERT INTO  userprofiles (id, join_date, join_time, discord_name,  have_they_applied, applied_date, applied_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
             val = (f"{userid}",
-            f"{joined_server}", f"{joined_server_time}", f"{ctx.author.name}",  f"Yes", "N/A", "N/A")
+                   f"{joined_server}", f"{joined_server_time}", f"{ctx.author.name}",  f"Yes", "N/A", "N/A")
             mycursor.execute(sql, val)
             mydb.commit()
             await ctx.send(f"{ctx.author.mention} Your Basic Driver Profile Has Been Made :clap:")
@@ -145,21 +165,22 @@ async def joinvtc(ctx):
             print("not PD")
         if row_count > 0:
            Member_already_blacklisted = discord.Embed(
-            title="Alle Group Applications | `join` error", description=f"Hey {ctx.author.mention} you have already made an account please dont make another.. DiscordID: {ctx.author.id}", color=0xFF0000)
+               title="Alle Group Applications | `join` error", description=f"Hey {ctx.author.mention} you have already made an account please dont make another.. DiscordID: {ctx.author.id}", color=0xFF0000)
            await ctx.send(embed=Member_already_blacklisted)
         else:
-        
-        
+
          joined_server = ctx.author.joined_at.strftime("%d/%b/%Y")
          joined_server_time = ctx.author.joined_at.strftime("%I:%M %p")
          sql = "INSERT INTO  userprofiles (id, join_date, join_time, discord_name,  have_they_applied, applied_date, applied_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
          val = (f"{userid}",
-           f"{joined_server}", f"{joined_server_time}", f"{ctx.author.name}",  f"Yes", "N/A", "N/A")
+                f"{joined_server}", f"{joined_server_time}", f"{ctx.author.name}",  f"Yes", "N/A", "N/A")
          mycursor.execute(sql, val)
          mydb.commit()
          await ctx.send(f"{ctx.author.mention} Your Basic Driver Profile Has Been Made :clap:")
 
 #Apply Command (allows users to apply to join the vtc.)
+
+
 @bot.command()
 # cool down of 4 mins to counter spamming
 @commands.cooldown(1, 240, commands.BucketType.user)
@@ -297,31 +318,31 @@ async def apply(ctx, *, args=None):
     await ticket_channel.send(f"{ctx.author.mention}")
     try:
      question1_em = discord.Embed(
-        title="Alle Group Applications | Question 1 ", description=f"Hey, {ctx.author.name} what is your name?", color=0xFF0000)
+         title="Alle Group Applications | Question 1 ", description=f"Hey, {ctx.author.name} what is your name?", color=0xFF0000)
      question1_em.set_footer(
          text=f"Alle Group Applications | Question 1 • {time_main2}")
      remove1 = await ticket_channel.send(embed=question1_em)
      msg = await bot.wait_for('message', check=check, timeout=3600)
      response = (msg.content)
     except asyncio.TimeoutError:
-            em = discord.Embed(
-                title="Alle Group Applications", description=f"Hey {ctx.author.name}, are you there? You opened up a application @ alle group and have not answered any of the questions after 1hr.", color=0x00a8ff)
-            await asyncio.sleep(3600)
-            await ctx.author.send(embed=em)
-            try: 
+        em = discord.Embed(
+             title="Alle Group Applications", description=f"Hey {ctx.author.name}, are you there? You opened up a application @ alle group and have not answered any of the questions after 1hr.", color=0x00a8ff)
+         await asyncio.sleep(3600)
+          await ctx.author.send(embed=em)
+           try:
              question1_em = discord.Embed(
-        title="Alle Group Applications | Question 1 ", description=f"Hey, {ctx.author.name} what is your name?", color=0xFF0000)
+                 title="Alle Group Applications | Question 1 ", description=f"Hey, {ctx.author.name} what is your name?", color=0xFF0000)
              question1_em.set_footer(
                  text=f"Alle Group Applications | Question 1 • {time_main2}")
              remove1 = await ticket_channel.send(embed=question1_em)
              msg = await bot.wait_for('message', check=check, timeout=7200)
              response = (msg.content)
             except:
-                  em2 = discord.Embed(
-                title="Alle Group Applications", description=f"Hey {ctx.author.name}, Your application with Alle Group will be closed in 5 mins as you have not responded to any of the questions in 2hrs", color=0x00a8ff)
-                  await asyncio.sleep(3600)
-                  await ctx.author.send(embed=em2)
-                  await asyncio.sleep(300)
+                em2 = discord.Embed(
+                    title="Alle Group Applications", description=f"Hey {ctx.author.name}, Your application with Alle Group will be closed in 5 mins as you have not responded to any of the questions in 2hrs", color=0x00a8ff)
+                await asyncio.sleep(3600)
+                await ctx.author.send(embed=em2)
+                 await asyncio.sleep(300)
                   await ticket_channel.delete()
                   await ctx.author.send(f"{ctx.author.name} Your Application Has been closed.")
                   role = discord.utils.get(
@@ -332,10 +353,10 @@ async def apply(ctx, *, args=None):
                   with open('data.json', 'w') as f:
                    json.dump(data, f)
                   mydb = mysql.connector.connect(
-                  host="localhost",
-                  user="root",
-                  password="Fv4&4*JT61%8WGj&vwj",
-                  database="alleapi"
+                      host="localhost",
+                      user="root",
+                      password="Fv4&4*JT61%8WGj&vwj",
+                      database="alleapi"
                   )
                   mycursor = mydb.cursor()
                   sql = f"UPDATE applications SET status = 'Closed', statusaddedby = '{ctx.author}' WHERE id = '{id}'"
@@ -363,7 +384,6 @@ async def apply(ctx, *, args=None):
     remove4 = await ticket_channel.send(embed=question4_em)
     msg5 = await bot.wait_for('message', check=check)
     response5 = (msg5.content)
-    
 
     #checks if they are older then
     #if msg5.content < 16:
@@ -390,17 +410,19 @@ async def apply(ctx, *, args=None):
     #mycursor.execute(sql)
     #mydb.commit()
     timestamp = datetime.now(pytz.timezone("Europe/London"))
-    thanks_for_answering_alle_questions = discord.Embed(title="Alle Group Applications | Your Application Has Been Recived.", description=f"Hey {ctx.author.name}, Thanks for answering all the questions a member of staff will now deal with your application. **Please remember it can take up to 2 days for your application to be viewed.**", color=0xFF0000)
+    thanks_for_answering_alle_questions = discord.Embed(title="Alle Group Applications | Your Application Has Been Recived.",
+                                                        description=f"Hey {ctx.author.name}, Thanks for answering all the questions a member of staff will now deal with your application. **Please remember it can take up to 2 days for your application to be viewed.**", color=0xFF0000)
     thanks_for_answering_alle_questions.set_footer(
         text=f"Alle Group Applications | Applications System • {time_main2}")
     await ctx.author.send(embed=thanks_for_answering_alle_questions)
     questionr = discord.Embed(title="Alle Group Applications | Answers To Application Questions",
                               description=f"Here are the answers to the application questions:", color=0xFF0000)
-    questionr.add_field(name="Name", value=f"{response}", inline=True)  
+    questionr.add_field(name="Name", value=f"{response}", inline=True)
     questionr.add_field(name="TMPID", value=f"{response2}", inline=True)
     questionr.add_field(name="Country", value=f"{response4}", inline=True)
     questionr.add_field(name="Age", value=f"{response5}", inline=True)
-    questionr.add_field(name="Applicant's Discord:", value=f"{ctx.author}", inline=True)
+    questionr.add_field(name="Applicant's Discord:",
+                        value=f"{ctx.author}", inline=True)
     questionr.add_field(name="Application Submitted:", value=timestamp.strftime(
         r"On: %d/%m/%Y At: %I:%M %p"), inline=True)
     questionr.set_footer(
@@ -490,23 +512,25 @@ async def apply(ctx, *, args=None):
       em2.add_field(name="Join Date", value=data["joinDate"], inline=True)
       em2.add_field(name="Discord User ID",
                     value=data["discordSnowflake"], inline=True)
-      em2.add_field(name="Applicants Discord Name And ID", value=f"{ctx.author.name} & {ctx.author.id}")
+      em2.add_field(name="Applicants Discord Name And ID",
+                    value=f"{ctx.author.name} & {ctx.author.id}")
      hook.send(embed=em2)
      in_a_vtc_check = (data["vtc"]["inVTC"])
      if in_a_vtc_check == True:
-        in_a_vtc_true = discord.Embed(title="Alle Group Applications| Application System", description=f"Hey {ctx.author.name}, Your already in a vtc. We dont allow dual vtcing. If you wish to join alle group please leave this vtc and then we can carry on with your application. You will have 1hr to do this. Then your application channel will be Automatically closed after the bot checks for one more time.", color=0xFF0000)
-        in_a_vtc_true.set_footer(text="Alle Group Applications| Application System")
+        in_a_vtc_true = discord.Embed(title="Alle Group Applications| Application System",
+                                      description=f"Hey {ctx.author.name}, Your already in a vtc. We dont allow dual vtcing. If you wish to join alle group please leave this vtc and then we can carry on with your application. You will have 1hr to do this. Then your application channel will be Automatically closed after the bot checks for one more time.", color=0xFF0000)
+        in_a_vtc_true.set_footer(
+            text="Alle Group Applications| Application System")
         await ctx.author.send(embed=in_a_vtc_true)
 
-        this_user_is_in_a_vtc = discord.Embed(title="Alle Group Applications| Application System", description=f"Hey Alle, the user {ctx.author.name} is already in vtc. They have been given 1hr to leave.", color=0xFF0000)
-        this_user_is_in_a_vtc.set_footer(text="Alle Group Applications| Application System")
+        this_user_is_in_a_vtc = discord.Embed(title="Alle Group Applications| Application System",
+                                              description=f"Hey Alle, the user {ctx.author.name} is already in vtc. They have been given 1hr to leave.", color=0xFF0000)
+        this_user_is_in_a_vtc.set_footer(
+            text="Alle Group Applications| Application System")
         await hook.send(embed=this_user_is_in_a_vtc)
         channel = discord.utils.get(ctx.guild.channels, id=837714802049679451)
-        await ticket_channel.send(f"Hey staff member please make sure to check this channel {channel.mention}") 
-     
-     
-     
-     
+        await ticket_channel.send(f"Hey staff member please make sure to check this channel {channel.mention}")
+
      banned = (data["banned"])
      if banned == False:
         bannedem = discord.Embed(
@@ -896,10 +920,10 @@ async def request(ctx):
     await ctx.message.delete()
     #day = dt.now()
     #mydb = mysql.connector.connect(
-        #host="localhost",
-       # user="root",
-      #  password="Fv4&4*JT61%8WGj&vwj",
-     #   database="alleapi"
+    #host="localhost",
+    # user="root",
+    #  password="Fv4&4*JT61%8WGj&vwj",
+    #   database="alleapi"
     #)
     #mycursor = mydb.cursor()
     #mycursor.execute(
@@ -918,7 +942,8 @@ async def request(ctx):
    #               value=f"{result}", inline=False)
    # hook.send(embed=em2)
    # await ctx.send("Your Training request has been sent to the admissions team.")
-    we_dont_do_trainings = discord.Embed(title="Alle Group Applications | Out Of Date Command", description=f"Hey {ctx.author.name}, we no longer offer driver training. As there is a new system in place now :)")
+    we_dont_do_trainings = discord.Embed(title="Alle Group Applications | Out Of Date Command",
+                                         description=f"Hey {ctx.author.name}, we no longer offer driver training. As there is a new system in place now :)")
     global time_main2
     we_dont_do_trainings.set_footer(
         text=f"Alle Group Applications | Apply Logging Message • {time_main2}")
@@ -937,10 +962,10 @@ async def request(ctx):
 async def confirm(ctx):
     await ctx.message.delete()
     #mydb = mysql.connector.connect(
-      #  host="localhost",
-       # user="root",
-     #   password="Fv4&4*JT61%8WGj&vwj",
-      #  database="alleapi"
+    #  host="localhost",
+    # user="root",
+    #   password="Fv4&4*JT61%8WGj&vwj",
+    #  database="alleapi"
     #)
     #getplayerinfourl = f"https://api.truckersmp.com/v2/player/{tmpid}"
     #r = requests.get(getplayerinfourl)
@@ -955,13 +980,13 @@ async def confirm(ctx):
     #hook = Webhook(
     #    'https://discord.com/api/webhooks/825683286428483594/nQbl4rw8fBcD_Q1Ig9ceNgUsHy9lQ-EOtTwCCyYTges0W8J2OIPVpXNQl6rLCWrj4JhF')
     #em2 = discord.Embed(
-     #   title=data["name"], description=f"You have {status} your training", color=0x00FF00)
+    #   title=data["name"], description=f"You have {status} your training", color=0x00FF00)
     ##hook.send(embed=em2)
     #hook2 = webhook(
-     #   'https: // discord.com/api/webhooks/833366266332708894/xoL7IBrAFGRpcUaIi2NMbLgEpQJqQ8nB-ogQe9AYEuJG2Tt9JQ8qOFBF1qvFtEHxLlq2'
+    #   'https: // discord.com/api/webhooks/833366266332708894/xoL7IBrAFGRpcUaIi2NMbLgEpQJqQ8nB-ogQe9AYEuJG2Tt9JQ8qOFBF1qvFtEHxLlq2'
     #)
     #em3 = discord.Embed(
-     #   title=data["name"], description=f"Has passed there training. Trained by:{ctx.author}", color=0x00FF00)
+    #   title=data["name"], description=f"Has passed there training. Trained by:{ctx.author}", color=0x00FF00)
     #hook2.send(embed=em3)
     global time_main2
     we_dont_do_trainings = discord.Embed(title="Alle Group Applications | Out Of Date Command",
@@ -979,23 +1004,25 @@ async def confirm(ctx):
         await ctx.send(embed=your_dms_are_disabled)
 
 # allows anyone to view a training that has been added to the DB.
+
+
 @bot.command()
 async def checkt(ctx, tmpid):
    await ctx.message.delete()
    global time_main2
    we_dont_do_trainings = discord.Embed(title="Alle Group Applications | Out Of Date Command",
-                                         description=f"Hey {ctx.author.name}, we no longer offer driver training. As there is a new system in place now :)")
+                                        description=f"Hey {ctx.author.name}, we no longer offer driver training. As there is a new system in place now :)")
    we_dont_do_trainings.set_footer(
        text=f"Alle Group Applications | Apply Logging Message • {time_main2}")
    await ctx.send("Look in your dms")
    try:
-        await ctx.author.send(embed=we_dont_do_trainings)
+       await ctx.author.send(embed=we_dont_do_trainings)
    except:
-        your_dms_are_disabled = discord.Embed(
-            title="Alle Group Applications | Out Of Date Command Error", description=f"{ctx.author.mention} i tried to dm you but i could not :(")
-        your_dms_are_disabled.set_footer(
-            text=f"Alle Group Applications | Error Logging Message • {time_main2}")
-        await ctx.send(embed=your_dms_are_disabled)
+       your_dms_are_disabled = discord.Embed(
+           title="Alle Group Applications | Out Of Date Command Error", description=f"{ctx.author.mention} i tried to dm you but i could not :(")
+       your_dms_are_disabled.set_footer(
+           text=f"Alle Group Applications | Error Logging Message • {time_main2}")
+       await ctx.send(embed=your_dms_are_disabled)
     #try:
      #gettraininginfourl = f'https://api-alle-group.com/api/v2/trainings{tmpid}'
      #r = requests.get(gettraininginfourl)
@@ -1003,28 +1030,28 @@ async def checkt(ctx, tmpid):
     #for data in data:
       #   embed = discord.Embed(title='Training Informaiton',
        #                        url=f'https://api-alle-group.com/api/v2/trainings{tmpid}', color=0xff0000)
-        # embed.add_field(name="Trainee Name",
-         #                value=data['traineename'], inline=False)
-         #embed.add_field(name='Trained By',
-         #                value=data['trainedby'], inline=False)
-         #embed.add_field(name='Status of Training',
-          #               value=data['status'], inline=False)
-         #embed.add_field(name='Date and Time',
-         #                value=f"{data['date']} {data['time']}", inline=False)
-         #embed.add_field(name='Server', value=data['server'], inline=False)
-         #embed.add_field(name='Training Origin and Destination',
-          #               value=f"Origin: {data['orgin']} | Destination: {data['destinaton']}", inline=False)
+       # embed.add_field(name="Trainee Name",
+       #                value=data['traineename'], inline=False)
+       #embed.add_field(name='Trained By',
+       #                value=data['trainedby'], inline=False)
+       #embed.add_field(name='Status of Training',
+       #               value=data['status'], inline=False)
+       #embed.add_field(name='Date and Time',
+       #                value=f"{data['date']} {data['time']}", inline=False)
+       #embed.add_field(name='Server', value=data['server'], inline=False)
+       #embed.add_field(name='Training Origin and Destination',
+       #               value=f"Origin: {data['orgin']} | Destination: {data['destinaton']}", inline=False)
       # try:
        #   await ctx.send(embed=embed)
-            #except:
-            #   cannot_send_embed = discord.Embed(
-               #       title="Alle Group Applications | `checkt` error", description=f"I cant send the results embed :(", color=0xFF0000)
-                #  await ctx.send(embed=cannot_send_embed)
-                    #except:
-                                 #   cannot_find_training = discord.Embed(
-           #      title="Alle Group Applications | `checkt` error", description=f"That training does not appear to exist :(", color=0xFF0000)
-                   # await ctx.send(embed=cannot_find_training)
-   
+        #except:
+        #   cannot_send_embed = discord.Embed(
+           #       title="Alle Group Applications | `checkt` error", description=f"I cant send the results embed :(", color=0xFF0000)
+            #  await ctx.send(embed=cannot_send_embed)
+                #except:
+                             #   cannot_find_training = discord.Embed(
+       #      title="Alle Group Applications | `checkt` error", description=f"That training does not appear to exist :(", color=0xFF0000)
+               # await ctx.send(embed=cannot_find_training)
+
 
 @checkt.error
 async def checkt_handler(ctx, error):
@@ -1119,10 +1146,10 @@ async def reply(ctx, *, message):
     with open('data.json') as f:
         data = json.load(f)
     # if statement checks if the channel id the command was used in is a application channel or not ONLY WORKS FOR ACTIVE APPLICATION CHANNELS
-    if ctx.channel.id in data["ticket-channel-ids"]:      
-           em = discord.Embed(
-           title="Message From Alle | Admissions  Team", description=f"{message}")
-           await ctx.send(embed=em)
+    if ctx.channel.id in data["ticket-channel-ids"]:
+        em = discord.Embed(
+            title="Message From Alle | Admissions  Team", description=f"{message}")
+        await ctx.send(embed=em)
     else:
         # sends error if the command has not be used in a application ticket channel.
         not_a_ticket_channel = discord.Embed(title="Alle Group Applications | `claim` error",
@@ -1298,10 +1325,12 @@ async def convertd(ctx, ):
     await ctx.author.send(embed=embed)
 # Fire a driver
 
+
 @bot.command()
 async def bug(ctx):
     await ctx.message.delete()
     # this command needs to send data to devs and stuff that has applications in it is to be sent to Bean.
+    global bug_id
 
     def check(message):
         return message.author == ctx.author and message.channel == ctx.channel
@@ -1313,34 +1342,95 @@ async def bug(ctx):
     message = await ctx.send(embed=what_is_the_bug_em)
     msg = await bot.wait_for('message', check=check)
     response = (msg.content)
+
     if 'applications' and 'application' and 'apps' and 'application' in response:
-        new_applications_bug_em = discord.Embed(title="Alle Group Applications | New Bug Report Submitted", description=f"Yo Bean, {ctx.author.name} has submitted the following bug: **`{response}`**", color=0xFF0000)
-        new_applications_bug_em.add_field(name="Reporting User's ID:", value=f"{ctx.author.id}", inline=False)
+        bug_id += 1
+        new_applications_bug_em = discord.Embed(title="Alle Group Applications | New Bug Report Submitted",
+                                                description=f"Yo Bean, {ctx.author.name} has submitted the following bug: **`{response}`**", color=0xFF0000)
+        new_applications_bug_em.add_field(
+            name="Reporting User's ID:", value=f"{ctx.author.id}", inline=False)
         timestamp = datetime.now(pytz.timezone("Europe/London"))
-        new_applications_bug_em.add_field(name="Report Submitted:", value=timestamp.strftime(r"On: %d/%m/%Y At: %I:%M %p"))
-        
+        new_applications_bug_em.add_field(
+            name="Report Submitted:", value=timestamp.strftime(r"On: %d/%m/%Y At: %I:%M %p"))
+        new_applications_bug_em.add_field(
+            name="Bug ID:", value=f"{bug_id}", inline=False)
+        test_time = timestamp.strftime(r"%I:%M %p")
         new_applications_bug_em.set_footer(
-            text=f"Alle Group Applications | Bug Report System • {time_main2}")
+            text=f"Alle Group Applications | Bug Report System • {test_time}")
+
         user = bot.get_user(755493797160288286)
         await user.send(embed=new_applications_bug_em)
-    
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Fv4&4*JT61%8WGj&vwj",
+            database="alleapi"
+        )
+        mycursor = mydb.cursor()
+        timestamp = datetime.now(pytz.timezone("Europe/London"))
+        time_and_date = timestamp.strftime(r"On: %d/%m/%Y At: %I:%M %p")
+        sql = "INSERT INTO  alle_bugs(bugid, submitedby, fixedby, submitteddate, fixeddate, bug) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (f"{bug_id}",
+               f"{ctx.author.id}", f"Not Yet Fixed", f"{time_and_date}", f"Not Yet Fixed", f"{response}")
+        mycursor.execute(sql, val)
+        mydb.commit()
+        await ctx.author.send(f"Thanks for submitting your bug your id is {bug_id}")
     else:
+        bug_id += 1
+        user1 = discord.utils.get(
+            ctx.guild.members, id=755493797160288286)
+        user2 = discord.utils.get(
+            ctx.guild.members, id=344999742847320064)
+
         new_applications_bug2_em = discord.Embed(title="Alle Group Applications | New Bug Report Submitted",
-                                                description=f"Yo Devs, {ctx.author.name} has submitted the following bug: **`{response}`**", color=0xFF0000)
+                                                 description=f"Yo Devs, {ctx.author.name} has submitted the following bug: **`{response}`**", color=0xFF0000)
         new_applications_bug2_em.add_field(
             name="Reporting User's ID:", value=f"{ctx.author.id}", inline=False)
         timestamp2 = datetime.now(pytz.timezone("Europe/London"))
         new_applications_bug2_em.add_field(
             name="Report Submitted:", value=timestamp2.strftime(r"On: %d/%m/%Y At: %I:%M %p"))
+        new_applications_bug2_em.add_field(
+            name="Bug ID:", value=f"{bug_id}", inline=False)
         new_applications_bug2_em.set_footer(
             text=f"Alle Group Applications | Bug Report System • {time_main2}")
         channel = discord.utils.get(ctx.guild.channels, id=837715287092232264)
+        await channel.send(f'{user1.mention}')
+        await channel.send(f'{user2.mention}')
         await channel.send(embed=new_applications_bug2_em)
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Fv4&4*JT61%8WGj&vwj",
+            database="alleapi"
+        )
+        mycursor = mydb.cursor()
+        timestamp = datetime.now(pytz.timezone("Europe/London"))
+        time_and_date = timestamp.strftime(r"On: %d/%m/%Y At: %I:%M %p")
+        sql = "INSERT INTO  alle_bugs(bugid, submitedby, fixedby, submitteddate, fixeddate, bug) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (f"{bug_id}",
+               f"{ctx.author.id}", f"Not Yet Fixed", f"{time_and_date}", f"Not Yet Fixed", f"{response}")
+        mycursor.execute(sql, val)
+        mydb.commit()
+        await ctx.author.send(f"Thanks for submitting your bug your id is {bug_id}")
     await msg.delete()
     await message.delete()
 
 
-
+@bot.command()
+async def bugu(ctx, id, *, comment="Thanks for reporting the bug it has been fixed."):
+    await ctx.message.delete()
+    get_bug_info_url = f'https://api-alle-group.com/api/v2/bugs/{id}'
+    r = requests.get(get_bug_info_url)
+    data = r.json()
+    for data in data:
+        embed = discord.Embed(
+            title="Alle Group Applications | Bug Report System", description=f"Thanks for submitting bug ID  {data['bugid']}")
+        embed.add_field(name="Bug", value=data['bug'], inline=False)
+        embed.add_field(name="Submitted Date:",
+                        value=data['submitteddate'], inline=False)
+        embed.add_field(name="Bug Comment", value=comment, inline=False)
+    #user = bot.get_user(data['submitedby'])
+    await ctx.send(embed=embed)
 
 
 @bot.command()
@@ -1349,7 +1439,7 @@ async def report(ctx):
 
     def check(message):
         return message.author == ctx.author and message.channel == ctx.channel
-    global time_main2 
+    global time_main2
     info_driver_report_1 = discord.Embed(
         title="Alle Group Applications | Driver Report System", description=f"Hey, {ctx.author.name} Please provide the drivers name.", color=0xFF0000)
     info_driver_report_1.set_footer(
@@ -1357,8 +1447,7 @@ async def report(ctx):
     message = await ctx.send(embed=info_driver_report_1)
     msg = await bot.wait_for('message', check=check)
     response = (msg.content)
-    
-    
+
     info_driver_report_2 = discord.Embed(
         title="Alle Group Applications | Driver Report System", description=f"What is the drivers tmpID?", color=0xFF0000)
     info_driver_report_2.set_footer(
@@ -1366,9 +1455,7 @@ async def report(ctx):
     message2 = await ctx.send(embed=info_driver_report_2)
     msg2 = await bot.wait_for('message', check=check)
     response2 = (msg2.content)
-    
-    
-    
+
     info_driver_report_3 = discord.Embed(
         title="Alle Group Applications | Driver Report System", description=f"Please explain the reason why you have reported this driver today?", color=0xFF0000)
     info_driver_report_3.set_footer(
@@ -1377,24 +1464,30 @@ async def report(ctx):
     msg3 = await bot.wait_for('message', check=check)
     response3 = (msg3.content)
     timestamp2 = datetime.now(pytz.timezone("Europe/London"))
-    driver_reported_for_shit_driving_em = discord.Embed(title="Alle Group Applications | New Driver Report In", description=f"", color=0xFF0000)
-    driver_reported_for_shit_driving_em.add_field(name="Drivers Name:", value=f"{response}", inline=True) 
-    driver_reported_for_shit_driving_em.add_field(name="Drivers tmpID:", value=f"{response2}", inline=True) 
-    driver_reported_for_shit_driving_em.add_field(name="Report Reason:", value=f"{response3}", inline=True) 
+    driver_reported_for_shit_driving_em = discord.Embed(
+        title="Alle Group Applications | New Driver Report In", description=f"", color=0xFF0000)
+    driver_reported_for_shit_driving_em.add_field(
+        name="Drivers Name:", value=f"{response}", inline=True)
+    driver_reported_for_shit_driving_em.add_field(
+        name="Drivers tmpID:", value=f"{response2}", inline=True)
+    driver_reported_for_shit_driving_em.add_field(
+        name="Report Reason:", value=f"{response3}", inline=True)
     driver_reported_for_shit_driving_em.add_field(
         name="Date Report Submitted:", value=timestamp2.strftime(r"On: %d/%m/%Y At: %I:%M %p"), inline=True)
-    driver_reported_for_shit_driving_em.add_field(name="Reporters Discord Name:", value=f"{ctx.author.name}", inline=True)    
+    driver_reported_for_shit_driving_em.add_field(
+        name="Reporters Discord Name:", value=f"{ctx.author.name}", inline=True)
     driver_reported_for_shit_driving_em.set_footer(
         text=f"Alle Group Applications | Driver Report System • {time_main2}")
     channel = discord.utils.get(ctx.guild.channels, id=837714802049679451)
     await channel.send(embed=driver_reported_for_shit_driving_em)
 
-    #embed saying thanks for sending in the report. 
-    thx_for_reporting = discord.Embed(title="Alle Group Applications | Thanks For Reporting.", description="We will take whatever action we take fit on your report.", color=0xFF0000)
+    #embed saying thanks for sending in the report.
+    thx_for_reporting = discord.Embed(title="Alle Group Applications | Thanks For Reporting.",
+                                      description="We will take whatever action we take fit on your report.", color=0xFF0000)
     thx_for_reporting.set_footer(
         text=f"Alle Group Applications | Driver Report System • {time_main2}")
     await ctx.send(embed=thx_for_reporting)
-    
+
 
 @bot.command()
 async def apinfo(ctx, tmpid):
@@ -1445,14 +1538,16 @@ async def bot_command_error(self, ctx: commands.Context, error: commands.Command
 @bot.command()
 async def suggest(ctx):
     await ctx.message.delete()
+
     def check(message):
         return message.author == ctx.author and message.channel == ctx.channel
-    
+
     what_is_the_suggestion_em = discord.Embed(
         title="Alle Group Suggestions", description="Please write your suggestion. Need help? Here's the [Format](https://discord.com/channels/837600839052689418/849399174289686548/849405042376441886)", color=0x00993C)
     global time_main
     global time_main2
-    what_is_the_suggestion_em.set_footer(text=f"Alle Group | Suggestions • {time_main2}")
+    what_is_the_suggestion_em.set_footer(
+        text=f"Alle Group | Suggestions • {time_main2}")
     message3 = await ctx.send(embed=what_is_the_suggestion_em)
     msg3 = await bot.wait_for('message', check=check)
     response3 = (msg3.content)
@@ -1460,9 +1555,11 @@ async def suggest(ctx):
     await message3.delete()
     suggestion_em = discord.Embed(
         title="Alle Group Suggestions", color=0x00993C)
-    suggestion_em.add_field(name="Name:", value=f"{ctx.author.name}", inline=False) 
+    suggestion_em.add_field(
+        name="Name:", value=f"{ctx.author.name}", inline=False)
     suggestion_em.add_field(name="Date:", value=f"{time_main}", inline=False)
-    suggestion_em.add_field(name="Suggestion:", value=f"{response3}", inline=False)   
+    suggestion_em.add_field(
+        name="Suggestion:", value=f"{response3}", inline=False)
     suggestion_em.set_footer(text=f"Alle Group | Suggestions • {time_main2}")
     channel = discord.utils.get(ctx.guild.channels, id=849399174289686548)
     send_embed = await channel.send(embed=suggestion_em)
@@ -1470,37 +1567,30 @@ async def suggest(ctx):
     await send_embed.add_reaction("❌")
 
 
-
-
 @bot.command()
 async def lookup(ctx, tmpid):
-       await ctx.message.delete()
-       getapplicationsdataurl = f'https://api-alle-group.com/api/v2/applications/{tmpid}'
-       r = requests.get(getapplicationsdataurl)
-       data = r.json()
+    await ctx.message.delete()
+    getapplicationsdataurl = f'https://api-alle-group.com/api/v2/applications/{tmpid}'
+     r = requests.get(getapplicationsdataurl)
+      data = r.json()
        for data in data:
-                embed = discord.Embed(title='User Info',
-                               url=f'https://api-alle-group.com/api/v2/applications/{tmpid}', color=0xff0000)
-                embed.add_field(name="Name",
-                         value=data['discordname'], inline=False)
-                embed.add_field(name='Application ID',
-                         value=data['applicationid'], inline=False)
-                embed.add_field(name='Status of Applications',
-                        value=data['status'], inline=False)
+            embed = discord.Embed(title='User Info',
+                                   url=f'https://api-alle-group.com/api/v2/applications/{tmpid}', color=0xff0000)
+             embed.add_field(name="Name",
+                              value=data['discordname'], inline=False)
+              embed.add_field(name='Application ID',
+                               value=data['applicationid'], inline=False)
+               embed.add_field(name='Status of Applications',
+                                value=data['status'], inline=False)
                 embed.add_field(name='Date and Time',
-                         value=f"{data['applicationdate']}", inline=False)
+                                value=f"{data['applicationdate']}", inline=False)
 
                 #embed.add_field(name="TMPID", value=data[tmpid])
 
                 await ctx.send(embed=embed)
 
 
-
-
-
-
-
-# events bot section of bot. 
+# events bot section of bot.
 @bot.command(pass_context=True, no_pm=True)
 async def adde(ctx):
     if ctx.message.guild == None:
@@ -1513,31 +1603,32 @@ async def adde(ctx):
       ed = '[A.G] D3ADBEATZZ'
       global time_main2
       embed1 = discord.Embed(title="Alle Group Events | Add A New Event",
-                           description="What is the name of the event?", color=0xFF0000)
-      embed1.set_footer(text=f"Alle Group Events | Add A New Event • {time_main2}")
+                             description="What is the name of the event?", color=0xFF0000)
+      embed1.set_footer(
+          text=f"Alle Group Events | Add A New Event • {time_main2}")
       remove1 = await ctx.send(embed=embed1)
       msg = await bot.wait_for('message', check=check)
       response = (msg.content)
       embed2 = discord.Embed(title="Alle Group Events | Add A New Event",
-                           description="What is the event info?", color=0xFF0000)
+                             description="What is the event info?", color=0xFF0000)
       embed2.set_footer(
-        text=f"Alle Group Events | Add A New Event • {time_main2}")
+          text=f"Alle Group Events | Add A New Event • {time_main2}")
       remove2 = await ctx.send(embed=embed2)
       msg1 = await bot.wait_for('message', check=check)
       response1 = (msg1.content)
 
       embed3 = discord.Embed(title="Alle Group Events | Add A New Event",
-                           description="Put event timings here", color=0xFF0000)
+                             description="Put event timings here", color=0xFF0000)
       embed3.set_footer(
-        text=f"Alle Group Events | Add A New Event • {time_main2}")
+          text=f"Alle Group Events | Add A New Event • {time_main2}")
       remove3 = await ctx.send(embed=embed3)
       msg2 = await bot.wait_for('message', check=check)
       response2 = (msg2.content)
 
       embed4 = discord.Embed(title="Alle Group Events | Add A New Event",
-                           description="Please paste tmp link here", color=0xFF0000)
+                             description="Please paste tmp link here", color=0xFF0000)
       embed4.set_footer(
-        text=f"Alle Group Events | Add A New Event • {time_main2}")
+          text=f"Alle Group Events | Add A New Event • {time_main2}")
       remove4 = await ctx.send(embed=embed4)
       msg3 = await bot.wait_for('message', check=check)
       response3 = (msg3.content)
@@ -1545,38 +1636,31 @@ async def adde(ctx):
       eventid += 1
       timestamp = datetime.now(pytz.timezone("Europe/London"))
       answers_em = discord.Embed(
-        title="Alle Group Events | New Event Data", description="", color=0xFF0000)
+          title="Alle Group Events | New Event Data", description="", color=0xFF0000)
       answers_em.add_field(name="Event ID", value=f"{eventid}")
-      answers_em.add_field(name="Event Name", value=f"{response}", inline=False)
-      answers_em.add_field(name="Event Info", value=f"{response1}", inline=False)
-      answers_em.add_field(name="Event Timings",
-                         value=f"{response2}", inline=False)
       answers_em.add_field(
-        name="Tmp Link", value=f"[Link]({response3})", inline=False)
+          name="Event Name", value=f"{response}", inline=False)
+      answers_em.add_field(
+          name="Event Info", value=f"{response1}", inline=False)
+      answers_em.add_field(name="Event Timings",
+                           value=f"{response2}", inline=False)
+      answers_em.add_field(
+          name="Tmp Link", value=f"[Link]({response3})", inline=False)
       answers_em.add_field(name="Submitted By:",
-                         value=f"{ctx.author.name}", inline=False)
+                           value=f"{ctx.author.name}", inline=False)
       answers_em.add_field(name="Event Info Submitted:", value=timestamp.strftime(
-        r"On: %d/%m/%Y At: %I:%M %p"), inline=True)
-      answers_em.set_footer(text=f"Alle Group Events | Add A New Event • {time_main2}")
+          r"On: %d/%m/%Y At: %I:%M %p"), inline=True)
+      answers_em.set_footer(
+          text=f"Alle Group Events | Add A New Event • {time_main2}")
       await ctx.send(embed=answers_em)
-    
+
 
 @bot.command()
 async def publish(ctx, eventid):
-      await ctx.message.delete() 
-      
+    await ctx.message.delete()
 
 
-
-
-
-
-
-
-
-
-
-# truckers mp traffic / server commands. 
+# truckers mp traffic / server commands.
 #Experimental command for Server List
 @bot.command()
 async def servers(ctx):
@@ -1586,10 +1670,10 @@ async def servers(ctx):
   r = requests.get(getserversURL)
   data = r.json()["response"]
   embed = discord.Embed(title="TMP Server Status",
-                       url="https://traffic.krashnz.com/", color=0xFF0000)
+                        url="https://traffic.krashnz.com/", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-     text="Bot code developed by Alle Devs")
+      text="Bot code developed by Alle Devs")
   for server in data:
     game = server["game"]
     name = server["shortname"]
@@ -1604,7 +1688,8 @@ async def servers(ctx):
                     value=players + '/' + maxplayers, inline=True)
   await ctx.send(embed=embed)
  except:
-     tmpaiissues = discord.Embed(title="TMP Server Status", description="It appears TMP are having API issues this is something that Alle can not control 😢", color=0xFF0000) 
+     tmpaiissues = discord.Embed(
+         title="TMP Server Status", description="It appears TMP are having API issues this is something that Alle can not control 😢", color=0xFF0000)
      await ctx.send(embed=tmpaiissues)
  #Commands for Traffic
 
@@ -1779,7 +1864,6 @@ async def ATSTrafficEU(ctx):
   await ctx.send(embed=embed)
 
 
-
 # embed command / announce command
 
 @bot.command()
@@ -1787,10 +1871,7 @@ async def embed(ctx):
     await ctx.message.delete()
 
 
-
-
-
-#music 
+#music
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -1934,6 +2015,7 @@ class Song:
                  .add_field(name='Requested by', value=self.requester.mention)
                  .add_field(name='Uploader', value='[{0.source.uploader}]({0.source.uploader_url})'.format(self))
                  .add_field(name='URL', value='[Click]({0.source.url})'.format(self))
+                 .set_footer(text="Made By: bean!!!!!!!#0041 for Alle Group")
                  .set_thumbnail(url=self.source.thumbnail))
 
         return embed
@@ -2108,22 +2190,12 @@ class Music(commands.Cog):
 
         if not ctx.voice_state.voice:
             return await ctx.send('Not connected to any voice channel.')
-
-        await ctx.voice_state.stop()
+        else:
+            pass
+        ctx.voice_state.songs.clear()
+        await ctx.guild.voice_client.disconnect()
         del self.voice_states[ctx.guild.id]
-
-    @commands.command(name='volume')
-    async def _volume(self, ctx: commands.Context, *, volume: int):
-        """Sets the volume of the player."""
-
-        if not ctx.voice_state.is_playing:
-            return await ctx.send('Nothing being played at the moment.')
-
-        if 0 > volume > 100:
-            return await ctx.send('Volume must be between 0 and 100')
-
-        ctx.voice_state.volume = volume / 100
-        await ctx.send('Volume of the player set to {}%'.format(volume))
+        await ctx.send('Bot Left.')
 
     @commands.command(name='now', aliases=['current', 'playing'])
     async def _now(self, ctx: commands.Context):
@@ -2173,19 +2245,14 @@ class Music(commands.Cog):
         if voter == ctx.voice_state.current.requester:
             await ctx.message.add_reaction('⏭')
             ctx.voice_state.skip()
-
-        elif voter.id not in ctx.voice_state.skip_votes:
-            ctx.voice_state.skip_votes.add(voter.id)
-            total_votes = len(ctx.voice_state.skip_votes)
-
-            if total_votes >= 3:
-                await ctx.message.add_reaction('⏭')
-                ctx.voice_state.skip()
-            else:
-                await ctx.send('Skip vote added, currently at **{}/3**'.format(total_votes))
+            await ctx.send('Song skipped playing next track :)')
+        elif voter == discord.Permissions.administrator:
+            await ctx.send('song skipped')
+            ctx.voice_state.skip()
 
         else:
-            await ctx.send('You have already voted to skip this song.')
+            await ctx.send('Song Skipped | Tho you did not request that song :(')
+            ctx.voice_state.skip()
 
     @commands.command(name='queue')
     async def _queue(self, ctx: commands.Context, *, page: int = 1):
@@ -2279,17 +2346,21 @@ class Music(commands.Cog):
                 raise commands.CommandError(
                     'Bot is already in a voice channel.')
 
+
 bot.add_cog(Music(bot))
 
+
+# moderation commands
 @bot.command(pass_context=True)
 async def ban(ctx, member: discord.Member, *, reason=None):
     if ctx.message.author.guild_permissions.ban_members is True:
         await member.send(f'You have been banned for `{reason}`')
         await member.ban(reason=reason)
         await ctx.send(f'{member.mention} has been banned for the following reason: ```{reason}```')
-        
+
     else:
         await ctx.send(f'You do not have permission to use this command.')
+
 
 @bot.command(pass_context=True)
 async def unban(ctx, *, member):
@@ -2304,6 +2375,7 @@ async def unban(ctx, *, member):
     else:
         await ctx.send(f'You do not have permission to use this command.')
 
+
 @bot.command(pass_context=True)
 async def kick(ctx, member: discord.Member, *, reason=None):
     await ctx.message.delete()
@@ -2311,9 +2383,10 @@ async def kick(ctx, member: discord.Member, *, reason=None):
         await member.send(f"You have been kicked for `{reason}`. Please don't make the same mistake on other servers.")
         await member.kick(reason=reason)
         await ctx.send(f'{member.mention} has been kicked for the following reason: ```{reason}```')
-        
+
     else:
         await ctx.send(f'You do not have permission to use this command.')
+
 
 @bot.command(pass_context=True)
 async def warn(ctx, member: discord.Member, *, reason):
@@ -2325,21 +2398,179 @@ async def warn(ctx, member: discord.Member, *, reason):
     else:
         await ctx.send(f'You do not have permission to use this command.')
 
+
 @bot.command()
 async def help(ctx):
     await ctx.message.delete()
-    embed = discord.Embed(title='Command List', description='Because you forgot all the commands.', Color=0xff0000)
+    embed = discord.Embed(
+        title='Command List', description='Because you forgot all the commands.', color=0xFF0000)
     embed.set_thumbnail(
         url='https://alle-group.com/wp-content/uploads/2021/05/cropped-cropped-png-transparent-church-logo-mountain-microsoft-azure-text-line3-1.png')
-    embed.add_field(name=f'ETS Traffic Commands', 
-        value=f'`Servers`, `Traffic`, `Traffic2`, `Traffic3`, `TrafficARC`, `TrafficUS`, `TrafficPM`, `TrafficPMARC`', inline=False)
-    embed.add_field(name=f'ATS Traffic Commands', value=f'`Servers`, `ATSTrafficUS`, `ATSTrafficUSARC`, `ATSTrafficEU`', inline=False)
-    embed.add_field(name=f'Music Commands', 
-    value=f'`Join`, `Summon`, `Leave`, `Volume`, `Now` (can also use `Current` or `Playing`), `Pause`, `Resume`, `Stop`, `Skip`, `Queue`, `Shuffle`, `Remove`, `Loop`, `Play`', 
-        inline=False)
-    embed.add_field(name=f'Other Commands', value=f'`Ping`, `Apply`, `Help`, `Convert`, `ConvertD`, `Bug`, `Report`, `Suggest`', inline=False)
+    embed.add_field(name=f'ETS Traffic Commands',
+                    value=f'`Servers`, `Traffic`, `Traffic2`, `Traffic3`, `TrafficARC`, `TrafficUS`, `TrafficPM`, `TrafficPMARC`', inline=False)
+    embed.add_field(name=f'ATS Traffic Commands',
+                    value=f'`Servers`, `ATSTrafficUS`, `ATSTrafficUSARC`, `ATSTrafficEU`', inline=False)
+    embed.add_field(name=f'Music Commands',
+                    value=f'`Join`, `Summon`, `Leave`, `Volume`, `Now` (can also use `Current` or `Playing`), `Pause`, `Resume`, `Stop`, `Skip`, `Queue`, `Shuffle`, `Remove`, `Loop`, `Play`',
+                    inline=False)
+    embed.add_field(name=f'Other Commands',
+                    value=f'`Ping`, `Apply`, `Help`, `Convert`, `ConvertD`, `Bug`, `Report`, `Suggest`', inline=False)
+    embed.add_field(name="Simple Support Commands",
+                    value="`unsupportedgv`, `installpromodstmp` ", inline=False)
+    embed.add_field(name="Fun Commands BETA", value="`meme`", inline=False)
+    if ctx.message.author.guild_permissions.administrator:
+        embed.add_field(name=f'Admin Commands',
+                        value='`ban`, `warn`, `unban`, `claim`, `hire`', inline=False)
+    else:
+        pass
     await ctx.send(embed=embed)
-    
+
+
+@bot.command(name="volume")
+async def volume(ctx, volume: float):
+    voice = get(bot.voice_clients, guild=ctx.guild)
+
+    if 0 <= volume <= 100:
+        if voice.is_playing():
+            new_volume = volume / 100
+            voice.source.volume = new_volume
+            await ctx.reply(f"Volume Changed To: {volume}")
+        else:
+            await ctx.reply("The bot is not currently playing any songs.")
+    else:
+        await ctx.reply("Somethings not right. Report this using `a/bot` quoting **wont change volume**.")
+
+
+# logging
+@bot.event
+async def on_message_delete(message):
+    embed = discord.Embed(title="Message Delete",
+                          color=0xFF0000)
+    embed.add_field(name='Message', value=f"{message.content}",
+                    inline=False)
+    embed.add_field(
+        name="Channel", value=f"{message.channel.mention}", inline=False)
+    channel = bot.get_channel(837715287092232264)
+    embed.set_author(name=f"{message.author}",
+                     icon_url=f'{message.author.avatar_url}')
+    global time_main
+    embed.set_footer(
+        text=f"Made By bean!!!!!!!#0041 For Alle | Message ID: {message.id} • {time_main3}")
+    await channel.send(embed=embed)
+
+
+@bot.event
+async def on_message_edit(message_before, message_after):
+    embed = discord.Embed(title="Message Edit",
+                          description=f"[**Jump To Message**]({message_after.jump_url})", color=0xFF0000)
+    embed.add_field(name='Old', value=f"{message_before.content}",
+                    inline=False)
+    embed.add_field(name="New", value=f"{message_after.content}",
+                    inline=False)
+    channel = bot.get_channel(837715287092232264)
+
+    embed.set_author(name=f"{message_before.author}",
+                     icon_url=f'{message_before.author.avatar_url}')
+
+    global time_main3
+    embed.set_footer(
+        text=f"Made By bean!!!!!!!#0041 For Alle | Message ID: {message_before.id} • {time_main3}")
+    await channel.send(embed=embed)
+
+
+@bot.event
+async def on_member_update(before, after):
+   if len(before.roles) < len(after.roles):
+    channel = bot.get_channel(851965794446475274)
+    b4_roles = before.roles
+    after_roles = after.roles
+    global time_main3
+    global time_main2
+    set_diffrence = set(after.roles) - set(b4_roles)
+    list_diffrence = list(set_diffrence)
+    role_name = [role.name for role in set_diffrence]
+    string = role_name
+    newrole = ' '.join([str(elem) for elem in string])
+    embed = discord.Embed(
+        title=f"{after} was given the `{newrole}` role", color=0xFF0000)
+    embed.set_author(name=f"{after}", icon_url=f"{after.avatar_url}")
+    embed.set_footer(
+        text=f"Made By bean!!!!!!!#0041 For Alle | ID: {after.id} • {time_main3} at {time_main2}")
+    await channel.send(embed=embed)
+   if len(before.roles) > len(after.roles):
+    channel = bot.get_channel(851965794446475274)
+    b4_roles = before.roles
+    after_roles = after.roles
+    set_diffrence = set(b4_roles) - set(after_roles)
+    list_diffrence = list(set_diffrence)
+    role_name = [role.name for role in set_diffrence]
+    string = role_name
+    newrole = ' '.join([str(elem) for elem in string])
+    embed = discord.Embed(
+        title=f"{after} lost the `{newrole}` role", color=0xFF0000)
+    embed.set_author(name=f"{after}", icon_url=f"{after.avatar_url}")
+    embed.set_footer(
+        text=f"Made By bean!!!!!!!#0041 For Alle | ID: {after.id} • {time_main3} at {time_main2}")
+    await channel.send(embed=embed)
+
+
+# more simple support commands
+
+@bot.command()
+async def unsupportedgv(ctx):
+    await ctx.message.delete()
+    getplayerinfourl = f"https://api.truckersmp.com/v2/version"
+    r = requests.get(getplayerinfourl)
+    data = r.json()
+    for server in data:
+     embed = discord.Embed(title="Basic Tmp Support Help Commands",
+                           description="To find out how to change your game version for `TMP` vist [Here](https://truckersmp.com/knowledge-base/article/26).", color=0x00993C)
+     embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+     embed.set_footer(
+         text=f"Made By bean!!!!!!!#0041 For Alle | Current Supported Version: " + data['supported_game_version'])
+    await ctx.send(embed=embed)
+
+
+@bot.command()
+async def installpromodstmp(ctx):
+    await ctx.message.delete()
+    getplayerinfourl = f"https://api.truckersmp.com/v2/version"
+    r = requests.get(getplayerinfourl)
+    data = r.json()
+    for server in data:
+     embed = discord.Embed(title="Basic Tmp Support Help Commands",
+                           description=" For help installing Promods Europe for `TMP` visit [Here](https://truckersmp.com/knowledge-base/article/26).", color=0x00993C)
+     embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+     embed.set_footer(
+         text=f"Made By bean!!!!!!!#0041 For Alle | For more help contact ProMods Support.")
+    await ctx.send(embed=embed)
+
+
+# fun commands e.g meme etc..
+@bot.command(pass_context=True)
+async def meme(ctx):
+    await ctx.message.delete()
+    embed = discord.Embed(title="Meme", description="")
+
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get('https://www.reddit.com/r/dankmemes/new.json?sort=hot') as r:
+            res = await r.json()
+            embed.set_image(url=res['data']['children']
+                            [random.randint(0, 25)]['data']['url'])
+            await ctx.send(embed=embed)
+
+
+# owener only commands
+# @bot.commands(pass_context=True)
+# async def bean_afk(ctx):
+#     await ctx.message.delete()
+
+
+# @bot.commands(pass_context=True)
+# async def bean_not_afk(ctx):
+#     await ctx.message.delete()
+
 
 # start the bot
 bot.run(token, bot=True)
+
