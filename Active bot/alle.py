@@ -410,6 +410,9 @@ async def apply(ctx, *, args=None):
     #mycursor.execute(sql)
     #mydb.commit()
     timestamp = datetime.now(pytz.timezone("Europe/London"))
+    
+    Diretor_role2 = discord.utils.get(ctx.guild.roles, id=837606126795227136)
+    await ticket_channel.send(f"{Diretor_role2.mention} New application finshed. The answers are below!!")
     thanks_for_answering_alle_questions = discord.Embed(title="Alle Group Applications | Your Application Has Been Recived.",
                                                         description=f"Hey {ctx.author.name}, Thanks for answering all the questions a member of staff will now deal with your application. **Please remember it can take up to 2 days for your application to be viewed.**", color=0xFF0000)
     thanks_for_answering_alle_questions.set_footer(
@@ -1866,9 +1869,108 @@ async def ATSTrafficEU(ctx):
 
 # embed command / announce command
 
-@bot.command()
+@bot.command(aliases=['announce', 'announcement'])
 async def embed(ctx):
-    await ctx.message.delete()
+   await ctx.message.delete()
+   def check(message):
+        return message.author == ctx.author and message.channel == ctx.channel
+   global time_main2 
+   embed_content = discord.Embed(title="Alle Groups Embed / Announcement Commands", description="Please write the announcement content.", color=0xFF000)
+   embed_content.set_footer(
+       text=f"Built By bean!!!!!!!#0041 For Alle | Alle Groups Embed / Announcement Commands  • {time_main2}")
+   await ctx.send(embed=embed_content)
+   msg = await bot.wait_for('message', check=check)
+   response = (msg.content)
+    
+   embed_channel = discord.Embed(title="Alle Groups Embed / Announcement Commands", description="Please mention the channel you wish the embed to be sent in.", color=0xFF000)
+   embed_channel.set_footer(
+       text=f"Built By bean!!!!!!!#0041 For Alle | Alle Groups Embed / Announcement Commands • {time_main2}")
+   await ctx.send(embed=embed_channel)
+   msg2 = await bot.wait_for('message', check=check)
+   response2 = (msg2.content)
+   channel_id = msg2.channel_mentions[0].id
+   print(channel_id)
+   channelID = int(channel_id)
+   channel = discord.utils.get(ctx.guild.text_channels, id=channelID)
+   
+
+   embed_color = discord.Embed(title="Alle Groups Embed / Announcement Commands", description="Please pick a color you wish your embed to be. The options are **blue**, **green**, **red**. If you want it to be a standard color say `skip`", color=0xFF000)
+   embed_color.set_footer(text=f"Built By bean!!!!!!!#0041 For Alle | Alle Groups Embed / Announcement Commands  • {time_main2}")
+   await ctx.send(embed=embed_color)
+   msg3 = await bot.wait_for('message', check=check)
+   response3 = (msg3.content)
+   if 'blue' in response3:
+       color_1 = 0x0055FF
+   elif 'green' in response3:
+       color_2 = 0xFF000
+   elif 'red' in response3:
+       color_3 = 0xFF0000
+   elif 'skip' in response3:
+       pass            
+   else:
+       await ctx.send("The color you selected is not an option")
+   
+   
+   embed_link = discord.Embed(title="Alle Groups Embed / Announcement Commands", description="Please say any links you wish to be within your embed. If you dont have an link then say `skip`.", color=0xFF000)
+   embed_link.set_footer(text=f"Built By bean!!!!!!!#0041 For Alle | Alle Groups Embed / Announcement Commands  • {time_main2}")
+   await ctx.send(embed=embed_link)
+   msg4 = await bot.wait_for('message', check=check)
+   response4 = (msg4.content)
+   
+   embed_image = discord.Embed(
+       title="Alle Groups Embed / Announcement Commands", description="Please provide the image link. If you dont want a image say `skip`", color=0xFF000)
+   embed_image.set_footer(
+       text=f"Built By bean!!!!!!!#0041 For Alle | Alle Groups Embed / Announcement Commands  • {time_main2}")
+   await ctx.send(embed=embed_image)
+   msg5 = await bot.wait_for('message', check=check)    
+   response5 = (msg5.content)
+   
+   embed_title = discord.Embed(title="Alle Groups Embed / Announcement Commands",
+                               description="Please write the embed title.", color=0xFF000)
+   embed_title.set_footer(
+       text=f"Built By bean!!!!!!!#0041 For Alle | Alle Groups Embed / Announcement Commands  • {time_main2}")
+   await ctx.send(embed=embed_title)
+   msg6 = await bot.wait_for('message', check=check)
+   response6 = (msg6.content)    
+   print('last embed request works')
+   print(channelID)
+   if 'blue' in response3:
+       anouncement_embed = discord.Embed(title=f"{response6}", description=f"{response}", color=0x0055FF)
+       print('blue color')
+   elif 'green' in response3:
+       anouncement_embed = discord.Embed(
+           title=f"{response6}", description=f"{response}", color=0xFF000)
+   elif 'red' in response3:
+       anouncement_embed = discord.Embed(
+           title=f"{response6}", description=f"{response}", color=0xFF0000)
+   else: 
+       anouncement_embed = discord.Embed(
+           title=f"{response6}", description=f"{response}")
+
+   if 'skip' in response4:
+       pass
+   else:
+        anouncement_embed.add_field(name="Link", value=f"[Press Here]({response4})")
+   
+   if 'skip' in response5:
+       pass
+   else:
+        anouncement_embed.set_image(url=f"{response5}")
+   print('embed bit works') 
+   anouncement_embed.set_thumbnail(url='https://alle-group.com/wp-content/uploads/2021/05/cropped-cropped-png-transparent-church-logo-mountain-microsoft-azure-text-line3-1.png')
+   anouncement_embed.set_footer(
+       text=f"{response6} Sent By {ctx.author.name} • {time_main2}")
+   embed_message = await channel.send(embed=anouncement_embed)
+   
+   embeded_message_sent_em = discord.Embed(
+       description=f"Your Embed/Announcement Has Been Sent To {channel.mention}. To View The Message Click [**Here**]({embed_message.jump_url})", color=0xFF000)
+   embeded_message_sent_em.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
+   embeded_message_sent_em.set_thumbnail(url="https://alle-group.com/wp-content/uploads/2021/05/cropped-cropped-png-transparent-church-logo-mountain-microsoft-azure-text-line3-1.png")
+   embeded_message_sent_em.set_footer(text=f"Built By bean!!!!!!!#0041 For Alle | Alle Groups Embed / Announcement Commands  • {time_main2}")
+   await ctx.send(embed=embeded_message_sent_em)
+
+
+
 
 
 #music
@@ -1877,7 +1979,7 @@ async def embed(ctx):
 youtube_dl.utils.bug_reports_message = lambda: ''
 
 
-class VoiceError(Exception):
+class VoiceError(Exception): 
     pass
 
 
@@ -2193,8 +2295,9 @@ class Music(commands.Cog):
         else:
             pass
         ctx.voice_state.songs.clear()
-        await ctx.guild.voice_client.disconnect()
+        
         del self.voice_states[ctx.guild.id]
+        await ctx.voice_client.disconnect()  
         await ctx.send('Bot Left.')
 
     @commands.command(name='now', aliases=['current', 'playing'])
@@ -2400,30 +2503,62 @@ async def warn(ctx, member: discord.Member, *, reason):
 
 
 @bot.command()
-async def help(ctx):
-    await ctx.message.delete()
-    embed = discord.Embed(
+async def help(ctx, command='defualt'):
+   await ctx.message.delete() 
+   embed = discord.Embed(
         title='Command List', description='Because you forgot all the commands.', color=0xFF0000)
-    embed.set_thumbnail(
+   embed.set_thumbnail(
         url='https://alle-group.com/wp-content/uploads/2021/05/cropped-cropped-png-transparent-church-logo-mountain-microsoft-azure-text-line3-1.png')
-    embed.add_field(name=f'ETS Traffic Commands',
+   embed.add_field(name=f'ETS Traffic Commands',
                     value=f'`Servers`, `Traffic`, `Traffic2`, `Traffic3`, `TrafficARC`, `TrafficUS`, `TrafficPM`, `TrafficPMARC`', inline=False)
-    embed.add_field(name=f'ATS Traffic Commands',
+   embed.add_field(name=f'ATS Traffic Commands',
                     value=f'`Servers`, `ATSTrafficUS`, `ATSTrafficUSARC`, `ATSTrafficEU`', inline=False)
-    embed.add_field(name=f'Music Commands',
+   embed.add_field(name=f'Music Commands',
                     value=f'`Join`, `Summon`, `Leave`, `Volume`, `Now` (can also use `Current` or `Playing`), `Pause`, `Resume`, `Stop`, `Skip`, `Queue`, `Shuffle`, `Remove`, `Loop`, `Play`',
                     inline=False)
-    embed.add_field(name=f'Other Commands',
-                    value=f'`Ping`, `Apply`, `Help`, `Convert`, `ConvertD`, `Bug`, `Report`, `Suggest`', inline=False)
-    embed.add_field(name="Simple Support Commands",
-                    value="`unsupportedgv`, `installpromodstmp` ", inline=False)
-    embed.add_field(name="Fun Commands BETA", value="`meme`", inline=False)
-    if ctx.message.author.guild_permissions.administrator:
+   embed.add_field(name=f'Other Commands',
+                    value=f'`Ping`, `Apply`, `Help`, `Convert`, `ConvertD`, `Bug`, `Report`, `Suggest`, `embed` (can also use `announcement` and `announce`)', inline=False)
+   embed.add_field(name="Simple Support Commands",
+                    value="`unsupportedgv`, `installpromodstmp`, `whatistmpid`", inline=False)
+   embed.add_field(name="Fun Commands BETA", value="`meme`, `dodgydave`, `avatar`", inline=False)
+   if ctx.message.author.guild_permissions.administrator:
         embed.add_field(name=f'Admin Commands',
                         value='`ban`, `warn`, `unban`, `claim`, `hire`', inline=False)
-    else:
+         
+   else:
         pass
-    await ctx.send(embed=embed)
+   if 'dodgydave' in command:
+           dodgydavehelpembed = discord.Embed(
+               title=f'{command} Command Help', description='In case your in need of some help :slight_smile:', color=0xE4003B)
+           dodgydavehelpembed.set_thumbnail(
+           url='https://alle-group.com/wp-content/uploads/2021/05/cropped-cropped-png-transparent-church-logo-mountain-microsoft-azure-text-line3-1.png')
+           dodgydavehelpembed.add_field(name=f"Command Name:", value=f"{command}", inline=False)
+           dodgydavehelpembed.add_field(name=f"Help:", value=f"`a/dodgydave` sends image and video link and quote. `a/dodgydave [no]` sends no image. ", inline=False)
+           await ctx.send(embed=dodgydavehelpembed)
+   elif 'avatar' in command:
+           avatarhelpembed = discord.Embed(
+               title=f'{command} Command Help', description='In case your in need of some help :slight_smile:', color=0xE4003B)
+           avatarhelpembed.set_thumbnail(
+           url='https://alle-group.com/wp-content/uploads/2021/05/cropped-cropped-png-transparent-church-logo-mountain-microsoft-azure-text-line3-1.png')
+           avatarhelpembed.add_field(name=f"Command Name:", value=f"{command}", inline=False)
+           avatarhelpembed.add_field(
+               name=f"Help:", value=f"**This command is still in devlopment**", inline=False)
+           await ctx.send(embed=avatarhelpembed)
+   elif 'embed'  in command:
+           embedhelpembed = discord.Embed(
+               title=f'{command} Command Help', description='In case your in need of some help :slight_smile:', color=0x0032FF)
+           embedhelpembed.set_thumbnail(
+           url='https://alle-group.com/wp-content/uploads/2021/05/cropped-cropped-png-transparent-church-logo-mountain-microsoft-azure-text-line3-1.png')
+           embedhelpembed.add_field(name=f"Command Name:", value=f"{command}", inline=False)
+           embedhelpembed.add_field(
+               name=f"Help:", value=f"This Command is very new and may contain some bugs. You can use either `embed` or `announce` or `announcement`", inline=False)
+           await ctx.send(embed=embedhelpembed)
+   else:
+          
+           await ctx.send(embed=embed)
+  
+       
+
 
 
 @bot.command(name="volume")
@@ -2481,7 +2616,7 @@ async def on_message_edit(message_before, message_after):
 @bot.event
 async def on_member_update(before, after):
    if len(before.roles) < len(after.roles):
-    channel = bot.get_channel(851965794446475274)
+    channel = bot.get_channel(837715287092232264)
     b4_roles = before.roles
     after_roles = after.roles
     global time_main3
@@ -2498,7 +2633,7 @@ async def on_member_update(before, after):
         text=f"Made By bean!!!!!!!#0041 For Alle | ID: {after.id} • {time_main3} at {time_main2}")
     await channel.send(embed=embed)
    if len(before.roles) > len(after.roles):
-    channel = bot.get_channel(851965794446475274)
+    channel = bot.get_channel(837715287092232264)
     b4_roles = before.roles
     after_roles = after.roles
     set_diffrence = set(b4_roles) - set(after_roles)
@@ -2543,8 +2678,18 @@ async def installpromodstmp(ctx):
      embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
      embed.set_footer(
          text=f"Made By bean!!!!!!!#0041 For Alle | For more help contact ProMods Support.")
+    embed.set_footer(
+        text=f"Made By bean!!!!!!!#0041 For Alle | For more help contact a member of **staff**.")
     await ctx.send(embed=embed)
 
+
+@bot.command()
+async def whatistmpid(ctx):
+    await ctx.message.delete()
+    embed = discord.Embed(title="Basic Tmp Support Help Commands", description="Your TMP ID is the ID on your profile it will look something like this. (look at image below)", color=0x00993C)
+    embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
+    embed.set_image(url="https://i.gyazo.com/ac91fdb0fc5f124be1d8e5ab757a4c75.png")
+    await ctx.send(embed=embed)
 
 # fun commands e.g meme etc..
 @bot.command(pass_context=True)
@@ -2560,7 +2705,41 @@ async def meme(ctx):
             await ctx.send(embed=embed)
 
 
-# owener only commands
+@bot.command()
+async def dodgydave(ctx, video="yes"):
+        await ctx.message.delete()
+        embed = discord.Embed(
+            title="Dennis Skinner", description="`I Didn't receive a proper answer then. Maybe Dodgy Dave will answer it now.`", color=0xE4003B)
+        if video == 'yes':
+            pick = random.randint(1, 10)
+            if pick < 5:
+             embed.set_image(url="https://static.independent.co.uk/s3fs-public/thumbnails/image/2016/04/11/19/web-dennis-skinner-afp.jpg?width=1200")
+            elif pick > 5:
+                embed.set_image(
+                    url="https://www.thetimes.co.uk/imageserver/image/%2Fmethode%2Ftimes%2Fprod%2Fweb%2Fbin%2F8ff0d1f2-93d9-11e7-a2ce-ce94682a575d.jpg?crop=2529%2C1423%2C52%2C21&resize=1180")
+            elif pick == '5':
+                embed.set_image(url="https://static.independent.co.uk/s3fs-public/thumbnails/image/2016/04/11/19/web-dennis-skinner-afp.jpg?width=1200")
+            embed.add_field(name="Watch The Video ", value=f"[Here](https://www.youtube.com/watch?v=qvIUa47x_Oc)")
+            print(pick)
+        await ctx.send(embed=embed)        
+
+
+
+
+
+
+
+# test system for getting role hex colors 
+@bot.command()
+async def roles_colors(ctx):
+    for role in ctx.guild.roles:
+      if '@everone' in role.name:
+          pass  
+      await ctx.send(f"`{role.name}`")
+      await ctx.send(role.color)
+
+
+# owner only commands
 # @bot.commands(pass_context=True)
 # async def bean_afk(ctx):
 #     await ctx.message.delete()
