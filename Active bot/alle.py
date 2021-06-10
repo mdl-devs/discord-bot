@@ -2648,6 +2648,65 @@ async def on_member_update(before, after):
         text=f"Made By bean!!!!!!!#0041 For Alle | ID: {after.id} • {time_main3} at {time_main2}")
     await channel.send(embed=embed)
 
+@bot.event
+async def on_member_update(before, after):
+    channel = bot.get_channel(837715287092232264)
+    if str(after.status) == "offline":
+      if str(before.status) == str(after.status):
+        gone_offline_em = discord.Embed(
+            description=f"**`{after.name} Activity Changed`**", color=0xFF000)
+        await channel.send(embed=gone_offline_em)
+      else:
+        gone_offline_em = discord.Embed(
+            description=f"**`User Status Changed From {before.status}`**", color=0xFF000)
+        gone_offline_em.set_author(
+            name=f"{after.name} Went Offline", icon_url=f"{after.avatar_url}")
+        gone_offline_em.set_footer(text=f"User Status Changes | Alle Group | ID: {after.id}")
+        await channel.send(embed=gone_offline_em)
+    
+    if str(after.status) == "online":
+      if str(before.status) == str(after.status):
+        gone_online_em = discord.Embed(
+            description=f"**`{after.name} Activity Changed`**", color=0xFF000)
+        await channel.send(embed=gone_online_em)
+      else:
+        gone_online_em = discord.Embed(
+            description=f"**`User Status Changed From {before.status}`**", color=0xFF000)
+        gone_online_em.set_author(name=f"{after.name} Came Online", icon_url=f"{after.avatar_url}")
+        gone_online_em.set_footer(text=f"User Status Changes | Alle Group | ID: {after.id}")
+        await channel.send(embed=gone_online_em)
+       
+    if str(after.status) == "dnd":
+      if str(before.status) == str(after.status):
+        gone_dnd_em = discord.Embed(
+            description=f"**`{after.name} Activity Changed`**", color=0xFF000)
+        await channel.send(embed=gone_dnd_em)    
+      else:
+        gone_dnd_em = discord.Embed(
+            description=f"**`User Status Changed From {before.status}`**", color=0xFF000)
+        gone_dnd_em.set_author(name=f"{after.name} Went DND", icon_url=f"{after.avatar_url}")
+        gone_dnd_em.set_footer(text=f"User Status Changes | Alle Group | ID: {after.id}")
+        await channel.send(embed=gone_dnd_em)
+    
+    
+    if str(after.status) == "idle":
+      if str(before.status) == str(after.status):
+        gone_idle_em = discord.Embed(
+            description=f"**`{after.name} Activity Changed`**", color=0xFF000)
+        await channel.send(embed=gone_idle_em)
+      else:
+        gone_idle_em = discord.Embed(
+            description=f"**`User Status Changed From {before.status}`**", color=0xFF000)
+        gone_idle_em.set_author(
+            name=f"{after.name} Went Idle", icon_url=f"{after.avatar_url}")
+        gone_idle_em.set_footer(
+            text=f"User Status Changes | Alle Group | ID: {after.id}")
+        await channel.send(embed=gone_idle_em)
+
+    if str(after.status) == "online":
+     if 'Yzzoxi' in str(after.name):
+        bean = bot.get_user(755493797160288286)
+        await bean.send("Hey bean Yzxxoi came online")
 
 # more simple support commands
 
@@ -2722,6 +2781,58 @@ async def dodgydave(ctx, video="yes"):
             embed.add_field(name="Watch The Video ", value=f"[Here](https://www.youtube.com/watch?v=qvIUa47x_Oc)")
             print(pick)
         await ctx.send(embed=embed)        
+
+
+@bot.command()
+async def avatar(ctx):
+    await ctx.message.delete()
+    embed = discord.Embed(title=f"Avatar Is Below. Enjoy :slight_smile:", color=0xFF000)
+    embed.set_author(name=f"{ctx.author}", icon_url=f"{ctx.author.avatar_url}")
+    embed.set_image(url=f"{ctx.author.avatar_url}")
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def avataru(ctx, user: discord.Member):
+    await ctx.message.delete()
+    embed = discord.Embed(title=f"{user.name}'s Avatar Is Below. Enjoy :slight_smile:", color=0xFF000)
+    embed.set_author(name=f"{ctx.author}", icon_url=f"{ctx.author.avatar_url}")
+    embed.set_image(url=f"{user.avatar_url}")
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def dadjoke(ctx):
+    await ctx.message.delete()
+    url = "https://us-central1-dadsofunny.cloudfunctions.net/DadJokes/random/jokes"
+    r = requests.get(url)
+    data = r.json()
+    for setup in data:
+         
+     dad_joke_em = discord.Embed(
+         title=f"Dad Jokes", description=f"Joke = ***`{data['setup']}`***", color=0xFF000)
+     dad_joke_em.add_field(name=f"Punchline", value=f"**`{data['punchline']}`**", inline=False)
+     dad_joke_em.add_field(
+         name=f"Joke Author:", value="`KegenGuyll`. View there [Github Profile.](https://github.com/KegenGuyll/)", inline=False)
+     dad_joke_em.set_footer(text=f"Dad Jokes by KegenGuyll | Joke Requested By: {ctx.author.name}")
+    await ctx.send(embed=dad_joke_em)
+
+
+@bot.command()
+async def joke(ctx):
+    await ctx.message.delete()
+    url = 'https://official-joke-api.appspot.com/random_joke'
+    r = requests.get(url)
+    data = r.json()
+    for setup in data:
+       joke_em = discord.Embed(title="Jokes", description=f"Joke = ***`{data['setup']}`***", color=0x00C5FF) 
+       joke_em.add_field(
+           name=f"Punchline", value=f"**`{data['punchline']}`**", inline=False)
+       joke_em.add_field(name=f"Joke Type", value=f"{data['type']}", inline=False)
+       joke_em.add_field(
+           name="Joke Author", value="`15Dkatz`. View there [Github Profile.](https://github.com/15Dkatz/)")
+       joke_em.set_footer(
+           text=f"Jokes by 15Dkatz | Joke Requested By: {ctx.author.name}")
+    await ctx.send(embed=joke_em)
+
 
 
 
