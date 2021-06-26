@@ -73,7 +73,7 @@ async def on_member_update(before, after):
 async def on_ready():
     global command_prefix
     activity = discord.Game(
-        name=f"Forgot a Command? Use a/help | Dennis Skinner is a legend. | Dodgy Dave", type=3)
+        name=f"Bean ❤️", type=3)
     await bot.change_presence(status="Test", activity=activity)
 
 
@@ -120,8 +120,8 @@ async def on_member_remove(member):
         description=f"{member.mention} {member}", icon_url=f"{member.avatar_url}", color=0x00993C)
     welcome_em.add_field(name="Roles", value=f"")
     welcome_em.set_author(name="User Left | Goodbye :wave:",
-                          icon_url=f"{member.avatar.url}")
-    welcome_em.set_footer(text=f"ID: {member.id} â€¢ {time_main3}")
+                          icon_url=f"{member.avatar_url}")
+    welcome_em.set_footer(text=f"ID: {member.id} At: {time_main3}")
     await leaving_channel.send(embed=welcome_em)
 
 
@@ -1760,7 +1760,7 @@ async def traffic2(ctx):
   embed = discord.Embed(title="TMP ETS2 Sim 2 Status", color=0xFF0000)
   embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
   embed.set_footer(
-      text="Bot code developed by Alle Devs")
+      text="Bot code developed by Moondog Devs")
   r = requests.get(getSim2TFC)
   data = r.json()['response']
   for top in data['top']:
@@ -2393,12 +2393,12 @@ class Music(commands.Cog):
          else:
 
           if ctx.voice_state.is_playing:
-            bot_nick = 'Alle'
+            bot_nick = 'Moondog'
             ctx.voice_state.voice.pause()
             await ctx.message.add_reaction('â¯')
         
           else:
-            await ctx.send(f"**{bot_nick} is not currently playing**")    
+            await ctx.send(f"**Moondog is not currently playing**")    
         
     @commands.command(name='resume')
     async def _resume(self, ctx: commands.Context):
@@ -2435,7 +2435,7 @@ class Music(commands.Cog):
 
         voter = ctx.message.author
         if voter == ctx.voice_state.current.requester:
-            await ctx.message.add_reaction('â­')
+            await ctx.message.add_reaction('⏩')
             ctx.voice_state.skip()
             await ctx.send('Song skipped playing next track :)')
         elif voter == discord.Permissions.administrator:
@@ -2719,12 +2719,12 @@ async def on_message_delete(message):
                     inline=False)
      embed.add_field(
         name="Channel", value=f"{message.channel.mention}", inline=False)
-     channel = bot.get_channel(837715287092232264)
+     channel = bot.get_channel(858338176379781150)
      embed.set_author(name=f"{message.author}",
                      icon_url=f'{message.author.avatar_url}')
      global time_main
      embed.set_footer(
-        text=f"Made By bean!!!!!!!#0041 For Alle | Message ID: {message.id} â€¢ {time_main3}")
+        text=f"Made By bean!!!!!!!#0041 For Moondog | Message ID: {message.id} â€¢ {time_main3}")
     
      await channel.send(embed=embed)
 
@@ -2741,21 +2741,21 @@ async def on_message_edit(message_before, message_after):
                     inline=False)
      embed.add_field(name="New", value=f"{message_after.content}",
                     inline=False)
-     channel = bot.get_channel(837715287092232264)
+     channel = bot.get_channel(858338176379781150)
 
      embed.set_author(name=f"{message_before.author}",
                      icon_url=f'{message_before.author.avatar_url}')
 
      global time_main3
      embed.set_footer(
-        text=f"Made By bean!!!!!!!#0041 For Alle | Message ID: {message_before.id} â€¢ {time_main3}")
+        text=f"Made By bean!!!!!!!#0041 For Moondog | Message ID: {message_before.id} â€¢ {time_main3}")
      await channel.send(embed=embed)
 
 
 @bot.event
 async def on_member_update(before, after):
    if len(before.roles) < len(after.roles):
-    channel = bot.get_channel(837715287092232264)
+    channel = bot.get_channel(858338176379781150)
     b4_roles = before.roles
     after_roles = after.roles
     global time_main3
@@ -2769,10 +2769,10 @@ async def on_member_update(before, after):
         title=f"{after} was given the `{newrole}` role", color=0xFF0000)
     embed.set_author(name=f"{after}", icon_url=f"{after.avatar_url}")
     embed.set_footer(
-        text=f"Made By bean!!!!!!!#0041 For Alle | ID: {after.id} â€¢ {time_main3} at {time_main2}")
+        text=f"Made By bean!!!!!!!#0041 For Moondog | ID: {after.id} â€¢ {time_main3} at {time_main2}")
     await channel.send(embed=embed)
    if len(before.roles) > len(after.roles):
-    channel = bot.get_channel(837715287092232264)
+    channel = bot.get_channel(858338176379781150)
     b4_roles = before.roles
     after_roles = after.roles
     set_diffrence = set(b4_roles) - set(after_roles)
@@ -2784,7 +2784,7 @@ async def on_member_update(before, after):
         title=f"{after} lost the `{newrole}` role", color=0xFF0000)
     embed.set_author(name=f"{after}", icon_url=f"{after.avatar_url}")
     embed.set_footer(
-        text=f"Made By bean!!!!!!!#0041 For Alle | ID: {after.id} â€¢ {time_main3} at {time_main2}")
+        text=f"Made By bean!!!!!!!#0041 For Moondog | ID: {after.id} â€¢ {time_main3} at {time_main2}")
     await channel.send(embed=embed)
 
 
@@ -2931,15 +2931,10 @@ async def dodgydave(ctx, video="yes"):
 
 
 @bot.command()
-async def avatar(ctx, user: discord.Member = None):
+async def avatar(ctx):
     await ctx.message.delete()
-    if user == 'None':
-     embed = discord.Embed(title=f"Your Avatar Is Below. Enjoy :slight_smile:", color=0xFF000)
-     embed.set_image(url=f"{ctx.author.avatar_url}")
-    else:
-        embed = discord.Embed(title=f"{user}'s Avatar Is Below. Enjoy :slight_smile:", color=0xFF000)
-    embed.set_author(name=f"{ctx.author}", icon_url=f"{ctx.author.avatar_url}")
-    embed.set_image(url=f"{user.avatar_url}")
+    embed = discord.Embed(title=f"Your Avatar Is Below. Enjoy :slight_smile:", color=0xFF000)
+    embed.set_image(url=f"{ctx.author.avatar_url}")  
     await ctx.send(embed=embed)
 
 
@@ -2991,7 +2986,7 @@ async def unsupportedgv(ctx):
                            description="To find out how to change your game version for `TMP` visit [Here](https://truckersmp.com/knowledge-base/article/26).", color=0x00993C)
      embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
      embed.set_footer(
-         text=f"Made By bean!!!!!!!#0041 For Alle | Current Supported Version: " + data['supported_game_version'])
+         text=f"Made By bean!!!!!!!#0041 For Moondog | Current Supported Version: " + data['supported_game_version'])
     await ctx.send(embed=embed)
 
 
@@ -3006,9 +3001,9 @@ async def installpromodstmp(ctx):
                            description=" For help installing Promods Europe for `TMP` visit [Here](https://truckersmp.com/knowledge-base/article/26).", color=0x00993C)
      embed.set_thumbnail(url='https://truckersmp.com/assets/img/avatar.png')
      embed.set_footer(
-         text=f"Made By bean!!!!!!!#0041 For Alle | For more help contact ProMods Support.")
+         text=f"Made By bean!!!!!!!#0041 For Moondog | For more help contact ProMods Support.")
     embed.set_footer(
-        text=f"Made By bean!!!!!!!#0041 For Alle | For more help contact a member of **staff**.")
+        text=f"Made By bean!!!!!!!#0041 For Moondog | For more help contact a member of **staff**.")
     await ctx.send(embed=embed)
 
 
@@ -3115,3 +3110,4 @@ async def view_jobs(ctx):
 
 # start the bot
 bot.run(token, bot=True)
+
